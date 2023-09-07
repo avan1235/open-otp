@@ -1,0 +1,219 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  release:
+    name: Create release
+    runs-on: ubuntu-latest
+    permissions: write-all
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+    steps:
+      - name: Extract version name
+        id: extract_name
+        run: echo "name=$(echo ${GITHUB_REF##*/})" >>$GITHUB_OUTPUT
+        shell: bash
+
+      - name: Create release
+        id: create_release
+        uses: ncipollo/release-action@v1
+        with:
+          name: Release ${{ steps.extract_name.outputs.name }}
+
+  build-desktop:
+    name: Build desktop release
+    permissions: write-all
+    strategy:
+      matrix:
+        platform: [ ubuntu-20.04, windows-2019, macos-12 ]
+    runs-on: ${{ matrix.platform }}
+    needs: release
+    steps:
+      - name: Checkout to push branch
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}
+          fetch-depth: 0
+
+      - name: Extract version from tag
+        uses: damienaicheh/extract-version-from-tag-action@v1.1.0
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v1
+        with:
+          java-version: 17
+
+      - name: Build distribution file
+        if: job.status == 'success'
+        run: |
+          export GRADLE_USER_HOME=$(pwd)/.gradle
+          chmod +x ./gradlew
+          ./gradlew desktopApp:packageReleaseDistributionForCurrentOS
+        shell: bash
+        env:
+          VERSION: ${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}
+
+      - name: Upload deb artifact file to workflow run results
+        uses: actions/upload-artifact@v2
+        if: runner.os == 'Linux'
+        with:
+          name: OpenOTP-${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}.deb
+          path: desktopApp/build/compose/binaries/main-release/deb/openotp_${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}-1_amd64.deb
+
+      - name: Upload deb artifact file to release
+        uses: actions/upload-release-asset@v1
+        if: runner.os == 'Linux'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.release.outputs.upload_url }}
+          asset_path: ./desktopApp/build/compose/binaries/main-release/deb/openotp_${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}-1_amd64.deb
+          asset_name: OpenOTP-${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}.deb
+          asset_content_type: application/x-deb
+
+      - name: Upload msi installer file to workflow run results
+        uses: actions/upload-artifact@v2
+        if: runner.os == 'Windows'
+        with:
+          name: OpenOTP-${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}.msi
+          path: desktopApp/build/compose/binaries/main-release/msi/OpenOTP-${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}.msi
+
+      - name: Upload msi installer file to release
+        uses: actions/upload-release-asset@v1
+        if: runner.os == 'Windows'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.release.outputs.upload_url }}
+          asset_path: ./desktopApp/build/compose/binaries/main-release/msi/OpenOTP-${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}.msi
+          asset_name: OpenOTP-${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}.msi
+          asset_content_type: application/x-ms-dos-executable
+
+      - name: Upload dmg image file to workflow run results
+        uses: actions/upload-artifact@v2
+        if: runner.os == 'macOS'
+        with:
+          name: OpenOTP-${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}.dmg
+          path: desktopApp/build/compose/binaries/main-release/dmg/OpenOTP-${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}.dmg
+
+      - name: Upload dmg image file to release
+        uses: actions/upload-release-asset@v1
+        if: runner.os == 'macOS'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.release.outputs.upload_url }}
+          asset_path: ./desktopApp/build/compose/binaries/main-release/dmg/OpenOTP-${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}.dmg
+          asset_name: OpenOTP-${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}.dmg
+          asset_content_type: application/octet-stream
+
+  build-android:
+    name: Build android release
+    permissions: write-all
+    runs-on: ubuntu-latest
+    needs: release
+    steps:
+      - name: Checkout to push branch
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}
+          fetch-depth: 0
+
+      - name: Extract version from tag
+        uses: damienaicheh/extract-version-from-tag-action@v1.1.0
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v1
+        with:
+          java-version: 17
+
+      - name: Decode Keystore
+        id: decode_keystore
+        uses: timheuer/base64-to-file@v1.2
+        with:
+          fileName: 'open-otp.jks'
+          encodedString: ${{ secrets.KEYSTORE }}
+
+      - name: Build APK file
+        if: job.status == 'success'
+        run: |
+          export GRADLE_USER_HOME=$(pwd)/.gradle
+          chmod +x ./gradlew
+          export BUMP_FILE_VERSION_CODE=false
+          ./gradlew androidApp:assembleDebug
+          export BUMP_FILE_VERSION_CODE=true
+          ./gradlew androidApp:assembleRelease androidApp:bundleRelease -Pandroid.injected.signing.store.file=$SIGNING_STORE_FILE -Pandroid.injected.signing.store.password=$SIGNING_STORE_PASSWORD -Pandroid.injected.signing.key.alias=$SIGNING_KEY_ALIAS -Pandroid.injected.signing.key.password=$SIGNING_KEY_PASSWORD
+        env:
+          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+          SIGNING_STORE_FILE: ${{ steps.decode_keystore.outputs.filePath }}
+          VERSION: ${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}
+
+      - name: Upload debug artifact file to workflow run results
+        uses: actions/upload-artifact@v2
+        with:
+          name: OpenOTP-Debug-${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}.apk
+          path: androidApp/build/outputs/apk/debug/androidApp-debug.apk
+
+      - name: Upload release artifact file to workflow run results
+        uses: actions/upload-artifact@v2
+        with:
+          name: OpenOTP-Release-${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}.apk
+          path: androidApp/build/outputs/apk/release/androidApp-release.apk
+
+      - name: Upload release bundle file to workflow run results
+        uses: actions/upload-artifact@v2
+        with:
+          name: OpenOTP-Release-${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}.aab
+          path: androidApp/build/outputs/bundle/release/androidApp-release.aab
+
+      - name: Upload debug artifact file to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.release.outputs.upload_url }}
+          asset_path: ./androidApp/build/outputs/apk/debug/androidApp-debug.apk
+          asset_name: OpenOTP-Debug-${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}.apk
+          asset_content_type: application/vnd.android.package-archive
+
+      - name: Upload release artifact file to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.release.outputs.upload_url }}
+          asset_path: ./androidApp/build/outputs/apk/release/androidApp-release.apk
+          asset_name: OpenOTP-Release-${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}.apk
+          asset_content_type: application/vnd.android.package-archive
+
+      - name: Upload release bundle file to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.release.outputs.upload_url }}
+          asset_path: ./androidApp/build/outputs/bundle/release/androidApp-release.aab
+          asset_name: OpenOTP-Release-${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}.aab
+          asset_content_type: application/x-authorware-bin
+
+      #      - name: Upload release bundle file to Google Play
+      #        uses: r0adkll/upload-google-play@v1
+      #        with:
+      #          serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+      #          packageName: ml.dev.kotlin.openotp
+      #          releaseFiles: ./androidApp/build/outputs/bundle/release/androidApp-release.aab
+      #          track: production
+      #          releaseName: ${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}
+
+      - name: Commit version code changes
+        run: |
+          git config --global user.name "${{ secrets.CI_COMMIT_AUTHOR }}"
+          git config --global user.email "${{ secrets.CI_COMMIT_EMAIL }}"
+          git commit ./gradle/libs.versions.toml -m "update version code"
+          git push origin HEAD:master

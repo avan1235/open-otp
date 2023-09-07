@@ -1,0 +1,78 @@
+[versions]
+uri-kmp = "0.0.14"
+kermit = "2.0.0-RC5"
+koin = "3.5.0"
+koin-compose = "1.1.0"
+uuid = "0.7.0"
+multiplatform-settings = "1.0.0"
+essenty = "1.1.0"
+quickie = "1.8.0"
+kotlincrypto-macs = "0.3.0"
+encoding-base32 = "2.0.0"
+buffer = "1.3.1"
+
+compose = "1.5.1"
+#noinspection GradleDependency
+decompose = "2.0.2-compose-experimental"
+
+kotlinx-datetime = "0.4.1"
+kotlinx-coroutines = "1.7.3"
+kotlinx-serialization = "1.6.0"
+
+androidx-activity-compose = "1.7.2"
+androidx-appcompat-appcompat = "1.6.1"
+androidx-core-ktx = "1.12.0"
+
+kotlin = "1.9.10"
+gradle-plugin = "8.1.0"
+parcelize-darwin = "0.2.1"
+
+android-compileSdk = "34"
+android-targetSdk = "34"
+android-minSdk = "26"
+
+versionCode = "1"
+
+[libraries]
+multiplatform-settings = { module = "com.russhwolf:multiplatform-settings", version.ref = "multiplatform-settings" }
+multiplatform-settings-coroutines = { module = "com.russhwolf:multiplatform-settings-coroutines", version.ref = "multiplatform-settings" }
+kotlincrypto-macs-hmac-sha1 = { module = "org.kotlincrypto.macs:hmac-sha1", version.ref = "kotlincrypto-macs" }
+kotlincrypto-macs-hmac-sha2 = { module = "org.kotlincrypto.macs:hmac-sha2", version.ref = "kotlincrypto-macs" }
+encoding-base32 = { module = "io.matthewnelson.encoding:base32", version.ref = "encoding-base32" }
+uuid = { module = "com.benasher44:uuid", version.ref = "uuid" }
+buffer = { module = "com.ditchoom:buffer", version.ref = "buffer" }
+uriKmp = { module = "com.eygraber:uri-kmp", version.ref = "uri-kmp" }
+kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
+compose-ui-ui = { module = "androidx.compose.ui:ui", version.ref = "compose" }
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
+kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
+
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity-compose" }
+androidx-appcompat-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat-appcompat" }
+androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core-ktx" }
+
+quickie-bundled = { module = "io.github.g00fy2.quickie:quickie-bundled", version.ref = "quickie" }
+
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
+koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin-compose" }
+
+decompose = { module = "com.arkivanov.decompose:decompose", version.ref = "decompose" }
+decompose-extensionsComposeJetbrains = { module = "com.arkivanov.decompose:extensions-compose-jetbrains", version.ref = "decompose" }
+
+essenty-parcelable = { module = "com.arkivanov.essenty:parcelable", version.ref = "essenty" }
+essenty-lifecycle = { module = "com.arkivanov.essenty:lifecycle", version.ref = "essenty" }
+essenty-stateKeeper = { module = "com.arkivanov.essenty:state-keeper", version.ref = "essenty" }
+essenty-instanceKeeper = { module = "com.arkivanov.essenty:instance-keeper", version.ref = "essenty" }
+parcelize-darwinRuntime = { module = "com.arkivanov.parcelize.darwin:runtime", version.ref = "essenty" }
+security-crypto-ktx = { group = "androidx.security", name = "security-crypto-ktx", version = "1.0.0" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "gradle-plugin" }
+android-library = { id = "com.android.library", version.ref = "gradle-plugin" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "compose" }
+parcelize-darwin = { id = "com.arkivanov.parcelize.darwin", version.ref = "parcelize-darwin" }

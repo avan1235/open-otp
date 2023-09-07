@@ -1,0 +1,3 @@
+-keep class com.arkivanov.decompose.extensions.compose.jetbrains.mainthread.SwingMainThreadChecker
+-dontwarn com.arkivanov.decompose.extensions.compose.jetbrains.pages.**
+-keep class kotlinx.coroutines.swing.SwingDispatcherFactory
