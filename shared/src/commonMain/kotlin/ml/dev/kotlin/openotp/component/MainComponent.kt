@@ -100,7 +100,7 @@ class MainComponentImpl(
                 }
                 val secret = uri.getQueryParameter("secret") ?: return notifyInvalidQRCodeData()
                 val issuer = uri.getQueryParameter("issuer")
-                val name = uri.path?.removePrefix("/")
+                val name = uri.path?.let { cleanNameFromPath(it, issuer) }
                 when (type) {
                     OtpType.TOTP -> {
                         val updatedData = userOtpCodeData.get() + TotpData(issuer, name, secret, TotpConfig.DEFAULT)
@@ -133,4 +133,8 @@ class MainComponentImpl(
     override fun onAddProviderClick() {
         navigateOnAddProvider()
     }
+
+    private fun cleanNameFromPath(name: String, issuer: String?): String = name
+        .removePrefix("/")
+        .run { if (issuer != null) removePrefix("$issuer: ").removePrefix("$issuer:") else this }
 }
