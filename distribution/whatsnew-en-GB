@@ -1,0 +1,3 @@
+This version brings some small improvements in daily usage:
+- validate base32 secret not to crash app on invalid one
+- display correctly the account name when it starts with issuer

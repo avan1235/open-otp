@@ -202,14 +202,15 @@ jobs:
           asset_name: OpenOTP-Release-${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}.aab
           asset_content_type: application/x-authorware-bin
 
-      #      - name: Upload release bundle file to Google Play
-      #        uses: r0adkll/upload-google-play@v1
-      #        with:
-      #          serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
-      #          packageName: ml.dev.kotlin.openotp
-      #          releaseFiles: ./androidApp/build/outputs/bundle/release/androidApp-release.aab
-      #          track: production
-      #          releaseName: ${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}
+      - name: Upload release bundle file to Google Play
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+          packageName: ml.dev.kotlin.openotp.OpenOtp
+          releaseFiles: ./androidApp/build/outputs/bundle/release/androidApp-release.aab
+          track: production
+          releaseName: ${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}
+          whatsNewDirectory: ./distribution/
 
       - name: Commit version code changes
         run: |
