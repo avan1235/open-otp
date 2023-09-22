@@ -2,8 +2,7 @@ package ml.dev.kotlin.openotp.otp
 
 import com.ditchoom.buffer.PlatformBuffer
 import com.ditchoom.buffer.allocate
-import io.matthewnelson.encoding.base32.Base32
-import io.matthewnelson.encoding.core.Decoder.Companion.decodeToByteArray
+import ml.dev.kotlin.openotp.util.decodeBase32ToByteArray
 import org.kotlincrypto.macs.hmac.sha1.HmacSHA1
 import org.kotlincrypto.macs.hmac.sha2.HmacSHA256
 import org.kotlincrypto.macs.hmac.sha2.HmacSHA512
@@ -14,7 +13,7 @@ class HotpGenerator(
     secret: String,
     private val config: HotpConfig
 ) {
-    private val secret: ByteArray = secret.encodeToByteArray().decodeToByteArray(Base32.Default)
+    private val secret: ByteArray = secret.decodeBase32ToByteArray()
 
     fun generate(count: HotpCounter): String {
         val message = PlatformBuffer.allocate(8).apply { this[0] = count }

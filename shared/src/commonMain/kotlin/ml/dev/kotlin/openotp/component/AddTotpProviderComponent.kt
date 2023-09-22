@@ -4,9 +4,11 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.decompose.value.update
+import com.arkivanov.decompose.value.updateAndGet
 import ml.dev.kotlin.openotp.USER_OTP_CODE_DATA_MODULE_QUALIFIER
 import ml.dev.kotlin.openotp.otp.*
 import ml.dev.kotlin.openotp.util.ValueSettings
+import ml.dev.kotlin.openotp.util.canBeDecodedWithBase32
 import org.koin.core.component.get
 
 interface AddOtpProviderComponent {
@@ -79,7 +81,9 @@ abstract class AddOtpProviderComponentImpl(
     }
 
     override fun onSecretChanged(secret: String) {
-        _secret.update { secret }
+        val updatedSecret = _secret.updateAndGet { secret }
+        val isValid = updatedSecret.canBeDecodedWithBase32
+        _secretIsError.update { !isValid }
     }
 
     override fun onAlgorithmSelected(algorithm: HmacAlgorithm) {

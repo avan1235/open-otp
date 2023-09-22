@@ -14,6 +14,7 @@ import ml.dev.kotlin.openotp.USER_OTP_CODE_DATA_MODULE_QUALIFIER
 import ml.dev.kotlin.openotp.otp.*
 import ml.dev.kotlin.openotp.qr.QRResult
 import ml.dev.kotlin.openotp.util.ValueSettings
+import ml.dev.kotlin.openotp.util.canBeDecodedWithBase32
 import ml.dev.kotlin.openotp.util.currentEpochMilliseconds
 import org.koin.core.component.get
 import kotlin.time.Duration
@@ -98,7 +99,10 @@ class MainComponentImpl(
                     "hotp" -> OtpType.HOTP
                     else -> return notifyInvalidQRCodeData()
                 }
-                val secret = uri.getQueryParameter("secret") ?: return notifyInvalidQRCodeData()
+                val secret = uri.getQueryParameter("secret")
+                    ?.takeIf { it.canBeDecodedWithBase32 }
+                    ?: return notifyInvalidQRCodeData()
+
                 val issuer = uri.getQueryParameter("issuer")
                 val name = uri.path?.let { cleanNameFromPath(it, issuer) }
                 when (type) {
@@ -133,8 +137,8 @@ class MainComponentImpl(
     override fun onAddProviderClick() {
         navigateOnAddProvider()
     }
-
-    private fun cleanNameFromPath(name: String, issuer: String?): String = name
-        .removePrefix("/")
-        .run { if (issuer != null) removePrefix("$issuer: ").removePrefix("$issuer:") else this }
 }
+
+private fun cleanNameFromPath(name: String, issuer: String?): String = name
+    .removePrefix("/")
+    .run { if (issuer != null) removePrefix("$issuer: ").removePrefix("$issuer:") else this }
