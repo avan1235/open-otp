@@ -37,6 +37,13 @@ android {
     kotlin {
         jvmToolchain(17)
     }
+    buildTypes {
+        release {
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"))
+        }
+    }
 }
 
 fun getAndBumpVersionCode(): Int {
