@@ -18,11 +18,24 @@ jobs:
         run: echo "name=$(echo ${GITHUB_REF##*/})" >>$GITHUB_OUTPUT
         shell: bash
 
+      - name: Checkout to push branch
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}
+          fetch-depth: 0
+
+      - name: Generate changelog
+        id: changelog
+        uses: metcalfc/changelog-generator@v4.1.0
+        with:
+          myToken: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Create release
         id: create_release
         uses: ncipollo/release-action@v1
         with:
           name: Release ${{ steps.extract_name.outputs.name }}
+          body: ${{ steps.changelog.outputs.changelog }}
 
   build-desktop:
     name: Build desktop release
