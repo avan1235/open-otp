@@ -223,7 +223,7 @@ jobs:
           releaseFiles: ./androidApp/build/outputs/bundle/release/androidApp-release.aab
           track: production
           releaseName: ${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}
-          whatsNewDirectory: ./distribution/
+          whatsNewDirectory: ./androidApp/distribution/
 
       - name: Commit version code changes
         run: |

@@ -1,6 +1,0 @@
-This version brings following new features:
-- add HOTP codes with QR codes scan
-
-This version brings some small improvements as well:
-- validate counter of HOTP codes
-- validate codes scanned with QR code
