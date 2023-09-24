@@ -14,8 +14,8 @@ import ml.dev.kotlin.openotp.USER_OTP_CODE_DATA_MODULE_QUALIFIER
 import ml.dev.kotlin.openotp.otp.*
 import ml.dev.kotlin.openotp.qr.QRResult
 import ml.dev.kotlin.openotp.util.ValueSettings
-import ml.dev.kotlin.openotp.util.canBeDecodedWithBase32
 import ml.dev.kotlin.openotp.util.currentEpochMilliseconds
+import ml.dev.kotlin.openotp.util.isValidBase32Secret
 import org.koin.core.component.get
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
@@ -100,7 +100,7 @@ class MainComponentImpl(
                     else -> return notifyInvalidQRCodeData()
                 }
                 val secret = uri.getQueryParameter("secret")
-                    ?.takeIf { it.canBeDecodedWithBase32 }
+                    ?.takeIf { it.isValidBase32Secret }
                     ?: return notifyInvalidQRCodeData()
 
                 val issuer = uri.getQueryParameter("issuer")

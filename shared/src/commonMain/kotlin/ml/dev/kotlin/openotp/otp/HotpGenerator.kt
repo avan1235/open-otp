@@ -40,5 +40,3 @@ class HotpGenerator(
         return codeInt.toString().padStart(digits, padChar = '0')
     }
 }
-
-typealias HotpCounter = Long
