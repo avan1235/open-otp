@@ -3,7 +3,6 @@ package ml.dev.kotlin.openotp.ui.component
 import androidx.compose.animation.VectorConverter
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.*
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.draggable
@@ -26,6 +25,7 @@ import androidx.compose.material3.DismissValue.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
@@ -45,6 +45,7 @@ import ml.dev.kotlin.openotp.otp.OtpData
 import ml.dev.kotlin.openotp.otp.TotpData
 import ml.dev.kotlin.openotp.otp.UserOtpCodeData
 import ml.dev.kotlin.openotp.ui.providerIcon
+import ml.dev.kotlin.openotp.util.currentEpochMilliseconds
 import ml.dev.kotlin.openotp.util.letTrue
 import kotlin.math.roundToInt
 
@@ -57,6 +58,7 @@ internal fun OtpCodeItems(
     listState: LazyListState = rememberLazyListState(),
 ) {
     val coroutineScope = rememberCoroutineScope()
+    val currentTimestamp by rememberUpdatedState(timestamp)
     LazyColumn(
         state = listState,
         modifier = Modifier
@@ -76,7 +78,6 @@ internal fun OtpCodeItems(
             key = { it.uuid },
         ) { item ->
             val currentItem by rememberUpdatedState(item)
-            val currentTimestamp by rememberUpdatedState(timestamp)
             val localClipboardManager = LocalClipboardManager.current
             val dismissState = rememberDismissState(
                 confirmValueChange = {
@@ -99,10 +100,7 @@ internal fun OtpCodeItems(
                     OtpCodeItem(
                         timestamp = currentTimestamp,
                         item = currentItem,
-                        onClick = {
-                            val code = currentItem.code(currentTimestamp)
-                            localClipboardManager.setText(AnnotatedString(code))
-                        },
+                        onClick = { localClipboardManager.copyOtpCode(currentItem, currentTimestamp) },
                         onRestartCode = { onRestartCode(currentItem) },
                     )
                 }
@@ -132,14 +130,15 @@ private fun OtpCodeItem(
             is TotpData -> {
                 val initialColor = MaterialTheme.colorScheme.primary
                 val targetColor = MaterialTheme.colorScheme.error
-                val color = remember {
+                val color = remember(initialColor) {
                     Animatable(
                         initialValue = initialColor,
                         typeConverter = Color.VectorConverter(ColorSpaces.LinearSrgb),
                     )
                 }
-                val left = remember(timestamp, item) { item.timeslotLeft(timestamp) }
-                LaunchedEffect(item) {
+                LaunchedEffect(item.periodMillis, initialColor, targetColor) {
+                    val left = item.timeslotLeft(currentEpochMilliseconds())
+                    val offsetMillis = ((1.0 - left) * item.periodMillis).roundToInt()
                     color.animateTo(
                         targetValue = targetColor,
                         animationSpec = infiniteRepeatable(
@@ -149,13 +148,16 @@ private fun OtpCodeItem(
                             ),
                             repeatMode = RepeatMode.Restart,
                             initialStartOffset = StartOffset(
-                                offsetMillis = ((1.0 - left) * item.periodMillis).roundToInt(),
+                                offsetMillis = offsetMillis,
                                 offsetType = StartOffsetType.FastForward,
                             )
                         )
                     )
                 }
-                TrailingData.CountDown(color, left)
+                TrailingData.CountDown(
+                    percent = item.timeslotLeft(timestamp).toFloat(),
+                    color = color,
+                )
             }
         }
 
@@ -205,7 +207,7 @@ private fun OtpCodeItem(
             trailingContent = {
                 when (trailingData) {
                     is TrailingData.CountDown -> CountDownStatusCircle(
-                        percent = trailingData.percent.toFloat(),
+                        percent = trailingData.percent,
                         color = trailingData.color.value,
                     )
 
@@ -224,8 +226,8 @@ private fun OtpCodeItem(
 private sealed interface TrailingData {
     data object Restart : TrailingData
     data class CountDown(
+        val percent: Float,
         val color: Animatable<Color, AnimationVector4D>,
-        val percent: Double,
     ) : TrailingData
 }
 
@@ -253,28 +255,27 @@ private fun CountDownStatusCircle(
     size: Dp = 28.dp,
     borderSize: Dp = 2.dp,
     padding: PaddingValues = PaddingValues(horizontal = 3.dp, vertical = 5.dp)
-) {
-    val sizePx = with(LocalDensity.current) { size.toPx() }
-    val borderSizePx = with(LocalDensity.current) { borderSize.toPx() }
+) = with(LocalDensity.current) {
+    val sizePx = remember(size) { size.toPx() }
+    val borderSizePx = remember(borderSize) { borderSize.toPx() }
     Box(
-        modifier = Modifier.padding(padding)
-    ) {
-        Canvas(
-            modifier = Modifier.size(size),
-        ) {
-            drawCircle(
-                color = color,
-                style = Stroke(borderSizePx),
-            )
-            drawArc(
-                color = color,
-                startAngle = 270f,
-                sweepAngle = percent * 360f,
-                useCenter = true,
-                size = Size(sizePx, sizePx),
-            )
-        }
-    }
+        modifier = Modifier
+            .padding(padding)
+            .size(size)
+            .drawBehind {
+                drawCircle(
+                    color = color,
+                    style = Stroke(borderSizePx),
+                )
+                drawArc(
+                    color = color,
+                    startAngle = 270f,
+                    sweepAngle = percent * 360f,
+                    useCenter = true,
+                    size = Size(sizePx, sizePx),
+                )
+            }
+    )
 }
 
 private fun OtpData.codePresentation(timestamp: Long): String {

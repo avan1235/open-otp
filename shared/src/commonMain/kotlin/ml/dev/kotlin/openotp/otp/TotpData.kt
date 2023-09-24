@@ -1,9 +1,11 @@
 package ml.dev.kotlin.openotp.otp
 
+import androidx.compose.runtime.Immutable
 import com.benasher44.uuid.uuid4
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
+@Immutable
 @Serializable
 sealed class OtpData {
     abstract val issuer: String?
@@ -18,6 +20,7 @@ sealed class OtpData {
     abstract override fun equals(other: Any?): Boolean
 }
 
+@Immutable
 @Serializable
 data class HotpData(
     override val issuer: String?,
@@ -37,6 +40,12 @@ data class HotpData(
     fun increaseCounter(): HotpData =
         copy(counter = counter + 1)
 
+    override fun hashCode(): Int =
+        uuid.hashCode()
+
+    override fun equals(other: Any?): Boolean =
+        (other as? HotpData)?.uuid == uuid
+
     companion object {
         operator fun invoke(
             issuer: String?,
@@ -48,6 +57,7 @@ data class HotpData(
     }
 }
 
+@Immutable
 @Serializable
 data class TotpData(
     override val issuer: String?,
@@ -69,6 +79,12 @@ data class TotpData(
 
     fun timeslotLeft(timestamp: Long): Double =
         authenticator.timeslotLeft(timestamp)
+
+    override fun hashCode(): Int =
+        uuid.hashCode()
+
+    override fun equals(other: Any?): Boolean =
+        (other as? TotpData)?.uuid == uuid
 
     companion object {
         operator fun invoke(
