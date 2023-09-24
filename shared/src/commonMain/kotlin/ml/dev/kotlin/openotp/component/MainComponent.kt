@@ -104,14 +104,25 @@ class MainComponentImpl(
                     ?: return notifyInvalidQRCodeData()
 
                 val issuer = uri.getQueryParameter("issuer")
-                val name = uri.path?.let { cleanNameFromPath(it, issuer) }
+                val name = uri.path?.removeIssuerFromPrefix(issuer)
+
                 when (type) {
                     OtpType.TOTP -> {
-                        val updatedData = userOtpCodeData.get() + TotpData(issuer, name, secret, TotpConfig.DEFAULT)
+                        val data = TotpData(issuer, name, secret, TotpConfig.DEFAULT)
+                        val updatedData = userOtpCodeData.get() + data
                         userOtpCodeData.set(updatedData)
                     }
 
-                    else -> return notifyUnsupportedHOTP()
+                    else -> {
+                        val counter = uri.getQueryParameter("counter")?.toLongOrNull()
+                        if (!counter.isValid()) {
+                            return notifyInvalidQRCodeData()
+                        }
+                        val data = HotpData(issuer, name, secret, counter, HotpConfig.DEFAULT)
+                        val updatedData = userOtpCodeData.get() + data
+                        userOtpCodeData.set(updatedData)
+
+                    }
                 }
             }
         }
@@ -125,10 +136,6 @@ class MainComponentImpl(
         toast("Missing camera permissions")
     }
 
-    private fun notifyUnsupportedHOTP() {
-        toast("Unsupported HOTP")
-    }
-
     override fun onSearchBarActiveChange(isActive: Boolean) {
         val updated = isSearchActive.updateAndGet { isActive }
         searchBackCallback.isEnabled = updated
@@ -139,6 +146,6 @@ class MainComponentImpl(
     }
 }
 
-private fun cleanNameFromPath(name: String, issuer: String?): String = name
-    .removePrefix("/")
-    .run { if (issuer != null) removePrefix("$issuer: ").removePrefix("$issuer:") else this }
+private fun String.removeIssuerFromPrefix(issuer: String?): String =
+    removePrefix("/")
+        .run { if (issuer != null) removePrefix("$issuer: ").removePrefix("$issuer:") else this }
