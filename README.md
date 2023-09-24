@@ -7,7 +7,7 @@
 Android released version is available on
 [Google Play](https://play.google.com/store/apps/details?id=ml.dev.kotlin.openotp.OpenOtp).
 
-<a href='https://play.google.com/store/apps/details?id=ml.dev.kotlin.openotp.OpenOtp&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a>
+<a href='https://play.google.com/store/apps/details?id=ml.dev.kotlin.openotp.OpenOtp'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a>
 
 You can download compiled version of application from
 [release page](https://github.com/avan1235/open-otp/releases).
