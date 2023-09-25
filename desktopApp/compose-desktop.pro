@@ -1,3 +1,12 @@
 -keep class com.arkivanov.decompose.extensions.compose.jetbrains.mainthread.SwingMainThreadChecker
 -dontwarn com.arkivanov.decompose.extensions.compose.jetbrains.pages.**
+-dontwarn org.xml.sax.**
+-dontwarn javax.xml.**
+-dontwarn org.w3c.dom.**
+-dontwarn org.apache.log.**
+-dontwarn org.apache.log4j.**
+-dontwarn org.apache.batik.**
+-dontwarn org.apache.avalon.**
+-dontwarn org.mozilla.javascript.**
+-dontwarn org.python.**
 -keep class kotlinx.coroutines.swing.SwingDispatcherFactory
