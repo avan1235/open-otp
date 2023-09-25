@@ -88,73 +88,7 @@ class MainComponentImpl(
             QRResult.QRUserCanceled -> Unit
             QRResult.QRMissingPermission -> return notifyMissingCameraPermissions()
             is QRResult.QRError -> return notifyInvalidQRCodeData()
-            is QRResult.QRSuccess -> {
-                val content = result.content ?: return notifyInvalidQRCodeData()
-                val uri = Uri.parseOrNull(content) ?: return notifyInvalidQRCodeData()
-                if ("otpauth" != uri.scheme) {
-                    return notifyInvalidQRCodeData()
-                }
-                val type = when (uri.host) {
-                    "totp" -> OtpType.TOTP
-                    "hotp" -> OtpType.HOTP
-                    else -> return notifyInvalidQRCodeData()
-                }
-                val secret = uri.getQueryParameter("secret")
-                    ?.takeIf { it.isValidBase32Secret }
-                    ?: return notifyInvalidQRCodeData()
-
-                val issuer = uri.getQueryParameter("issuer")
-                val name = uri.path?.removeIssuerFromPrefix(issuer)
-
-                val hmacAlgorithm = when (uri.getQueryParameter("algorithm")) {
-                    "sha1" -> HmacAlgorithm.SHA1
-                    "sha256" -> HmacAlgorithm.SHA256
-                    "sha512" -> HmacAlgorithm.SHA512
-                    null -> null
-                    else -> return notifyInvalidQRCodeData()
-                }
-                val codeDigits = when (uri.getQueryParameter("digits")) {
-                    "6" -> OtpDigits.Six
-                    "8" -> OtpDigits.Eight
-                    null -> null
-                    else -> return notifyInvalidQRCodeData()
-                }
-
-                when (type) {
-                    OtpType.TOTP -> {
-                        val period = when (uri.getQueryParameter("period")) {
-                            "15" -> TotpPeriod.Fifteen
-                            "30" -> TotpPeriod.Thirty
-                            "60" -> TotpPeriod.Sixty
-                            null -> null
-                            else -> return notifyInvalidQRCodeData()
-                        }
-                        val config = TotpConfig(
-                            period = period ?: TotpConfig.DEFAULT.period,
-                            codeDigits = codeDigits ?: TotpConfig.DEFAULT.codeDigits,
-                            hmacAlgorithm = hmacAlgorithm ?: TotpConfig.DEFAULT.hmacAlgorithm
-                        )
-                        val data = TotpData(issuer, name, secret, config)
-                        val updatedData = userOtpCodeData.get() + data
-                        userOtpCodeData.set(updatedData)
-                    }
-
-                    else -> {
-                        val counter = uri.getQueryParameter("counter")?.toLongOrNull()
-                        if (!counter.isValid()) {
-                            return notifyInvalidQRCodeData()
-                        }
-                        val config = HotpConfig(
-                            codeDigits = codeDigits ?: HotpConfig.DEFAULT.codeDigits,
-                            hmacAlgorithm = hmacAlgorithm ?: HotpConfig.DEFAULT.hmacAlgorithm
-                        )
-                        val data = HotpData(issuer, name, secret, counter, config)
-                        val updatedData = userOtpCodeData.get() + data
-                        userOtpCodeData.set(updatedData)
-
-                    }
-                }
-            }
+            is QRResult.QRSuccess -> storeQRCodeUserOtpCodeData(result)
         }
     }
 
@@ -174,8 +108,104 @@ class MainComponentImpl(
     override fun onAddProviderClick() {
         navigateOnAddProvider()
     }
+
+    private fun storeQRCodeUserOtpCodeData(qrSuccess: QRResult.QRSuccess) {
+        try {
+            val uri = qrSuccess.uri
+
+            uri.validateScheme()
+            val secret = uri.secret
+            val issuer = uri.issuer
+            val name = uri.label
+            val hmacAlgorithm = uri.hmacAlgorithm
+            val codeDigits = uri.codeDigits
+
+            when (uri.otpType) {
+                OtpType.TOTP -> {
+                    val period = uri.period
+                    val config = TotpConfig(
+                        period = period ?: TotpConfig.DEFAULT.period,
+                        codeDigits = codeDigits ?: TotpConfig.DEFAULT.codeDigits,
+                        hmacAlgorithm = hmacAlgorithm ?: TotpConfig.DEFAULT.hmacAlgorithm
+                    )
+                    val data = TotpData(issuer, name, secret, config)
+                    val updatedData = userOtpCodeData.get() + data
+                    userOtpCodeData.set(updatedData)
+                }
+
+                else -> {
+                    val counter = uri.counter
+                    val config = HotpConfig(
+                        codeDigits = codeDigits ?: HotpConfig.DEFAULT.codeDigits,
+                        hmacAlgorithm = hmacAlgorithm ?: HotpConfig.DEFAULT.hmacAlgorithm
+                    )
+                    val data = HotpData(issuer, name, secret, counter, config)
+                    val updatedData = userOtpCodeData.get() + data
+                    userOtpCodeData.set(updatedData)
+                }
+            }
+        } catch (_: InvalidQRCodeException) {
+            notifyInvalidQRCodeData()
+        }
+    }
 }
 
-private fun String.removeIssuerFromPrefix(issuer: String?): String =
-    removePrefix("/")
-        .run { if (issuer != null) removePrefix("$issuer: ").removePrefix("$issuer:") else this }
+private object InvalidQRCodeException : IllegalArgumentException()
+
+private val Uri.otpType: OtpType
+    get() = when (host) {
+        "totp" -> OtpType.TOTP
+        "hotp" -> OtpType.HOTP
+        else -> throw InvalidQRCodeException
+    }
+
+private val Uri.secret: String
+    get() = getQueryParameter("secret")
+        ?.takeIf { it.isValidBase32Secret }
+        ?: throw InvalidQRCodeException
+
+private val Uri.issuer: String?
+    get() = getQueryParameter("issuer")
+
+private val Uri.label: String?
+    get() = path?.removePrefix("/")
+
+private val Uri.hmacAlgorithm: HmacAlgorithm?
+    get() = when (getQueryParameter("algorithm")) {
+        "sha1" -> HmacAlgorithm.SHA1
+        "sha256" -> HmacAlgorithm.SHA256
+        "sha512" -> HmacAlgorithm.SHA512
+        null -> null
+        else -> throw InvalidQRCodeException
+    }
+
+private val Uri.codeDigits: OtpDigits?
+    get() = when (getQueryParameter("digits")) {
+        "6" -> OtpDigits.Six
+        "8" -> OtpDigits.Eight
+        null -> null
+        else -> throw InvalidQRCodeException
+    }
+
+private val Uri.period: TotpPeriod?
+    get() = when (getQueryParameter("period")) {
+        "15" -> TotpPeriod.Fifteen
+        "30" -> TotpPeriod.Thirty
+        "60" -> TotpPeriod.Sixty
+        null -> null
+        else -> throw InvalidQRCodeException
+    }
+
+private val Uri.counter: HotpCounter
+    get() = getQueryParameter("counter")
+        ?.toLongOrNull()
+        ?.takeIf { it.isValid() }
+        ?: throw InvalidQRCodeException
+
+private fun Uri.validateScheme(): Unit =
+    if ("otpauth" != scheme) throw InvalidQRCodeException else Unit
+
+private val QRResult.QRSuccess.uri: Uri
+    get() = content
+        ?.let(Uri.Companion::parseOrNull)
+        ?: throw InvalidQRCodeException
