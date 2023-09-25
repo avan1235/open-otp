@@ -45,7 +45,7 @@ import ml.dev.kotlin.openotp.otp.HotpData
 import ml.dev.kotlin.openotp.otp.OtpData
 import ml.dev.kotlin.openotp.otp.TotpData
 import ml.dev.kotlin.openotp.otp.UserOtpCodeData
-import ml.dev.kotlin.openotp.ui.providerIcon
+import ml.dev.kotlin.openotp.ui.issuerIcon
 import ml.dev.kotlin.openotp.util.currentEpochMilliseconds
 import ml.dev.kotlin.openotp.util.letTrue
 import kotlin.math.roundToInt
@@ -165,19 +165,12 @@ private fun OtpCodeItem(
                 )
             }
         }
-
+        val itemNamePresentation = remember(item) { item.namePresentation() }
+        val itemIcon = remember(item) { item.issuer.issuerIcon }
         ListItem(
-            overlineContent = content@{
-                val issuer = item.issuer?.takeIf { it.isNotBlank() }
-                val accountName = item.accountName?.takeIf { it.isNotBlank() }
-                val text = when {
-                    issuer != null && accountName != null -> "$issuer: $accountName"
-                    issuer != null -> issuer
-                    accountName != null -> accountName
-                    else -> return@content
-                }
+            overlineContent = overlineContent@{
                 Text(
-                    text = text,
+                    text = itemNamePresentation ?: return@overlineContent,
                     fontSize = 12.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -199,7 +192,7 @@ private fun OtpCodeItem(
             },
             leadingContent = {
                 Icon(
-                    imageVector = item.issuer.providerIcon,
+                    imageVector = itemIcon,
                     contentDescription = "provider",
                     modifier = Modifier
                         .background(
@@ -288,6 +281,25 @@ private fun OtpData.codePresentation(timestamp: Long): String {
     val length = code.length
     val halfLength = length / 2
     return code.substring(0..<halfLength) + " " + code.substring(halfLength..<length)
+}
+
+private fun OtpData.namePresentation(): String? {
+    val issuer = issuer?.takeIf { it.isNotBlank() }
+    val accountName = accountName
+        ?.takeIf { it.isNotBlank() }
+        ?.run {
+            when {
+                startsWith("$issuer: ") -> removePrefix("$issuer: ")
+                startsWith("$issuer:") -> removePrefix("$issuer:")
+                else -> this
+            }
+        }
+    return when {
+        issuer != null && accountName != null -> "$issuer: $accountName"
+        issuer != null -> issuer
+        accountName != null -> accountName
+        else -> null
+    }
 }
 
 @Composable

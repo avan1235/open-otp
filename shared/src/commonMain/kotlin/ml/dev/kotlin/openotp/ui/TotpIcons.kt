@@ -7,7 +7,7 @@ import ml.dev.kotlin.openotp.ui.icons.*
 
 object OtpIcons
 
-val String?.providerIcon: ImageVector
+val String?.issuerIcon: ImageVector
     get() = when {
         this == null -> Icons.Default.Lock
         contains("amazon", ignoreCase = true) -> OtpIcons.Amazon
