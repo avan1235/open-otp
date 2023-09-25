@@ -1,3 +1,2 @@
 This version brings some small improvements:
-- use safe storage to store data
-- implement recognising different otp configuration params in QR codes
+- improve colors animation to sync after a few iterations
