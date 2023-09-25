@@ -22,6 +22,7 @@ kotlinx-serialization = "1.6.0"
 androidx-activity-compose = "1.7.2"
 androidx-appcompat-appcompat = "1.6.1"
 androidx-core-ktx = "1.12.0"
+androidx-crypto = "1.1.0-alpha05"
 
 kotlin = "1.9.10"
 gradle-plugin = "8.1.0"
@@ -35,7 +36,6 @@ versionCode = "5"
 
 [libraries]
 multiplatform-settings = { module = "com.russhwolf:multiplatform-settings", version.ref = "multiplatform-settings" }
-multiplatform-settings-coroutines = { module = "com.russhwolf:multiplatform-settings-coroutines", version.ref = "multiplatform-settings" }
 kotlincrypto-macs-hmac-sha1 = { module = "org.kotlincrypto.macs:hmac-sha1", version.ref = "kotlincrypto-macs" }
 kotlincrypto-macs-hmac-sha2 = { module = "org.kotlincrypto.macs:hmac-sha2", version.ref = "kotlincrypto-macs" }
 encoding-base32 = { module = "io.matthewnelson.encoding:base32", version.ref = "encoding-base32" }
@@ -52,6 +52,7 @@ kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity-compose" }
 androidx-appcompat-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat-appcompat" }
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core-ktx" }
+androidx-security-crypto = { module = "androidx.security:security-crypto", version.ref = "androidx-crypto" }
 
 quickie-bundled = { module = "io.github.g00fy2.quickie:quickie-bundled", version.ref = "quickie" }
 

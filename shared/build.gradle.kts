@@ -64,7 +64,6 @@ kotlin {
                 implementation(libs.uriKmp)
 
                 implementation(libs.multiplatform.settings)
-                implementation(libs.multiplatform.settings.coroutines)
 
                 implementation(libs.decompose)
                 implementation(libs.decompose.extensionsComposeJetbrains)
@@ -89,6 +88,7 @@ kotlin {
                 api(libs.androidx.core.ktx)
 
                 implementation(libs.quickie.bundled)
+                implementation(libs.androidx.security.crypto)
 
                 runtimeOnly(libs.kotlinx.coroutines.android)
             }
