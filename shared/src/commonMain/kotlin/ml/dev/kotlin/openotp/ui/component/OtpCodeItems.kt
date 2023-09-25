@@ -39,6 +39,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import ml.dev.kotlin.openotp.otp.HotpData
 import ml.dev.kotlin.openotp.otp.OtpData
@@ -130,29 +131,33 @@ private fun OtpCodeItem(
             is TotpData -> {
                 val initialColor = MaterialTheme.colorScheme.primary
                 val targetColor = MaterialTheme.colorScheme.error
-                val color = remember(initialColor) {
+                val color = remember(item, initialColor) {
                     Animatable(
                         initialValue = initialColor,
                         typeConverter = Color.VectorConverter(ColorSpaces.LinearSrgb),
                     )
                 }
-                LaunchedEffect(item.periodMillis, initialColor, targetColor) {
-                    val left = item.timeslotLeft(currentEpochMilliseconds())
-                    val offsetMillis = ((1.0 - left) * item.periodMillis).roundToInt()
-                    color.animateTo(
-                        targetValue = targetColor,
-                        animationSpec = infiniteRepeatable(
-                            animation = tween(
-                                durationMillis = item.periodMillis,
-                                easing = LinearEasing,
-                            ),
-                            repeatMode = RepeatMode.Restart,
-                            initialStartOffset = StartOffset(
-                                offsetMillis = offsetMillis,
-                                offsetType = StartOffsetType.FastForward,
+                LaunchedEffect(item, initialColor, targetColor) {
+                    while (isActive) {
+                        val left = item.timeslotLeft(currentEpochMilliseconds())
+                        val offsetMillis = ((1.0 - left) * item.periodMillis).roundToInt()
+                        color.animateTo(
+                            targetValue = targetColor,
+                            animationSpec = repeatable(
+                                iterations = SINGLE_COLOR_REPEAT_ITERATIONS,
+                                animation = tween(
+                                    durationMillis = item.periodMillis,
+                                    easing = LinearEasing,
+                                ),
+                                repeatMode = RepeatMode.Restart,
+                                initialStartOffset = StartOffset(
+                                    offsetMillis = offsetMillis,
+                                    offsetType = StartOffsetType.FastForward,
+                                )
                             )
                         )
-                    )
+                        color.snapTo(initialColor)
+                    }
                 }
                 TrailingData.CountDown(
                     percent = item.timeslotLeft(timestamp).toFloat(),
@@ -328,3 +333,5 @@ private fun ClipboardManager.copyOtpCode(item: OtpData, timestamp: Long) {
     val string = AnnotatedString(code)
     setText(string)
 }
+
+private const val SINGLE_COLOR_REPEAT_ITERATIONS: Int = 2 * 10

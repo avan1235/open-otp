@@ -19,7 +19,7 @@ enum class TotpPeriod(
 
     @Transient
     override val presentableName: String =
-        "$step ${unit.toString().toLowerCase(Locale.current)}${if (step > 0) "s" else ""}"
+        "$step ${unit.toString().toLowerCase(Locale.current)}${if (step != 1L) "s" else ""}"
 
     @Transient
     val millis: Long = Instant
