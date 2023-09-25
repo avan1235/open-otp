@@ -106,9 +106,35 @@ class MainComponentImpl(
                 val issuer = uri.getQueryParameter("issuer")
                 val name = uri.path?.removeIssuerFromPrefix(issuer)
 
+                val hmacAlgorithm = when (uri.getQueryParameter("algorithm")) {
+                    "sha1" -> HmacAlgorithm.SHA1
+                    "sha256" -> HmacAlgorithm.SHA256
+                    "sha512" -> HmacAlgorithm.SHA512
+                    null -> null
+                    else -> return notifyInvalidQRCodeData()
+                }
+                val codeDigits = when (uri.getQueryParameter("digits")) {
+                    "6" -> OtpDigits.Six
+                    "8" -> OtpDigits.Eight
+                    null -> null
+                    else -> return notifyInvalidQRCodeData()
+                }
+
                 when (type) {
                     OtpType.TOTP -> {
-                        val data = TotpData(issuer, name, secret, TotpConfig.DEFAULT)
+                        val period = when (uri.getQueryParameter("period")) {
+                            "15" -> TotpPeriod.Fifteen
+                            "30" -> TotpPeriod.Thirty
+                            "60" -> TotpPeriod.Sixty
+                            null -> null
+                            else -> return notifyInvalidQRCodeData()
+                        }
+                        val config = TotpConfig(
+                            period = period ?: TotpConfig.DEFAULT.period,
+                            codeDigits = codeDigits ?: TotpConfig.DEFAULT.codeDigits,
+                            hmacAlgorithm = hmacAlgorithm ?: TotpConfig.DEFAULT.hmacAlgorithm
+                        )
+                        val data = TotpData(issuer, name, secret, config)
                         val updatedData = userOtpCodeData.get() + data
                         userOtpCodeData.set(updatedData)
                     }
@@ -118,7 +144,11 @@ class MainComponentImpl(
                         if (!counter.isValid()) {
                             return notifyInvalidQRCodeData()
                         }
-                        val data = HotpData(issuer, name, secret, counter, HotpConfig.DEFAULT)
+                        val config = HotpConfig(
+                            codeDigits = codeDigits ?: HotpConfig.DEFAULT.codeDigits,
+                            hmacAlgorithm = hmacAlgorithm ?: HotpConfig.DEFAULT.hmacAlgorithm
+                        )
+                        val data = HotpData(issuer, name, secret, counter, config)
                         val updatedData = userOtpCodeData.get() + data
                         userOtpCodeData.set(updatedData)
 
