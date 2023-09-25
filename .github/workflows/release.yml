@@ -216,6 +216,7 @@ jobs:
           asset_content_type: application/x-authorware-bin
 
       - name: Upload release bundle file to Google Play
+        if: contains(env.PUBLISH_TO_GOOGLE_PLAY, 'true')
         uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
@@ -224,6 +225,8 @@ jobs:
           track: production
           releaseName: ${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}
           whatsNewDirectory: ./androidApp/distribution/
+        env:
+          PUBLISH_TO_GOOGLE_PLAY: ${{secrets.PUBLISH_TO_GOOGLE_PLAY}}
 
       - name: Commit version code changes
         run: |
