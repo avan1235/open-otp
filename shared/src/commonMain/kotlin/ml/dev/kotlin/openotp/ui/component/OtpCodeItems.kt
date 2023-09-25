@@ -39,12 +39,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import ml.dev.kotlin.openotp.otp.HotpData
 import ml.dev.kotlin.openotp.otp.OtpData
 import ml.dev.kotlin.openotp.otp.TotpData
 import ml.dev.kotlin.openotp.otp.UserOtpCodeData
+import ml.dev.kotlin.openotp.shared.OpenOtpResources
 import ml.dev.kotlin.openotp.ui.issuerIcon
 import ml.dev.kotlin.openotp.util.currentEpochMilliseconds
 import ml.dev.kotlin.openotp.util.letTrue
@@ -193,7 +195,7 @@ private fun OtpCodeItem(
             leadingContent = {
                 Icon(
                     imageVector = itemIcon,
-                    contentDescription = "provider",
+                    contentDescription = stringResource(OpenOtpResources.strings.issuer_icon_name),
                     modifier = Modifier
                         .background(
                             color = MaterialTheme.colorScheme.surfaceVariant,
@@ -240,7 +242,7 @@ private fun RestartButton(
     ) {
         Icon(
             imageVector = Icons.Default.RestartAlt,
-            contentDescription = "restart",
+            contentDescription = stringResource(OpenOtpResources.strings.restart_icon_name),
             modifier = Modifier.fillMaxSize(),
         )
     }
@@ -322,8 +324,8 @@ private fun DismissBackground(dismissState: DismissState) {
         EndToStart -> Icons.Default.Delete
     }
     val contentDescription = when (direction) {
-        StartToEnd -> "copy"
-        EndToStart -> "delete"
+        StartToEnd -> stringResource(OpenOtpResources.strings.copy_icon_name)
+        EndToStart -> stringResource(OpenOtpResources.strings.delete_icon_name)
     }
     val scale by animateFloatAsState(
         targetValue = if (dismissState.targetValue == Default) 0.75f else 1f

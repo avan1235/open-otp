@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+    <plural name="totp_period_second_unit_presentation">
+        <item quantity="zero">%s sekund</item>
+        <item quantity="one">%s sekunda</item>
+        <item quantity="two">%s sekundy</item>
+        <item quantity="many">%s sekund</item>
+        <item quantity="other">%s sekund</item>
+    </plural>
+</resources>

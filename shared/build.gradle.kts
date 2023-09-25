@@ -1,3 +1,4 @@
+import dev.icerock.gradle.MRVisibility
 import org.jetbrains.compose.ExperimentalComposeLibrary
 
 plugins {
@@ -7,6 +8,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.parcelize.darwin)
+    alias(libs.plugins.moko.resources)
 }
 
 kotlin {
@@ -74,6 +76,9 @@ kotlin {
                 implementation(libs.essenty.stateKeeper)
                 implementation(libs.essenty.parcelable)
                 implementation(libs.essenty.instanceKeeper)
+
+                api(libs.moko.resoures)
+                api(libs.moko.resoures.compose)
             }
         }
         val commonTest by getting {
@@ -82,6 +87,8 @@ kotlin {
             }
         }
         val androidMain by getting {
+            dependsOn(commonMain)
+
             dependencies {
                 api(libs.androidx.activity.compose)
                 api(libs.androidx.appcompat.appcompat)
@@ -103,6 +110,8 @@ kotlin {
             iosSimulatorArm64Main.dependsOn(this)
         }
         val desktopMain by getting {
+            dependsOn(commonMain)
+
             dependencies {
                 implementation(compose.desktop.common)
 
@@ -130,4 +139,12 @@ android {
     kotlin {
         jvmToolchain(17)
     }
+}
+
+multiplatformResources {
+    multiplatformResourcesPackage = "ml.dev.kotlin.openotp.shared"
+    multiplatformResourcesClassName = "OpenOtpResources"
+    multiplatformResourcesVisibility = MRVisibility.Internal
+    iosBaseLocalizationRegion = "en"
+    multiplatformResourcesSourceSet = "commonMain"
 }

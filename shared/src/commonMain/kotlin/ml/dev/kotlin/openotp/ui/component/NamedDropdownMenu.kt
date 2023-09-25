@@ -14,6 +14,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import dev.icerock.moko.resources.compose.stringResource
+import ml.dev.kotlin.openotp.shared.OpenOtpResources
 import ml.dev.kotlin.openotp.ui.theme.Shapes
 import ml.dev.kotlin.openotp.ui.theme.Typography
 import ml.dev.kotlin.openotp.util.Named
@@ -34,7 +36,7 @@ internal fun <T : Named> NamedDropdownMenu(
             contentAlignment = Alignment.CenterEnd
         ) {
             Text(
-                text = selected.presentableName,
+                text = selected.presentableName(),
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(Shapes.medium)
@@ -46,7 +48,7 @@ internal fun <T : Named> NamedDropdownMenu(
             )
             Icon(
                 imageVector = Icons.Default.ArrowDropDown,
-                contentDescription = "dropdown",
+                contentDescription = stringResource(OpenOtpResources.strings.dropdown_icon_name),
                 modifier = Modifier.padding(16.dp),
                 tint = contentColorFor(MaterialTheme.colorScheme.secondary),
             )
@@ -62,7 +64,7 @@ internal fun <T : Named> NamedDropdownMenu(
                 DropdownMenuItem(
                     text = {
                         Text(
-                            text = it.presentableName,
+                            text = it.presentableName(),
                             color = contentColorFor(MaterialTheme.colorScheme.tertiary),
                             style = Typography.titleMedium,
                         )

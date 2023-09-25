@@ -17,8 +17,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.zIndex
+import dev.icerock.moko.resources.compose.stringResource
 import ml.dev.kotlin.openotp.otp.OtpData
 import ml.dev.kotlin.openotp.otp.UserOtpCodeData
+import ml.dev.kotlin.openotp.shared.OpenOtpResources
 
 @Composable
 internal fun FilteredOtpCodeItems(
@@ -51,20 +53,27 @@ internal fun FilteredOtpCodeItems(
             onActiveChange = onSearchBarActiveChange,
             placeholder = {
                 Text(
-                    text = "Search...",
+                    text = stringResource(OpenOtpResources.strings.search_field),
                     style = searchBarTextStyle(enabled = false, interactionSource)
                 )
             },
             leadingIcon = {
                 when (searchActive) {
-                    false -> Icon(Icons.Default.Search, "search")
+                    false -> Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = stringResource(OpenOtpResources.strings.search_icon_name),
+                    )
+
                     true -> IconButton(
                         onClick = {
                             onSearchBarActiveChange(false)
                             searchQuery = ""
                         },
                     ) {
-                        Icon(Icons.Default.ArrowBack, "back")
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = stringResource(OpenOtpResources.strings.back_icon_name)
+                        )
                     }
                 }
             },
@@ -73,7 +82,10 @@ internal fun FilteredOtpCodeItems(
                     IconButton(
                         onClick = { searchQuery = "" }
                     ) {
-                        Icon(Icons.Default.Close, "remove")
+                        Icon(
+                            imageVector = Icons.Default.Close,
+                            contentDescription = stringResource(OpenOtpResources.strings.remove_icon_name),
+                        )
                     }
                 }
             },

@@ -12,10 +12,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
+import dev.icerock.moko.resources.compose.stringResource
 import ml.dev.kotlin.openotp.component.MainComponent
 import ml.dev.kotlin.openotp.otp.OtpData
 import ml.dev.kotlin.openotp.otp.UserOtpCodeData
 import ml.dev.kotlin.openotp.qr.rememberQRCodeScanner
+import ml.dev.kotlin.openotp.shared.OpenOtpResources
 import ml.dev.kotlin.openotp.ui.component.AddActionButton
 import ml.dev.kotlin.openotp.ui.component.FilteredOtpCodeItems
 import ml.dev.kotlin.openotp.ui.component.OtpCodeItems
@@ -79,7 +81,7 @@ private fun AllOtpCodeItems(
                 if (codeData.isNotEmpty()) {
                     OtpCodeItems(codeData, timestamp, onOtpCodeDataDismiss, onRestartCode, listState)
                 } else {
-                    Text("Add New Keys")
+                    Text(text = stringResource(OpenOtpResources.strings.add_new_keys))
                 }
             }
         }

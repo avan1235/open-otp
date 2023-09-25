@@ -15,6 +15,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import dev.icerock.moko.resources.compose.stringResource
+import ml.dev.kotlin.openotp.shared.OpenOtpResources
 
 @Composable
 internal fun AddActionButton(
@@ -35,6 +37,7 @@ internal fun AddActionButton(
             contentAlignment = Alignment.BottomEnd,
         ) {
             val fabState = rememberMultiFabState()
+            val buttonText = stringResource(OpenOtpResources.strings.add_button_name)
             MultiFloatingActionButton(
                 items = listOfNotNull(
                     MultiFabItem(
@@ -49,7 +52,7 @@ internal fun AddActionButton(
                 fabIcon = FabIcon(
                     icon = Icons.Default.Add,
                     iconRotate = 45f,
-                    text = { "Add" }
+                    text = { buttonText }
                 ),
                 expanded = expanded && !fabState.value.isExpanded(),
                 containerColor = MaterialTheme.colorScheme.tertiary,

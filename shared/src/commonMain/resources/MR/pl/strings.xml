@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+    <string name="add_new_keys">Dodaj Nowe Klucze</string>
+
+    <string name="invalid_qr_code">Nieprawidłowy kod QR</string>
+    <string name="missing_camera_permissions">Brak uprawnień do używania kamery</string>
+
+    <string name="issuer_icon_name">Wystawca</string>
+    <string name="search_icon_name">Wyszukaj</string>
+    <string name="back_icon_name">Cofnij</string>
+    <string name="remove_icon_name">Usuń</string>
+    <string name="restart_icon_name">Zrestartuj</string>
+    <string name="copy_icon_name">Skopiuj</string>
+    <string name="delete_icon_name">Usuń</string>
+    <string name="dropdown_icon_name">Wybierz z wielu opcji</string>
+
+    <string name="search_field">Wyszukaj...</string>
+    <string name="secret_field">sekret</string>
+    <string name="counter_field">licznik</string>
+    <string name="invalid_field_name_provided_formatted">Podano nieprawidłowy %s</string>
+
+    <string name="account_details_group_name">Szczegóły konta</string>
+    <string name="advanced_settings_group_name">Zaawansowane ustawienia</string>
+
+    <string name="issuer_field_name">Wystawca</string>
+    <string name="account_name_field_name">Nazwa konta</string>
+    <string name="secret_field_name">Sekret</string>
+    <string name="password_field_name">Hasło</string>
+    <string name="algorithm_field_name">Algorytm</string>
+    <string name="digits_field_name">Cyfry</string>
+    <string name="period_field_name">Okres</string>
+    <string name="counter_field_name">Licznik</string>
+
+    <string name="add_button_name">Dodaj</string>
+    <string name="save_button_name">Zapisz</string>
+    <string name="cancel_button_name">Anuluj</string>
+
+    <string name="totp_presentation">TOTP - Czasowy</string>
+    <string name="hotp_presentation">HOTP - Manualny</string>
+</resources>

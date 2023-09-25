@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 import ml.dev.kotlin.openotp.USER_OTP_CODE_DATA_MODULE_QUALIFIER
 import ml.dev.kotlin.openotp.otp.*
 import ml.dev.kotlin.openotp.qr.QRResult
+import ml.dev.kotlin.openotp.shared.OpenOtpResources
 import ml.dev.kotlin.openotp.util.ValueSettings
 import ml.dev.kotlin.openotp.util.currentEpochMilliseconds
 import ml.dev.kotlin.openotp.util.isValidBase32Secret
@@ -93,11 +94,11 @@ class MainComponentImpl(
     }
 
     private fun notifyInvalidQRCodeData() {
-        toast("Invalid QR code")
+        toast(message = stringResource(OpenOtpResources.strings.invalid_qr_code))
     }
 
     private fun notifyMissingCameraPermissions() {
-        toast("Missing camera permissions")
+        toast(message = stringResource(OpenOtpResources.strings.missing_camera_permissions))
     }
 
     override fun onSearchBarActiveChange(isActive: Boolean) {

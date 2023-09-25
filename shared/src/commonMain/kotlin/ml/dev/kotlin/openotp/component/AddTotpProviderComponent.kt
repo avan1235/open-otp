@@ -7,6 +7,7 @@ import com.arkivanov.decompose.value.operator.map
 import com.arkivanov.decompose.value.update
 import ml.dev.kotlin.openotp.USER_OTP_CODE_DATA_MODULE_QUALIFIER
 import ml.dev.kotlin.openotp.otp.*
+import ml.dev.kotlin.openotp.shared.OpenOtpResources
 import ml.dev.kotlin.openotp.util.ValueSettings
 import ml.dev.kotlin.openotp.util.isValidBase32Secret
 import org.koin.core.component.get
@@ -53,10 +54,11 @@ abstract class AddOtpProviderComponentImpl(
     protected val secureStorage: ValueSettings<UserOtpCodeData> = get(USER_OTP_CODE_DATA_MODULE_QUALIFIER)
 
     protected fun notifyInvalid(fieldName: String) {
-        toast("Invalid $fieldName provided")
+        toast(message = stringResource(OpenOtpResources.strings.invalid_field_name_provided_formatted, fieldName))
     }
 
-    protected fun notifyInvalidSecret() = notifyInvalid("secret")
+    protected fun notifyInvalidSecret() =
+        notifyInvalid(fieldName = stringResource(OpenOtpResources.strings.secret_field))
 
     override fun onSaveClicked() {
         navigateOnSaveClicked()
@@ -232,5 +234,6 @@ class AddHotpProviderComponentImpl(
         super.onSaveClicked()
     }
 
-    private fun notifyInvalidCounter() = notifyInvalid("counter")
+    private fun notifyInvalidCounter() =
+        notifyInvalid(fieldName = stringResource(OpenOtpResources.strings.counter_field))
 }

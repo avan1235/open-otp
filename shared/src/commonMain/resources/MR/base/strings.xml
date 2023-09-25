@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+    <string name="add_new_keys">Add New Keys</string>
+
+    <string name="invalid_qr_code">Invalid QR code</string>
+    <string name="missing_camera_permissions">Missing camera permissions</string>
+
+    <string name="issuer_icon_name">Issuer</string>
+    <string name="search_icon_name">Search</string>
+    <string name="back_icon_name">Back</string>
+    <string name="remove_icon_name">Remove</string>
+    <string name="restart_icon_name">Restart</string>
+    <string name="copy_icon_name">Copy</string>
+    <string name="delete_icon_name">Delete</string>
+    <string name="dropdown_icon_name">Select from multiple options</string>
+
+    <string name="search_field">Search...</string>
+    <string name="secret_field">secret</string>
+    <string name="counter_field">counter</string>
+    <string name="invalid_field_name_provided_formatted">Invalid %s provided</string>
+
+    <string name="account_details_group_name">Account Details</string>
+    <string name="advanced_settings_group_name">Advanced Settings</string>
+
+    <string name="issuer_field_name">Issuer</string>
+    <string name="account_name_field_name">Account Name</string>
+    <string name="secret_field_name">Secret</string>
+    <string name="password_field_name">Password</string>
+    <string name="algorithm_field_name">Algorithm</string>
+    <string name="digits_field_name">Digits</string>
+    <string name="period_field_name">Period</string>
+    <string name="counter_field_name">Counter</string>
+
+    <string name="add_button_name">Add</string>
+    <string name="save_button_name">Save</string>
+    <string name="cancel_button_name">Cancel</string>
+
+    <string name="totp_presentation">TOTP - Time Based</string>
+    <string name="hotp_presentation">HOTP - Counter Based</string>
+</resources>

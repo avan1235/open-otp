@@ -6,4 +6,5 @@ plugins {
     alias(libs.plugins.android.library) apply false
     alias(libs.plugins.compose.multiplatform) apply false
     alias(libs.plugins.parcelize.darwin) apply false
+    alias(libs.plugins.moko.resources) apply false
 }

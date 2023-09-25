@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+    <plural name="totp_period_second_unit_presentation">
+        <item quantity="zero">%s seconds</item>
+        <item quantity="one">%s second</item>
+        <item quantity="many">%s seconds</item>
+        <item quantity="other">%s seconds</item>
+    </plural>
+</resources>
