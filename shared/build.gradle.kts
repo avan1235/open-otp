@@ -108,6 +108,10 @@ kotlin {
             iosX64Main.dependsOn(this)
             iosArm64Main.dependsOn(this)
             iosSimulatorArm64Main.dependsOn(this)
+
+            dependencies {
+                implementation(libs.parcelize.darwinRuntime)
+            }
         }
         val desktopMain by getting {
             dependsOn(commonMain)

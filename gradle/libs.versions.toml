@@ -63,7 +63,7 @@ kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 moko-resoures = { module = "dev.icerock.moko:resources", version.ref = "moko-resources" }
 moko-resoures-compose = { module = "dev.icerock.moko:resources-compose", version.ref = "moko-resources" }
 multiplatform-settings = { module = "com.russhwolf:multiplatform-settings", version.ref = "multiplatform-settings" }
-parcelize-darwinRuntime = { module = "com.arkivanov.parcelize.darwin:runtime", version.ref = "essenty" }
+parcelize-darwinRuntime = { module = "com.arkivanov.parcelize.darwin:runtime", version.ref = "parcelize-darwin" }
 quickie-bundled = { module = "io.github.g00fy2.quickie:quickie-bundled", version.ref = "quickie" }
 security-crypto-ktx = "androidx.security:security-crypto-ktx:1.0.0"
 uriKmp = { module = "com.eygraber:uri-kmp", version.ref = "uri-kmp" }
