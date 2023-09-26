@@ -14,7 +14,7 @@ moko-resources = "0.23.0"
 
 compose = "1.5.1"
 #noinspection GradleDependency
-decompose = "2.0.2-compose-experimental"
+decompose = "2.2.0-compose-experimental-alpha01"
 
 kotlinx-datetime = "0.4.1"
 kotlinx-coroutines = "1.7.3"
