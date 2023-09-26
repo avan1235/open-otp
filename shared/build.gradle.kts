@@ -38,6 +38,7 @@ kotlin {
                 optIn("androidx.compose.foundation.layout.ExperimentalLayoutApi")
                 optIn("androidx.compose.material3.ExperimentalMaterial3Api")
                 optIn("com.arkivanov.decompose.ExperimentalDecomposeApi")
+                optIn("com.google.accompanist.permissions.ExperimentalPermissionsApi")
             }
         }
         val commonMain by getting {
@@ -94,8 +95,14 @@ kotlin {
                 api(libs.androidx.appcompat.appcompat)
                 api(libs.androidx.core.ktx)
 
-                implementation(libs.quickie.bundled)
+                implementation(libs.androidx.camera)
+                implementation(libs.androidx.cameraLifecycle)
+                implementation(libs.androidx.cameraPreview)
+
+                implementation(libs.mlkit.barcodeScanning)
                 implementation(libs.androidx.security.crypto)
+
+                implementation(libs.accompanist.permissions)
 
                 runtimeOnly(libs.kotlinx.coroutines.android)
             }

@@ -19,6 +19,7 @@ import ml.dev.kotlin.openotp.component.OpenOtpAppComponent.Child
 import ml.dev.kotlin.openotp.otp.OtpData
 import ml.dev.kotlin.openotp.ui.screen.AddProviderScreen
 import ml.dev.kotlin.openotp.ui.screen.MainScreen
+import ml.dev.kotlin.openotp.ui.screen.ScanQRCodeScreen
 import ml.dev.kotlin.openotp.ui.theme.OpenOtpTheme
 import ml.dev.kotlin.openotp.util.ValueSettings
 import org.koin.compose.koinInject
@@ -47,7 +48,8 @@ internal fun OpenOtpApp(component: OpenOtpAppComponent) {
                     snackbarHost = { SnackbarHost(snackbarHostState) },
                 ) {
                     when (val instance = child.instance) {
-                        is Child.Main -> MainScreen(mainComponent = instance.component)
+                        is Child.Main -> MainScreen(instance.component)
+                        is Child.ScanQRCode -> ScanQRCodeScreen(instance.component)
                         is Child.AddProvider -> AddProviderScreen(instance.totpComponent, instance.hotpComponent)
                     }
                 }

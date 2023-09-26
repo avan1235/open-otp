@@ -24,3 +24,8 @@ inline fun <T> runCatchingOrNull(action: () -> T): T? = try {
 } catch (_: Throwable) {
     null
 }
+
+inline fun <T, U : Any> runIfNonNull(t: T?, crossinline action: (T) -> U): U? =
+    if (t != null) action(t) else null
+
+inline fun lambda(noinline f: () -> Unit): () -> Unit = f

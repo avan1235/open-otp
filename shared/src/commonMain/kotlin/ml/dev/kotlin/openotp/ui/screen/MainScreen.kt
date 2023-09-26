@@ -4,10 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -16,15 +13,30 @@ import dev.icerock.moko.resources.compose.stringResource
 import ml.dev.kotlin.openotp.component.MainComponent
 import ml.dev.kotlin.openotp.otp.OtpData
 import ml.dev.kotlin.openotp.otp.UserOtpCodeData
-import ml.dev.kotlin.openotp.qr.rememberQRCodeScanner
+import ml.dev.kotlin.openotp.qr.CameraPermission.Denied
+import ml.dev.kotlin.openotp.qr.CameraPermission.Granted
+import ml.dev.kotlin.openotp.qr.rememberCameraPermissionState
 import ml.dev.kotlin.openotp.shared.OpenOtpResources
 import ml.dev.kotlin.openotp.ui.component.AddActionButton
 import ml.dev.kotlin.openotp.ui.component.FilteredOtpCodeItems
 import ml.dev.kotlin.openotp.ui.component.OtpCodeItems
+import ml.dev.kotlin.openotp.util.lambda
+import ml.dev.kotlin.openotp.util.runIfNonNull
 
 @Composable
 internal fun MainScreen(mainComponent: MainComponent) {
-    val onScanClick = rememberQRCodeScanner(mainComponent::onQRCodeScanned)
+    val cameraPermissionState = rememberCameraPermissionState()
+    val navigateToScanQRCodeWhenCameraPermissionChanged by mainComponent.navigateToScanQRCodeWhenCameraPermissionChanged.subscribeAsState()
+
+    if (cameraPermissionState != null) {
+        val isGranted = cameraPermissionState.permission.isGranted
+        LaunchedEffect(isGranted) {
+            if (isGranted && navigateToScanQRCodeWhenCameraPermissionChanged) {
+                mainComponent.onCameraPermissionGranted()
+                mainComponent.onScanQRCodeClick()
+            }
+        }
+    }
 
     val listState = rememberLazyListState()
     val isFirstListItemVisible = remember {
@@ -33,12 +45,12 @@ internal fun MainScreen(mainComponent: MainComponent) {
 
     val codeData by mainComponent.codeData.subscribeAsState()
     val timestamp by mainComponent.timestamp.subscribeAsState()
-    val searchActive by mainComponent.isSearchActive.subscribeAsState()
+    val isSearchActive by mainComponent.isSearchActive.subscribeAsState()
 
     FilteredOtpCodeItems(
         codeData = codeData,
         timestamp = timestamp,
-        searchActive = searchActive,
+        isSearchActive = isSearchActive,
         onOtpCodeDataDismiss = mainComponent::onOtpCodeDataRemove,
         onSearchBarActiveChange = mainComponent::onSearchBarActiveChange,
         onRestartCode = mainComponent::onOtpCodeDataRestart,
@@ -52,8 +64,18 @@ internal fun MainScreen(mainComponent: MainComponent) {
     )
     AddActionButton(
         expanded = isFirstListItemVisible.value,
-        visible = !searchActive,
-        onScanQRCodeClick = onScanClick,
+        visible = !isSearchActive,
+        onScanQRCodeClick = runIfNonNull(cameraPermissionState) {
+            lambda {
+                when (it.permission) {
+                    Granted -> mainComponent.onScanQRCodeClick()
+                    Denied -> {
+                        mainComponent.onRequestedCameraPermission()
+                        it.launchRequest()
+                    }
+                }
+            }
+        },
         onAddWithTextClick = mainComponent::onAddProviderClick,
     )
 }

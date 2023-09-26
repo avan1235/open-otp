@@ -26,7 +26,7 @@ import ml.dev.kotlin.openotp.shared.OpenOtpResources
 internal fun FilteredOtpCodeItems(
     codeData: UserOtpCodeData,
     timestamp: Long,
-    searchActive: Boolean,
+    isSearchActive: Boolean,
     onOtpCodeDataDismiss: (OtpData) -> Boolean,
     onSearchBarActiveChange: (Boolean) -> Unit,
     onRestartCode: (OtpData) -> Unit,
@@ -49,7 +49,7 @@ internal fun FilteredOtpCodeItems(
         SearchBar(
             query = searchQuery,
             onQueryChange = { searchQuery = it },
-            active = searchActive,
+            active = isSearchActive,
             onActiveChange = onSearchBarActiveChange,
             placeholder = {
                 Text(
@@ -58,7 +58,7 @@ internal fun FilteredOtpCodeItems(
                 )
             },
             leadingIcon = {
-                when (searchActive) {
+                when (isSearchActive) {
                     false -> Icon(
                         imageVector = Icons.Default.Search,
                         contentDescription = stringResource(OpenOtpResources.strings.search_icon_name),
@@ -78,7 +78,7 @@ internal fun FilteredOtpCodeItems(
                 }
             },
             trailingIcon = {
-                if (searchActive && searchQuery.isNotEmpty()) {
+                if (isSearchActive && searchQuery.isNotEmpty()) {
                     IconButton(
                         onClick = { searchQuery = "" }
                     ) {

@@ -1,4 +1,5 @@
 [versions]
+accompanistPermissions = "0.32.0"
 # @keep
 android-compileSdk = "34"
 # @keep
@@ -10,7 +11,9 @@ androidx-appcompat-appcompat = "1.6.1"
 androidx-core-ktx = "1.12.0"
 # @pin
 androidx-crypto = "1.1.0-alpha05"
+barcodeScanning = "17.2.0"
 buffer = "1.3.6"
+cameraX = "1.2.3"
 compose = "1.5.2"
 decompose = "2.2.0-compose-experimental-alpha01"
 encoding-base32 = "2.0.0"
@@ -30,7 +33,6 @@ kotlinx-serialization = "1.6.0"
 moko-resources = "0.23.0"
 multiplatform-settings = "1.0.0"
 parcelize-darwin = "0.2.2"
-quickie = "1.8.0"
 uri-kmp = "0.0.14"
 uuid = "0.8.1"
 version-catalog-update = "0.8.1"
@@ -38,8 +40,12 @@ version-catalog-update = "0.8.1"
 versionCode = "8"
 
 [libraries]
+accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity-compose" }
 androidx-appcompat-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat-appcompat" }
+androidx-camera = { module = "androidx.camera:camera-camera2", version.ref = "cameraX" }
+androidx-cameraLifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "cameraX" }
+androidx-cameraPreview = { module = "androidx.camera:camera-view", version.ref = "cameraX" }
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core-ktx" }
 androidx-security-crypto = { module = "androidx.security:security-crypto", version.ref = "androidx-crypto" }
 buffer = { module = "com.ditchoom:buffer", version.ref = "buffer" }
@@ -59,11 +65,11 @@ kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutine
 kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
+mlkit-barcodeScanning = { module = "com.google.mlkit:barcode-scanning", version.ref = "barcodeScanning" }
 moko-resoures = { module = "dev.icerock.moko:resources", version.ref = "moko-resources" }
 moko-resoures-compose = { module = "dev.icerock.moko:resources-compose", version.ref = "moko-resources" }
 multiplatform-settings = { module = "com.russhwolf:multiplatform-settings", version.ref = "multiplatform-settings" }
 parcelize-darwinRuntime = { module = "com.arkivanov.parcelize.darwin:runtime", version.ref = "parcelize-darwin" }
-quickie-bundled = { module = "io.github.g00fy2.quickie:quickie-bundled", version.ref = "quickie" }
 uriKmp = { module = "com.eygraber:uri-kmp", version.ref = "uri-kmp" }
 uuid = { module = "com.benasher44:uuid", version.ref = "uuid" }
 

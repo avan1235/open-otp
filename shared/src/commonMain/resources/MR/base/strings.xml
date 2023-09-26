@@ -4,6 +4,7 @@
 
     <string name="invalid_qr_code">Invalid QR code</string>
     <string name="missing_camera_permissions">Missing camera permissions</string>
+    <string name="scan_qr_code">Scan QR Code</string>
 
     <string name="issuer_icon_name">Issuer</string>
     <string name="search_icon_name">Search</string>

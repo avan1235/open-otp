@@ -15,6 +15,7 @@ interface OpenOtpAppComponent {
 
     sealed class Child {
         class Main(val component: MainComponent) : Child()
+        class ScanQRCode(val component: ScanQRCodeComponent) : Child()
         class AddProvider(
             val totpComponent: AddTotpProviderComponent,
             val hotpComponent: AddHotpProviderComponent,
@@ -39,7 +40,17 @@ class OpenOtpAppComponentImpl(
         is Config.Main -> Child.Main(
             MainComponentImpl(
                 componentContext = childComponentContext,
+                navigateOnScanQRCode = { navigation.push(Config.ScanQRCode) },
                 navigateOnAddProvider = { navigation.push(Config.AddProvider) },
+            )
+        )
+
+        is Config.ScanQRCode -> Child.ScanQRCode(
+            ScanQRCodeComponentImpl(
+                componentContext = childComponentContext,
+                navigateOnCancel = { message ->
+                    navigation.pop { message?.let(::toast) }
+                },
             )
         )
 
@@ -64,6 +75,9 @@ class OpenOtpAppComponentImpl(
     private sealed interface Config : Parcelable {
         @Parcelize
         data object Main : Config
+
+        @Parcelize
+        data object ScanQRCode : Config
 
         @Parcelize
         data object AddProvider : Config
