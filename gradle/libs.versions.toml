@@ -1,93 +1,82 @@
 [versions]
-uri-kmp = "0.0.14"
-kermit = "2.0.0-RC5"
-koin = "3.5.0"
-koin-compose = "1.1.0"
-uuid = "0.7.0"
-multiplatform-settings = "1.0.0"
-essenty = "1.1.0"
-quickie = "1.8.0"
-kotlincrypto-macs = "0.3.0"
-encoding-base32 = "2.0.0"
-buffer = "1.3.1"
-moko-resources = "0.23.0"
-
-compose = "1.5.1"
-decompose = "2.2.0-compose-experimental-alpha01"
-
-kotlinx-datetime = "0.4.1"
-kotlinx-coroutines = "1.7.3"
-kotlinx-serialization = "1.6.0"
-
+# @keep
+android-compileSdk = "34"
+# @keep
+android-minSdk = "26"
+# @keep
+android-targetSdk = "34"
 androidx-activity-compose = "1.7.2"
 androidx-appcompat-appcompat = "1.6.1"
 androidx-core-ktx = "1.12.0"
 # @pin
 androidx-crypto = "1.1.0-alpha05"
-
-# @pin
-kotlin = "1.9.10"
+buffer = "1.3.1"
+compose = "1.5.1"
+decompose = "2.2.0-compose-experimental-alpha01"
+encoding-base32 = "2.0.0"
+essenty = "1.1.0"
 # @pin
 gradle-plugin = "8.1.0"
-parcelize-darwin = "0.2.1"
 gradle-versions = "0.48.0"
+kermit = "2.0.0-RC5"
+koin = "3.5.0"
+koin-compose = "1.1.0"
+# @pin
+kotlin = "1.9.10"
+kotlincrypto-macs = "0.3.0"
+kotlinx-coroutines = "1.7.3"
+kotlinx-datetime = "0.4.1"
+kotlinx-serialization = "1.6.0"
+moko-resources = "0.23.0"
+multiplatform-settings = "1.0.0"
+parcelize-darwin = "0.2.1"
+quickie = "1.8.0"
+uri-kmp = "0.0.14"
+uuid = "0.7.0"
 version-catalog-update = "0.8.1"
-
-# @keep
-android-compileSdk = "34"
-# @keep
-android-targetSdk = "34"
-# @keep
-android-minSdk = "26"
-
 # @keep
 versionCode = "8"
 
 [libraries]
-multiplatform-settings = { module = "com.russhwolf:multiplatform-settings", version.ref = "multiplatform-settings" }
-kotlincrypto-macs-hmac-sha1 = { module = "org.kotlincrypto.macs:hmac-sha1", version.ref = "kotlincrypto-macs" }
-kotlincrypto-macs-hmac-sha2 = { module = "org.kotlincrypto.macs:hmac-sha2", version.ref = "kotlincrypto-macs" }
-encoding-base32 = { module = "io.matthewnelson.encoding:base32", version.ref = "encoding-base32" }
-uuid = { module = "com.benasher44:uuid", version.ref = "uuid" }
-buffer = { module = "com.ditchoom:buffer", version.ref = "buffer" }
-uriKmp = { module = "com.eygraber:uri-kmp", version.ref = "uri-kmp" }
-kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
-compose-ui-ui = { module = "androidx.compose.ui:ui", version.ref = "compose" }
-moko-resoures = { module = "dev.icerock.moko:resources", version.ref = "moko-resources" }
-moko-resoures-compose = { module = "dev.icerock.moko:resources-compose", version.ref = "moko-resources" }
-kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
-kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
-kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
-kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
-
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity-compose" }
 androidx-appcompat-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat-appcompat" }
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core-ktx" }
 androidx-security-crypto = { module = "androidx.security:security-crypto", version.ref = "androidx-crypto" }
-
-quickie-bundled = { module = "io.github.g00fy2.quickie:quickie-bundled", version.ref = "quickie" }
-
-koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
-koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin-compose" }
-
+buffer = { module = "com.ditchoom:buffer", version.ref = "buffer" }
+compose-ui-ui = { module = "androidx.compose.ui:ui", version.ref = "compose" }
 decompose = { module = "com.arkivanov.decompose:decompose", version.ref = "decompose" }
 decompose-extensionsComposeJetbrains = { module = "com.arkivanov.decompose:extensions-compose-jetbrains", version.ref = "decompose" }
-
-essenty-parcelable = { module = "com.arkivanov.essenty:parcelable", version.ref = "essenty" }
-essenty-lifecycle = { module = "com.arkivanov.essenty:lifecycle", version.ref = "essenty" }
-essenty-stateKeeper = { module = "com.arkivanov.essenty:state-keeper", version.ref = "essenty" }
+encoding-base32 = { module = "io.matthewnelson.encoding:base32", version.ref = "encoding-base32" }
 essenty-instanceKeeper = { module = "com.arkivanov.essenty:instance-keeper", version.ref = "essenty" }
+essenty-lifecycle = { module = "com.arkivanov.essenty:lifecycle", version.ref = "essenty" }
+essenty-parcelable = { module = "com.arkivanov.essenty:parcelable", version.ref = "essenty" }
+essenty-stateKeeper = { module = "com.arkivanov.essenty:state-keeper", version.ref = "essenty" }
+kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
+koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin-compose" }
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
+kotlincrypto-macs-hmac-sha1 = { module = "org.kotlincrypto.macs:hmac-sha1", version.ref = "kotlincrypto-macs" }
+kotlincrypto-macs-hmac-sha2 = { module = "org.kotlincrypto.macs:hmac-sha2", version.ref = "kotlincrypto-macs" }
+kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
+moko-resoures = { module = "dev.icerock.moko:resources", version.ref = "moko-resources" }
+moko-resoures-compose = { module = "dev.icerock.moko:resources-compose", version.ref = "moko-resources" }
+multiplatform-settings = { module = "com.russhwolf:multiplatform-settings", version.ref = "multiplatform-settings" }
 parcelize-darwinRuntime = { module = "com.arkivanov.parcelize.darwin:runtime", version.ref = "essenty" }
-security-crypto-ktx = { group = "androidx.security", name = "security-crypto-ktx", version = "1.0.0" }
+quickie-bundled = { module = "io.github.g00fy2.quickie:quickie-bundled", version.ref = "quickie" }
+security-crypto-ktx = "androidx.security:security-crypto-ktx:1.0.0"
+uriKmp = { module = "com.eygraber:uri-kmp", version.ref = "uri-kmp" }
+uuid = { module = "com.benasher44:uuid", version.ref = "uuid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "gradle-plugin" }
 android-library = { id = "com.android.library", version.ref = "gradle-plugin" }
+compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "compose" }
+gradle-versions = { id = "com.github.ben-manes.versions", version.ref = "gradle-versions" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "compose" }
-parcelize-darwin = { id = "com.arkivanov.parcelize.darwin", version.ref = "parcelize-darwin" }
 moko-resources = { id = "dev.icerock.mobile.multiplatform-resources", version.ref = "moko-resources" }
-gradle-versions = { id = "com.github.ben-manes.versions", version.ref = "gradle-versions" }
+parcelize-darwin = { id = "com.arkivanov.parcelize.darwin", version.ref = "parcelize-darwin" }
 version-catalog-update = { id = "nl.littlerobots.version-catalog-update", version.ref = "version-catalog-update" }
