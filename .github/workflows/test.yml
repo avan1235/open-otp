@@ -1,0 +1,112 @@
+name: Test
+
+on:
+  pull_request:
+    types: [ review_requested ]
+
+jobs:
+  build-desktop:
+    name: Build desktop release
+    permissions: write-all
+    strategy:
+      matrix:
+        platform: [ ubuntu-20.04, windows-2019, macos-12 ]
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - name: Checkout to push branch
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}
+          fetch-depth: 0
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v1
+        with:
+          java-version: 17
+
+      - name: Build distribution file
+        if: job.status == 'success'
+        run: |
+          export GRADLE_USER_HOME=$(pwd)/.gradle
+          chmod +x ./gradlew
+          ./gradlew shared:cleanDesktopTest shared:desktopTest
+          ./gradlew desktopApp:packageReleaseDistributionForCurrentOS
+        shell: bash
+
+      - name: Upload deb artifact file to workflow run results
+        uses: actions/upload-artifact@v2
+        if: runner.os == 'Linux'
+        with:
+          name: OpenOTP.deb
+          path: desktopApp/build/compose/binaries/main-release/deb/openotp_1.0.0-1_amd64.deb
+
+      - name: Upload msi installer file to workflow run results
+        uses: actions/upload-artifact@v2
+        if: runner.os == 'Windows'
+        with:
+          name: OpenOTP.msi
+          path: desktopApp/build/compose/binaries/main-release/msi/OpenOTP.msi
+
+      - name: Upload dmg image file to workflow run results
+        uses: actions/upload-artifact@v2
+        if: runner.os == 'macOS'
+        with:
+          name: OpenOTP.dmg
+          path: desktopApp/build/compose/binaries/main-release/dmg/OpenOTP.dmg
+
+  build-android:
+    name: Build android release
+    permissions: write-all
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout to push branch
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}
+          fetch-depth: 0
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v1
+        with:
+          java-version: 17
+
+      - name: Decode Keystore
+        id: decode_keystore
+        uses: timheuer/base64-to-file@v1.2
+        with:
+          fileName: 'open-otp.jks'
+          encodedString: ${{ secrets.KEYSTORE }}
+
+      - name: Build APK file
+        if: job.status == 'success'
+        run: |
+          export GRADLE_USER_HOME=$(pwd)/.gradle
+          chmod +x ./gradlew
+          export BUMP_FILE_VERSION_CODE=false
+          ./gradlew shared:cleanTestDebugUnitTest shared:testDebugUnitTest
+          ./gradlew androidApp:assembleDebug
+          export BUMP_FILE_VERSION_CODE=true
+          ./gradlew androidApp:assembleRelease androidApp:bundleRelease -Pandroid.injected.signing.store.file=$SIGNING_STORE_FILE -Pandroid.injected.signing.store.password=$SIGNING_STORE_PASSWORD -Pandroid.injected.signing.key.alias=$SIGNING_KEY_ALIAS -Pandroid.injected.signing.key.password=$SIGNING_KEY_PASSWORD
+        env:
+          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+          SIGNING_STORE_FILE: ${{ steps.decode_keystore.outputs.filePath }}
+
+      - name: Upload debug artifact file to workflow run results
+        uses: actions/upload-artifact@v2
+        with:
+          name: OpenOTP-Debug.apk
+          path: androidApp/build/outputs/apk/debug/androidApp-debug.apk
+
+      - name: Upload release artifact file to workflow run results
+        uses: actions/upload-artifact@v2
+        with:
+          name: OpenOTP-Release.apk
+          path: androidApp/build/outputs/apk/release/androidApp-release.apk
+
+      - name: Upload release bundle file to workflow run results
+        uses: actions/upload-artifact@v2
+        with:
+          name: OpenOTP-Release.aab
+          path: androidApp/build/outputs/bundle/release/androidApp-release.aab

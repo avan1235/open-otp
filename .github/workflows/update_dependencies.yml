@@ -1,0 +1,47 @@
+name: Update Dependencies
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout to push branch
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}
+          fetch-depth: 0
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v1
+        with:
+          java-version: 17
+
+      - name: Update dependencies
+        run: |
+          export GRADLE_USER_HOME=$(pwd)/.gradle
+          chmod +x ./gradlew
+          ./gradlew versionCatalogUpdate
+
+      - name: Create report env variable
+        run: |
+          {
+            echo 'REPORT<<EOF'
+            cat build/dependencyUpdates/report.txt
+            echo EOF
+          } >> "$GITHUB_ENV"
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{ secrets.PAT }}
+          commit-message: update dependencies
+          committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+          author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+          signoff: false
+          branch: github-actions-bot/update-deps
+          delete-branch: true
+          title: 'Update Dependencies'
+          body: ${{ env.REPORT }}
+          reviewers: ${{ github.actor }}
