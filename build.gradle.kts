@@ -7,4 +7,7 @@ plugins {
     alias(libs.plugins.compose.multiplatform) apply false
     alias(libs.plugins.parcelize.darwin) apply false
     alias(libs.plugins.moko.resources) apply false
+
+    alias(libs.plugins.gradle.versions) apply true
+    alias(libs.plugins.version.catalog.update) apply true
 }

@@ -28,6 +28,8 @@ androidx-crypto = "1.1.0-alpha05"
 kotlin = "1.9.10"
 gradle-plugin = "8.1.0"
 parcelize-darwin = "0.2.1"
+gradle-versions = "0.48.0"
+version-catalog-update = "0.8.1"
 
 android-compileSdk = "34"
 android-targetSdk = "34"
@@ -81,3 +83,5 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "compose" }
 parcelize-darwin = { id = "com.arkivanov.parcelize.darwin", version.ref = "parcelize-darwin" }
 moko-resources = { id = "dev.icerock.mobile.multiplatform-resources", version.ref = "moko-resources" }
+gradle-versions = { id = "com.github.ben-manes.versions", version.ref = "gradle-versions" }
+version-catalog-update = { id = "nl.littlerobots.version-catalog-update", version.ref = "version-catalog-update" }
