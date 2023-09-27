@@ -10,7 +10,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.*
@@ -32,7 +34,7 @@ internal fun ScanQRCodeScreen(
     scanQRCodeComponent: ScanQRCodeComponent,
     holePercent: Float = 0.75f,
 ) {
-    var isLoading by remember { mutableStateOf(true) }
+    val isLoading = remember { mutableStateOf(true) }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -40,13 +42,14 @@ internal fun ScanQRCodeScreen(
         QRCodeScanner(
             onResult = scanQRCodeComponent::onQRCodeScanned,
             innerPadding = innerPadding,
-        ) { isLoading = it }
+            isLoading = isLoading,
+        )
         QRCodeCameraHole(holePercent)
         ScanQRCodeScreenDescription(
             holePercent = holePercent,
             onCancel = scanQRCodeComponent::onCancelClick,
         )
-        CoverErrorsLoadingAnimation(isLoading)
+        CoverErrorsLoadingAnimation(isLoading.value)
     }
 }
 

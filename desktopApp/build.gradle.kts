@@ -49,9 +49,9 @@ compose.desktop {
         }
         buildTypes.release.proguard {
             configurationFiles.from(project.file("compose-desktop.pro"))
-            optimize = true
-            obfuscate = true
             isEnabled = true
+            optimize = true
+            obfuscate = false
         }
     }
 }

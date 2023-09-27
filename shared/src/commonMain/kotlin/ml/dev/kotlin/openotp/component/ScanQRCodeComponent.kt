@@ -28,7 +28,7 @@ class ScanQRCodeComponentImpl(
     override fun onQRCodeScanned(result: QRResult): Boolean = when (result) {
         is QRResult.QRError -> navigateOnCancel(invalidQRCodeMessage).letFalse()
         is QRResult.QRSuccess -> {
-            val otpData = result.contents.distinct().map(::extractQRCodeUserOtpCodeData)
+            val otpData = result.nonEmptyCodes.distinct().map(::extractQRCodeUserOtpCodeData)
             val nonNullOtpData = otpData.filterNotNull()
             if (otpData.size != nonNullOtpData.size) {
                 navigateOnCancel(invalidQRCodeMessage)

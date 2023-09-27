@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
@@ -25,7 +26,7 @@ import java.util.concurrent.Executors
 actual fun QRCodeScanner(
     onResult: (QRResult) -> Boolean,
     innerPadding: PaddingValues,
-    onIsLoadingChange: (Boolean) -> Unit,
+    isLoading: MutableState<Boolean>,
 ) {
     val localContext = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -51,7 +52,7 @@ actual fun QRCodeScanner(
                     analysisExecutor,
                     QRCodeAnalyzer(
                         handle = { handleNext = handleNext && onResult(it) },
-                        onPassCompleted = { failureOccurred -> onIsLoadingChange(failureOccurred) },
+                        onPassCompleted = { failureOccurred -> isLoading.value = failureOccurred },
                     )
                 )
 

@@ -24,8 +24,8 @@ internal class QRCodeAnalyzer(
                     .setBarcodeFormats(Barcode.FORMAT_QR_CODE)
                     .build()
             )
-        } catch (e: Exception) {
-            handleSynchronized(QRResult.QRError(e))
+        } catch (_: Exception) {
+            handleSynchronized(QRResult.QRError)
             null
         }
     }
@@ -49,7 +49,7 @@ internal class QRCodeAnalyzer(
             .addOnSuccessListener { onNonEmptySuccess(it) }
             .addOnFailureListener {
                 failureTimestamp = currentTimeMillis()
-                handleSynchronized(QRResult.QRError(it))
+                handleSynchronized(QRResult.QRError)
             }
             .addOnCompleteListener {
                 onPassCompleted(failureTimestamp.isFailure)
@@ -63,8 +63,8 @@ internal class QRCodeAnalyzer(
     }
 
     private fun onNonEmptySuccess(codes: List<Barcode?>?) {
-        val someCodes = codes?.mapNotNull { it?.rawValue }?.takeIf { it.isNotEmpty() } ?: return
-        handleSynchronized(QRResult.QRSuccess(someCodes))
+        val qrResult = QRResult.QRSuccess(codes) { it?.rawValue } ?: return
+        handleSynchronized(qrResult)
     }
 }
 

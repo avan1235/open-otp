@@ -1,4 +1,7 @@
 -keep class com.arkivanov.decompose.extensions.compose.jetbrains.mainthread.SwingMainThreadChecker
+-keep class kotlinx.coroutines.swing.SwingDispatcherFactory
+-keep class org.bridj.** { *; }
+
 -dontwarn com.arkivanov.decompose.extensions.compose.jetbrains.pages.**
 -dontwarn org.xml.sax.**
 -dontwarn javax.xml.**
@@ -9,4 +12,6 @@
 -dontwarn org.apache.avalon.**
 -dontwarn org.mozilla.javascript.**
 -dontwarn org.python.**
--keep class kotlinx.coroutines.swing.SwingDispatcherFactory
+-dontwarn org.osgi.framework.**
+-dontwarn org.slf4j.impl.**
+-dontwarn ch.qos.logback.classic.**
