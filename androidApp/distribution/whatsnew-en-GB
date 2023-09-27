@@ -1,2 +1,2 @@
 This version brings some small improvements:
-- added app localisation for future improvements in different languages
+- reimplemented QR codes scanning from ground-up
