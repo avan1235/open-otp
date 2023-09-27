@@ -34,6 +34,8 @@ jobs:
           ./gradlew shared:cleanDesktopTest shared:desktopTest
           ./gradlew desktopApp:packageReleaseDistributionForCurrentOS
         shell: bash
+        env:
+          VERSION: 1.0.0
 
       - name: Upload deb artifact file to workflow run results
         uses: actions/upload-artifact@v2
@@ -47,14 +49,14 @@ jobs:
         if: runner.os == 'Windows'
         with:
           name: OpenOTP.msi
-          path: desktopApp/build/compose/binaries/main-release/msi/OpenOTP.msi
+          path: desktopApp/build/compose/binaries/main-release/msi/OpenOTP-1.0.0.msi
 
       - name: Upload dmg image file to workflow run results
         uses: actions/upload-artifact@v2
         if: runner.os == 'macOS'
         with:
           name: OpenOTP.dmg
-          path: desktopApp/build/compose/binaries/main-release/dmg/OpenOTP.dmg
+          path: desktopApp/build/compose/binaries/main-release/dmg/OpenOTP-1.0.0.dmg
 
   build-android:
     name: Build android release
