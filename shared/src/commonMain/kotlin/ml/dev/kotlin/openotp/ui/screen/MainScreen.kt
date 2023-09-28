@@ -20,21 +20,16 @@ import ml.dev.kotlin.openotp.shared.OpenOtpResources
 import ml.dev.kotlin.openotp.ui.component.AddActionButton
 import ml.dev.kotlin.openotp.ui.component.FilteredOtpCodeItems
 import ml.dev.kotlin.openotp.ui.component.OtpCodeItems
-import ml.dev.kotlin.openotp.util.lambda
-import ml.dev.kotlin.openotp.util.runIfNonNull
 
 @Composable
 internal fun MainScreen(mainComponent: MainComponent) {
     val cameraPermissionState = rememberCameraPermissionState()
     val navigateToScanQRCodeWhenCameraPermissionChanged by mainComponent.navigateToScanQRCodeWhenCameraPermissionChanged.subscribeAsState()
 
-    if (cameraPermissionState != null) {
-        val isGranted = cameraPermissionState.permission.isGranted
-        LaunchedEffect(isGranted) {
-            if (isGranted && navigateToScanQRCodeWhenCameraPermissionChanged) {
-                mainComponent.onCameraPermissionGranted()
-                mainComponent.onScanQRCodeClick()
-            }
+    val isGranted = cameraPermissionState.permission.isGranted
+    LaunchedEffect(isGranted) {
+        if (isGranted && navigateToScanQRCodeWhenCameraPermissionChanged) {
+            mainComponent.onScanQRCodeClick()
         }
     }
 
@@ -65,17 +60,15 @@ internal fun MainScreen(mainComponent: MainComponent) {
     AddActionButton(
         expanded = isFirstListItemVisible.value,
         visible = !isSearchActive,
-        onScanQRCodeClick = runIfNonNull(cameraPermissionState) {
-            lambda {
-                when (it.permission) {
-                    Granted -> mainComponent.onScanQRCodeClick()
-                    Denied -> {
-                        mainComponent.onRequestedCameraPermission()
-                        it.launchRequest()
-                    }
+        onScanQRCodeClick = {
+            when (cameraPermissionState.permission) {
+                Granted -> mainComponent.onScanQRCodeClick()
+                Denied -> {
+                    mainComponent.onRequestedCameraPermission()
+                    cameraPermissionState.launchRequest()
                 }
             }
-        },
+        }.takeIf { cameraPermissionState.isAvailable },
         onAddWithTextClick = mainComponent::onAddProviderClick,
     )
 }

@@ -1,10 +1,9 @@
 package ml.dev.kotlin.openotp.component
 
+import kotlinx.serialization.Serializable
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
-import com.arkivanov.essenty.parcelable.Parcelable
-import com.arkivanov.essenty.parcelable.Parcelize
 import ml.dev.kotlin.openotp.component.OpenOtpAppComponent.Child
 
 interface OpenOtpAppComponent {
@@ -31,6 +30,7 @@ class OpenOtpAppComponentImpl(
 
     override val stack: Value<ChildStack<*, Child>> = childStack(
         source = navigation,
+        serializer = Config.serializer(),
         initialConfiguration = Config.Main,
         handleBackButton = true,
         childFactory = ::child,
@@ -72,14 +72,15 @@ class OpenOtpAppComponentImpl(
         navigation.popTo(index = toIndex)
     }
 
-    private sealed interface Config : Parcelable {
-        @Parcelize
+    @Serializable
+    private sealed interface Config {
+        @Serializable
         data object Main : Config
 
-        @Parcelize
+        @Serializable
         data object ScanQRCode : Config
 
-        @Parcelize
+        @Serializable
         data object AddProvider : Config
     }
 }

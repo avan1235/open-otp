@@ -24,6 +24,10 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "shared"
             isStatic = true
+            export(libs.decompose)
+            export(libs.essenty.lifecycle)
+            export(libs.essenty.stateKeeper)
+            export(libs.parcelize.darwinRuntime)
         }
     }
 
@@ -68,15 +72,15 @@ kotlin {
 
                 implementation(libs.multiplatform.settings)
 
-                implementation(libs.decompose)
-                implementation(libs.decompose.extensionsComposeJetbrains)
+                api(libs.decompose)
+                api(libs.decompose.extensionsComposeJetbrains)
 
                 implementation(libs.kotlinx.serialization.json)
 
-                implementation(libs.essenty.lifecycle)
-                implementation(libs.essenty.stateKeeper)
-                implementation(libs.essenty.parcelable)
-                implementation(libs.essenty.instanceKeeper)
+                api(libs.essenty.lifecycle)
+                api(libs.essenty.stateKeeper)
+                api(libs.essenty.parcelable)
+                api(libs.essenty.instanceKeeper)
 
                 api(libs.moko.resoures)
                 api(libs.moko.resoures.compose)
@@ -103,6 +107,7 @@ kotlin {
                 implementation(libs.androidx.security.crypto)
 
                 implementation(libs.accompanist.permissions)
+                implementation(libs.accompanist.systemuicontroller)
 
                 runtimeOnly(libs.kotlinx.coroutines.android)
             }
@@ -117,7 +122,7 @@ kotlin {
             iosSimulatorArm64Main.dependsOn(this)
 
             dependencies {
-                implementation(libs.parcelize.darwinRuntime)
+                api(libs.parcelize.darwinRuntime)
             }
         }
         val desktopMain by getting {
@@ -158,4 +163,5 @@ multiplatformResources {
     multiplatformResourcesVisibility = MRVisibility.Internal
     iosBaseLocalizationRegion = "en"
     multiplatformResourcesSourceSet = "commonMain"
+    disableStaticFrameworkWarning = true
 }

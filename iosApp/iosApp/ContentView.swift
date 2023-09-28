@@ -3,19 +3,34 @@ import SwiftUI
 import shared
 
 struct ComposeView: UIViewControllerRepresentable {
+    
+    let component: OpenOtpAppComponent
+    
     func makeUIViewController(context: Context) -> UIViewController {
-        Main_iosKt.MainViewController()
+        Main_iosKt.MainViewController(component: component)
     }
-
+    
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
 }
 
 struct ContentView: View {
+    
+    let component: OpenOtpAppComponent
+    
+    @Environment(\.colorScheme) var colorScheme
+    
     var body: some View {
-        ComposeView()
-                .ignoresSafeArea(.keyboard) // Compose has own keyboard handler
+        let backgroundColor = Color(
+            colorScheme == .dark
+            ? SwiftHelpersKt.MD_THEME_DARK_BACKGROUND
+            : SwiftHelpersKt.MD_THEME_LIGHT_BACKGROUND
+        )
+        ZStack {
+            backgroundColor
+                .edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
+            
+            ComposeView(component: component)
+                .ignoresSafeArea(.keyboard)
+        }
     }
 }
-
-
-

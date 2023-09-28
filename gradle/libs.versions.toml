@@ -1,5 +1,5 @@
 [versions]
-accompanistPermissions = "0.32.0"
+accompanist = "0.32.0"
 # @keep
 android-compileSdk = "34"
 # @keep
@@ -40,7 +40,8 @@ version-catalog-update = "0.8.1"
 versionCode = "9"
 
 [libraries]
-accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
+accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanist" }
+accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanist" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity-compose" }
 androidx-appcompat-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat-appcompat" }
 androidx-camera = { module = "androidx.camera:camera-camera2", version.ref = "cameraX" }

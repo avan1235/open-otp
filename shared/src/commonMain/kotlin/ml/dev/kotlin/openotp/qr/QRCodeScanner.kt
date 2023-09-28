@@ -11,9 +11,11 @@ expect fun QRCodeScanner(
 )
 
 @Composable
-expect fun rememberCameraPermissionState(): CameraPermissionState?
+expect fun rememberCameraPermissionState(): CameraPermissionState
 
 interface CameraPermissionState {
+    val isAvailable: Boolean
+
     val permission: CameraPermission
 
     fun launchRequest()

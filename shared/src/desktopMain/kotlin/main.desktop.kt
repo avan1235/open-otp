@@ -22,7 +22,6 @@ fun desktopOpenOtpApp() {
     initOpenOtpKoin {
         modules(module {
             single { OpenOtpAppComponentContext() }
-            single { SnackbarHostState() }
         })
     }
     val lifecycle = LifecycleRegistry()

@@ -30,8 +30,6 @@ interface MainComponent {
 
     fun onRequestedCameraPermission()
 
-    fun onCameraPermissionGranted()
-
     fun onOtpCodeDataRemove(otpData: OtpData): Boolean
 
     fun onOtpCodeDataRestart(otpData: OtpData)
@@ -89,10 +87,6 @@ class MainComponentImpl(
         toast(message = stringResource(OpenOtpResources.strings.missing_camera_permissions))
     }
 
-    override fun onCameraPermissionGranted() {
-        _navigateToScanQRCodeWhenCameraPermissionChanged.update { false }
-    }
-
     override fun onOtpCodeDataRemove(otpData: OtpData): Boolean {
         val before = userOtpCodeData.get()
         val filtered = before.filter { it != otpData }
@@ -116,6 +110,7 @@ class MainComponentImpl(
     }
 
     override fun onScanQRCodeClick() {
+        _navigateToScanQRCodeWhenCameraPermissionChanged.update { false }
         navigateOnScanQRCode()
     }
 

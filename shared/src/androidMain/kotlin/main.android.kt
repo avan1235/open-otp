@@ -14,7 +14,6 @@ fun ComponentActivity.androidOpenOtpApp() {
         modules(
             module {
                 single { OpenOtpAppComponentContext(this@androidOpenOtpApp) }
-                single { SnackbarHostState() }
             }
         )
     }

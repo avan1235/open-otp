@@ -125,7 +125,7 @@ private fun AddHotpProviderScreen(component: AddHotpProviderComponent) {
             text = counter,
             onTextChange = component::onCounterChanged,
             isError = counterIsError,
-            keyboardType = KeyboardType.Number,
+            buttonType = FormFieldButtonType.Done,
         )
 
         val selectedAlgorithm by component.algorithm.subscribeAsState()
@@ -216,6 +216,11 @@ private fun AccountDetails(component: AddOtpProviderComponent) {
             text = secret,
             isError = secretIsError,
             onTextChange = component::onSecretChanged,
+            buttonType = when (component) {
+                is AddTotpProviderComponent -> FormFieldButtonType.Done
+                is AddHotpProviderComponent -> FormFieldButtonType.Next
+                else -> FormFieldButtonType.Done
+            }
         )
     }
 }

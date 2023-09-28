@@ -4,10 +4,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Surface
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.Children
@@ -21,6 +18,7 @@ import ml.dev.kotlin.openotp.ui.screen.AddProviderScreen
 import ml.dev.kotlin.openotp.ui.screen.MainScreen
 import ml.dev.kotlin.openotp.ui.screen.ScanQRCodeScreen
 import ml.dev.kotlin.openotp.ui.theme.OpenOtpTheme
+import ml.dev.kotlin.openotp.ui.theme.rememberPlatformColors
 import ml.dev.kotlin.openotp.util.ValueSettings
 import org.koin.compose.koinInject
 import org.koin.core.context.startKoin
@@ -33,6 +31,9 @@ import org.koin.dsl.module
 @Composable
 internal fun OpenOtpApp(component: OpenOtpAppComponent) {
     OpenOtpTheme {
+        rememberPlatformColors(
+            colors = MaterialTheme.colorScheme.background,
+        )
         Surface(
             modifier = Modifier
                 .fillMaxSize()
@@ -65,6 +66,7 @@ internal fun initOpenOtpKoin(appDeclaration: KoinAppDeclaration = {}) {
         appDeclaration()
         modules(module {
             userOtpCodeDataModule()
+            snackbarHostStateModule()
         })
     }
 }
@@ -78,4 +80,8 @@ private fun Module.userOtpCodeDataModule() {
             default = emptyList(),
         )
     }
+}
+
+private fun Module.snackbarHostStateModule() {
+    single { SnackbarHostState() }
 }

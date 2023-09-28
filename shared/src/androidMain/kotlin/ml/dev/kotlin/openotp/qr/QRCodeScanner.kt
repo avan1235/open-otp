@@ -66,18 +66,21 @@ actual fun QRCodeScanner(
 }
 
 @Composable
-actual fun rememberCameraPermissionState(): CameraPermissionState? {
+actual fun rememberCameraPermissionState(): CameraPermissionState {
     val cameraPermissionState = rememberPermissionState(
         android.Manifest.permission.CAMERA
     )
-    return object : CameraPermissionState {
-        override val permission: CameraPermission
-            get() = when (cameraPermissionState.status) {
-                PermissionStatus.Granted -> CameraPermission.Granted
-                is PermissionStatus.Denied -> CameraPermission.Denied
-            }
+    return remember {
+        object : CameraPermissionState {
+            override val isAvailable: Boolean = true
+            override val permission: CameraPermission
+                get() = when (cameraPermissionState.status) {
+                    PermissionStatus.Granted -> CameraPermission.Granted
+                    is PermissionStatus.Denied -> CameraPermission.Denied
+                }
 
-        override fun launchRequest() = cameraPermissionState.launchPermissionRequest()
+            override fun launchRequest() = cameraPermissionState.launchPermissionRequest()
+        }
     }
 }
 
