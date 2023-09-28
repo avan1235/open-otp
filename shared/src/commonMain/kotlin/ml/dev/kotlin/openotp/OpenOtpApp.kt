@@ -1,9 +1,6 @@
 package ml.dev.kotlin.openotp
 
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -35,9 +32,7 @@ internal fun OpenOtpApp(component: OpenOtpAppComponent) {
             colors = MaterialTheme.colorScheme.background,
         )
         Surface(
-            modifier = Modifier
-                .fillMaxSize()
-                .windowInsetsPadding(WindowInsets.systemBars),
+            modifier = Modifier.fillMaxSize(),
         ) {
             Children(
                 stack = component.stack,
@@ -47,6 +42,7 @@ internal fun OpenOtpApp(component: OpenOtpAppComponent) {
                 val snackbarHostState = koinInject<SnackbarHostState>()
                 Scaffold(
                     snackbarHost = { SnackbarHost(snackbarHostState) },
+                    modifier = Modifier.fillMaxSize()
                 ) {
                     when (val instance = child.instance) {
                         is Child.Main -> MainScreen(instance.component)

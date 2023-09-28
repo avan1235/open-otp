@@ -16,6 +16,7 @@ struct iOSApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView(component: rootHolder.root)
+                .ignoresSafeArea(.all)
                 .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
                     LifecycleRegistryExtKt.resume(rootHolder.lifecycle)
                 }

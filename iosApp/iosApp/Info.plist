@@ -51,5 +51,7 @@
         <string>en</string>
         <string>pl</string>
     </array>
+    <key>NSCameraUsageDescription</key>
+    <string></string>
 </dict>
 </plist>

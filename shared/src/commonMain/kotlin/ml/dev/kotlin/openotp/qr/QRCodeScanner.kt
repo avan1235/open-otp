@@ -1,13 +1,11 @@
 package ml.dev.kotlin.openotp.qr
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 
 @Composable
 expect fun QRCodeScanner(
     onResult: (QRResult) -> Boolean,
-    innerPadding: PaddingValues,
     isLoading: MutableState<Boolean>,
 )
 

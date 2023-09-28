@@ -34,22 +34,23 @@ internal fun ScanQRCodeScreen(
     scanQRCodeComponent: ScanQRCodeComponent,
     holePercent: Float = 0.75f,
 ) {
-    val isLoading = remember { mutableStateOf(true) }
+    NoSystemBarsScreen {
+        val isLoading = remember { mutableStateOf(true) }
 
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-    ) { innerPadding ->
-        QRCodeScanner(
-            onResult = scanQRCodeComponent::onQRCodeScanned,
-            innerPadding = innerPadding,
-            isLoading = isLoading,
-        )
-        QRCodeCameraHole(holePercent)
-        ScanQRCodeScreenDescription(
-            holePercent = holePercent,
-            onCancel = scanQRCodeComponent::onCancelClick,
-        )
-        CoverErrorsLoadingAnimation(isLoading.value)
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+        ) {
+            QRCodeScanner(
+                onResult = scanQRCodeComponent::onQRCodeScanned,
+                isLoading = isLoading,
+            )
+            QRCodeCameraHole(holePercent)
+            ScanQRCodeScreenDescription(
+                holePercent = holePercent,
+                onCancel = scanQRCodeComponent::onCancelClick,
+            )
+            CoverErrorsLoadingAnimation(isLoading.value)
+        }
     }
 }
 

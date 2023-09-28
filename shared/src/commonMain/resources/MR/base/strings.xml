@@ -6,6 +6,7 @@
     <string name="missing_camera_permissions">Missing camera permissions</string>
     <string name="scan_qr_code">Scan QR Code</string>
     <string name="copied_code_to_clipboard">Copied "%s" to clipboard</string>
+    <string name="camera_not_available">Camera is not available\non simulator. Please try\nto run on a real iOS device.</string>
 
     <string name="issuer_icon_name">Issuer</string>
     <string name="search_icon_name">Search</string>

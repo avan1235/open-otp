@@ -4,9 +4,7 @@ import android.widget.LinearLayout.LayoutParams
 import androidx.appcompat.widget.ListPopupWindow
 import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.PreviewView
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -25,7 +23,6 @@ import java.util.concurrent.Executors
 @Composable
 actual fun QRCodeScanner(
     onResult: (QRResult) -> Boolean,
-    innerPadding: PaddingValues,
     isLoading: MutableState<Boolean>,
 ) {
     val localContext = LocalContext.current
@@ -34,9 +31,7 @@ actual fun QRCodeScanner(
     val analysisExecutor = rememberExecutor()
     val cameraController = remember { LifecycleCameraController(localContext) }
     AndroidView(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(innerPadding),
+        modifier = Modifier.fillMaxSize(),
         factory = { context ->
             PreviewView(context).apply {
                 setBackgroundColor(backgroundColor.toArgb())
@@ -74,6 +69,7 @@ actual fun rememberCameraPermissionState(): CameraPermissionState {
     return remember {
         object : CameraPermissionState {
             override val isAvailable: Boolean = true
+
             override val permission: CameraPermission
                 get() = when (cameraPermissionState.status) {
                     PermissionStatus.Granted -> CameraPermission.Granted

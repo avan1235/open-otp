@@ -15,7 +15,6 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import dev.icerock.moko.resources.compose.stringResource
@@ -36,52 +35,57 @@ internal fun AddProviderScreen(
     totpComponent: AddTotpProviderComponent,
     hotpComponent: AddHotpProviderComponent,
 ) {
-    Column(modifier = Modifier.fillMaxWidth()) {
-        var selected by remember { mutableStateOf(OtpType.entries.first()) }
-        TabRow(selectedTabIndex = selected.ordinal) {
-            OtpType.entries.forEach { type ->
-                Tab(
-                    text = { Text(type.presentableName()) },
-                    selected = type == selected,
-                    onClick = { selected = type },
-                    icon = {
-                        when (type) {
-                            TOTP -> Icon(
-                                imageVector = Icons.Default.Update,
-                                contentDescription = type.presentableName()
-                            )
+    SystemBarsScreen {
+        Column(modifier = Modifier.fillMaxWidth()) {
+            var selected by remember { mutableStateOf(OtpType.entries.first()) }
+            TabRow(selectedTabIndex = selected.ordinal) {
+                OtpType.entries.forEach { type ->
+                    Tab(
+                        text = { Text(type.presentableName()) },
+                        selected = type == selected,
+                        onClick = { selected = type },
+                        icon = {
+                            when (type) {
+                                TOTP -> Icon(
+                                    imageVector = Icons.Default.Update,
+                                    contentDescription = type.presentableName()
+                                )
 
-                            HOTP -> Icon(imageVector = Icons.Default.Pin, contentDescription = type.presentableName())
+                                HOTP -> Icon(
+                                    imageVector = Icons.Default.Pin,
+                                    contentDescription = type.presentableName()
+                                )
+                            }
                         }
+                    )
+                }
+            }
+            BoxWithConstraints {
+                val totpOffset by animateDpAsState(
+                    targetValue = when (selected) {
+                        TOTP -> 0.dp
+                        HOTP -> -maxWidth
+                    }
+                )
+                val hotpOffset by animateDpAsState(
+                    targetValue = when (selected) {
+                        TOTP -> maxWidth
+                        HOTP -> 0.dp
+                    }
+                )
+                Box(modifier = Modifier.offset(x = totpOffset)) {
+                    AddTotpProviderScreen(totpComponent)
+                }
+                Box(modifier = Modifier.offset(x = hotpOffset)) {
+                    AddHotpProviderScreen(hotpComponent)
+                }
+                AddProviderFormConfirmButtons(
+                    component = when (selected) {
+                        TOTP -> totpComponent
+                        HOTP -> hotpComponent
                     }
                 )
             }
-        }
-        BoxWithConstraints {
-            val totpOffset by animateDpAsState(
-                targetValue = when (selected) {
-                    TOTP -> 0.dp
-                    HOTP -> -maxWidth
-                }
-            )
-            val hotpOffset by animateDpAsState(
-                targetValue = when (selected) {
-                    TOTP -> maxWidth
-                    HOTP -> 0.dp
-                }
-            )
-            Box(modifier = Modifier.offset(x = totpOffset)) {
-                AddTotpProviderScreen(totpComponent)
-            }
-            Box(modifier = Modifier.offset(x = hotpOffset)) {
-                AddHotpProviderScreen(hotpComponent)
-            }
-            AddProviderFormConfirmButtons(
-                component = when (selected) {
-                    TOTP -> totpComponent
-                    HOTP -> hotpComponent
-                }
-            )
         }
     }
 }

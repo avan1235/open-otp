@@ -2,7 +2,6 @@ package ml.dev.kotlin.openotp.qr
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -31,7 +30,6 @@ import java.lang.System.currentTimeMillis
 @Composable
 actual fun QRCodeScanner(
     onResult: (QRResult) -> Boolean,
-    innerPadding: PaddingValues,
     isLoading: MutableState<Boolean>,
 ) {
     Box(
@@ -73,8 +71,8 @@ actual fun QRCodeScanner(
 }
 
 @Composable
-actual fun rememberCameraPermissionState(): CameraPermissionState {
-    return object : CameraPermissionState {
+actual fun rememberCameraPermissionState(): CameraPermissionState = remember {
+    object : CameraPermissionState {
         override val isAvailable: Boolean by lazy {
             try {
                 runIfNonNull(Webcam.getDefault()) { true } ?: false
