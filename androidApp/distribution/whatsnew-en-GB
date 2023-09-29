@@ -1,2 +1,3 @@
-This version brings some small improvements:
-- reimplemented QR codes scanning from ground-up
+This version brings some small fixes:
+- not resetting hotp code now reset on click
+- updated icon of hotp codes reset button
