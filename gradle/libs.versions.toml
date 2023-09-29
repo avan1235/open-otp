@@ -33,7 +33,7 @@ kotlinx-serialization = "1.6.0"
 moko-resources = "0.23.0"
 multiplatform-settings = "1.0.0"
 parcelize-darwin = "0.2.2"
-uri-kmp = "0.0.14"
+uri-kmp = "0.0.15"
 uuid = "0.8.1"
 version-catalog-update = "0.8.1"
 # @keep
