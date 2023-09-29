@@ -38,7 +38,7 @@ uri-kmp = "0.0.15"
 uuid = "0.8.1"
 version-catalog-update = "0.8.1"
 # @keep
-versionCode = "9"
+versionCode = "10"
 webcamCapture = "0.3.12"
 
 [libraries]
