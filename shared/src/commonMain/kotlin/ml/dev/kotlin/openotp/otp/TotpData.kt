@@ -40,12 +40,6 @@ data class HotpData(
     fun increaseCounter(): HotpData =
         copy(counter = counter + 1)
 
-    override fun hashCode(): Int =
-        uuid.hashCode()
-
-    override fun equals(other: Any?): Boolean =
-        (other as? HotpData)?.uuid == uuid
-
     companion object {
         operator fun invoke(
             issuer: String?,
@@ -79,12 +73,6 @@ data class TotpData(
 
     fun timeslotLeft(timestamp: Long): Double =
         authenticator.timeslotLeft(timestamp)
-
-    override fun hashCode(): Int =
-        uuid.hashCode()
-
-    override fun equals(other: Any?): Boolean =
-        (other as? TotpData)?.uuid == uuid
 
     companion object {
         operator fun invoke(
