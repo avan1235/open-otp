@@ -1,7 +1,10 @@
 # OpenOTP
 
-[![Build](https://img.shields.io/github/actions/workflow/status/avan1235/open-otp/release.yml?label=Build)](https://github.com/avan1235/open-otp/actions/workflows/release.yml)
-[![Latest Release](https://img.shields.io/github/v/release/avan1235/open-otp?label=Release)](https://github.com/avan1235/open-otp/releases)
+![Platforms](https://img.shields.io/badge/mobile-Android%20%7C%20iOS-blue)
+![Platforms](https://img.shields.io/badge/desktop-Windows%20%7C%20macOS%20%7C%20Linux-blue)
+
+[![Build](https://img.shields.io/github/actions/workflow/status/avan1235/open-otp/release.yml?label=Build&color=green)](https://github.com/avan1235/open-otp/actions/workflows/release.yml)
+[![Latest Release](https://img.shields.io/github/v/release/avan1235/open-otp?label=Release&color=green)](https://github.com/avan1235/open-otp/releases)
 [![Google Play](https://img.shields.io/endpoint?color=green&logo=google-play&logoColor=green&url=https%3A%2F%2Fplay.cuzi.workers.dev%2Fplay%3Fi%3Dml.dev.kotlin.openotp.OpenOtp%26l%3DGoogle%2520Play%26m%3D%24version)](https://play.google.com/store/apps/details?id=ml.dev.kotlin.openotp.OpenOtp)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-red.svg)](./LICENSE.md)
