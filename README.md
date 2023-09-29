@@ -45,6 +45,17 @@ To install Linux version run:
 sudo dpkg -i  openotp.deb
 ```
 
+### Build application locally
+
+The project is configured with with Gradle and you can find the
+latest release build commands in the [release.yml](./.github/workflows/release.yml) file.
+
+Example build commands for particular platforms:
+- desktop: `./gradlew desktopApp:packageDistributionForCurrentOS`
+- Android: `./gradlew androidApp:assembleDebug`
+- iOS: open [iosApp.xcodeproj](./iosApp/iosApp.xcodeproj) in Xcode and run the build 
+(you might need to configure the `Team` in `Signing & Capabilities`)
+
 ## Tech Stack
 
 ### Core
