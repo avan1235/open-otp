@@ -58,19 +58,29 @@ Example build commands for particular platforms:
 
 ## Tech Stack
 
-### Core
+### Tools & Libraries
 
-- 100% [Kotlin](https://kotlinlang.org/)
-- 100% [Compose Multiplatform](https://github.com/JetBrains/compose-multiplatform)
+- [Kotlin](https://kotlinlang.org/)
+- [Compose Multiplatform](https://github.com/JetBrains/compose-multiplatform) (UI)
 - [Material3 design](https://m3.material.io/) (UI components)
-- [Kotlin Coroutines](https://kotlinlang.org/docs/coroutines-overview.html) (structured concurrency)
-- [Koin](https://insert-koin.io/) (DI)
-
-### Local Persistence
-
-- [Multiplatform Settings](https://github.com/russhwolf/multiplatform-settings)
-- [Android Security](https://developer.android.com/jetpack/androidx/releases/security) (Android `SharedPreferences`
-  implemented with `EncryptedSharedPreferences`)
+- [Kotlin Coroutines](https://github.com/Kotlin/kotlinx.coroutines) (structured concurrency)
+- [Kotlin Datetime](https://github.com/Kotlin/kotlinx-datetime) (current time access)
+- [Kotlin Serialization](https://github.com/Kotlin/kotlinx.serialization) (data serialization)
+- [Koin](https://github.com/InsertKoinIO/koin) (DI)
+- [Kermit](https://github.com/touchlab/Kermit) (Logging)
+- [Decompose](https://github.com/arkivanov/Decompose) (lifecycle-aware business logic)
+- [Essenty](https://github.com/arkivanov/Essenty) (handy additions to Decompose)
+- [moko resources](https://github.com/icerockdev/moko-resources) (resources for localization)
+- [Multiplatform Settings](https://github.com/russhwolf/multiplatform-settings) (persistence of keys)
+- [uuid](https://github.com/benasher44/uuid) (UUID generation)
+- [ByteBuffer](https://github.com/DitchOoM/buffer) (allocate and modify `byte[]` natively)
+- [Uri KMP](https://github.com/eygraber/uri-kmp) (parsing URI from QR codes)
+- [Webcam Capture API](https://github.com/sarxos/webcam-capture/) (desktop camera bindings)
+- [zxing](https://github.com/zxing/zxing) (desktop QR codes recognition)
+- [AndroidX Security](https://developer.android.com/jetpack/androidx/releases/security) (`EncryptedSharedPreferences` for Multiplatform Settings)
+- [AndroidX CameraX](https://developer.android.com/jetpack/androidx/releases/camera) (camera access on Android)
+- [ML Kit Barcode scanning](https://developer.android.com/jetpack/androidx/releases/camera) (Android QR codes recognition)
+- [Accompanist](https://github.com/google/accompanist) (permissions and system UI control on Android)
 
 ### Build & CI
 
