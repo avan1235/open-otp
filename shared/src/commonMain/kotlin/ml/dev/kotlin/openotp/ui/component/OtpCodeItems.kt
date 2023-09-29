@@ -15,9 +15,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Cached
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.RestartAlt
 import androidx.compose.material3.*
 import androidx.compose.material3.DismissDirection.EndToStart
 import androidx.compose.material3.DismissDirection.StartToEnd
@@ -241,7 +241,7 @@ private fun RestartButton(
         modifier = Modifier.size(size),
     ) {
         Icon(
-            imageVector = Icons.Default.RestartAlt,
+            imageVector = Icons.Default.Cached,
             contentDescription = stringResource(OpenOtpResources.strings.restart_icon_name),
             modifier = Modifier.fillMaxSize(),
         )
