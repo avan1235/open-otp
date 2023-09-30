@@ -15,7 +15,6 @@ barcodeScanning = "17.2.0"
 buffer = "1.3.6"
 cameraX = "1.2.3"
 compose = "1.5.2"
-zxing-core = "3.5.2"
 decompose = "2.2.0-compose-experimental-alpha01"
 encoding-base32 = "2.0.0"
 essenty = "1.3.0-alpha01"
@@ -40,6 +39,7 @@ version-catalog-update = "0.8.1"
 # @keep
 versionCode = "10"
 webcamCapture = "0.3.12"
+zxing-core = "3.5.2"
 
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanist" }
@@ -52,8 +52,6 @@ androidx-cameraPreview = { module = "androidx.camera:camera-view", version.ref =
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core-ktx" }
 androidx-security-crypto = { module = "androidx.security:security-crypto", version.ref = "androidx-crypto" }
 buffer = { module = "com.ditchoom:buffer", version.ref = "buffer" }
-zxing-core = { module = "com.google.zxing:core", version.ref = "zxing-core" }
-zxing-javase = { module = "com.google.zxing:javase", version.ref = "zxing-core" }
 decompose = { module = "com.arkivanov.decompose:decompose", version.ref = "decompose" }
 decompose-extensionsComposeJetbrains = { module = "com.arkivanov.decompose:extensions-compose-jetbrains", version.ref = "decompose" }
 encoding-base32 = { module = "io.matthewnelson.encoding:base32", version.ref = "encoding-base32" }
@@ -78,6 +76,8 @@ parcelize-darwinRuntime = { module = "com.arkivanov.parcelize.darwin:runtime", v
 uriKmp = { module = "com.eygraber:uri-kmp", version.ref = "uri-kmp" }
 uuid = { module = "com.benasher44:uuid", version.ref = "uuid" }
 webcam-capture = { module = "com.github.sarxos:webcam-capture", version.ref = "webcamCapture" }
+zxing-core = { module = "com.google.zxing:core", version.ref = "zxing-core" }
+zxing-javase = { module = "com.google.zxing:javase", version.ref = "zxing-core" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "gradle-plugin" }
