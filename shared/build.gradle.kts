@@ -163,7 +163,7 @@ android {
 multiplatformResources {
     multiplatformResourcesPackage = "ml.dev.kotlin.openotp.shared"
     multiplatformResourcesClassName = "OpenOtpResources"
-    multiplatformResourcesVisibility = MRVisibility.Internal
+    multiplatformResourcesVisibility = MRVisibility.Public
     iosBaseLocalizationRegion = "en"
     multiplatformResourcesSourceSet = "commonMain"
     disableStaticFrameworkWarning = true

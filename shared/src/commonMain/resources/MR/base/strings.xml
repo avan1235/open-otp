@@ -16,6 +16,7 @@
     <string name="copy_icon_name">Copy</string>
     <string name="delete_icon_name">Delete</string>
     <string name="dropdown_icon_name">Select from multiple options</string>
+    <string name="camara_image_name">Camera image</string>
 
     <string name="search_field">Search...</string>
     <string name="secret_field">secret</string>

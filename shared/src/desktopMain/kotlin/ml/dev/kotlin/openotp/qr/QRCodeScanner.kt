@@ -17,12 +17,14 @@ import com.google.zxing.NotFoundException
 import com.google.zxing.client.j2se.BufferedImageLuminanceSource
 import com.google.zxing.common.HybridBinarizer
 import com.google.zxing.multi.qrcode.QRCodeMultiReader
+import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import ml.dev.kotlin.openotp.qr.CameraPermission.Denied
 import ml.dev.kotlin.openotp.qr.CameraPermission.Granted
+import ml.dev.kotlin.openotp.shared.OpenOtpResources
 import ml.dev.kotlin.openotp.util.OnceLaunchedEffect
 import ml.dev.kotlin.openotp.util.runIfNonNull
 import java.awt.image.BufferedImage
@@ -62,7 +64,7 @@ actual fun QRCodeScanner(
         ) {
             Image(
                 bitmap = bitmap,
-                contentDescription = "camera",
+                contentDescription = stringResource(OpenOtpResources.strings.camara_image_name),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize()
             )
