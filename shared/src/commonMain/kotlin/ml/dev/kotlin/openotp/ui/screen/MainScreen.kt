@@ -7,6 +7,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import dev.icerock.moko.resources.compose.stringResource
@@ -49,6 +50,7 @@ internal fun MainScreen(mainComponent: MainComponent) {
         onOtpCodeDataDismiss = mainComponent::onOtpCodeDataRemove,
         onSearchBarActiveChange = mainComponent::onSearchBarActiveChange,
         onRestartCode = mainComponent::onOtpCodeDataRestart,
+        copyOtpCode = mainComponent::copyOtpCode,
     )
     AllOtpCodeItems(
         codeData = codeData,
@@ -56,6 +58,7 @@ internal fun MainScreen(mainComponent: MainComponent) {
         listState = listState,
         onOtpCodeDataDismiss = mainComponent::onOtpCodeDataRemove,
         onRestartCode = mainComponent::onOtpCodeDataRestart,
+        copyOtpCode = mainComponent::copyOtpCode,
     )
     AddActionButton(
         expanded = isFirstListItemVisible.value,
@@ -80,6 +83,7 @@ private fun AllOtpCodeItems(
     listState: LazyListState,
     onOtpCodeDataDismiss: (OtpData) -> Boolean,
     onRestartCode: (OtpData) -> Unit,
+    copyOtpCode: ClipboardManager.(item: OtpData, timestamp: Long) -> Unit,
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -94,7 +98,7 @@ private fun AllOtpCodeItems(
                 contentAlignment = Alignment.Center,
             ) {
                 if (codeData.isNotEmpty()) {
-                    OtpCodeItems(codeData, timestamp, onOtpCodeDataDismiss, onRestartCode, listState)
+                    OtpCodeItems(codeData, timestamp, onOtpCodeDataDismiss, onRestartCode, copyOtpCode, listState)
                 } else {
                     Text(text = stringResource(OpenOtpResources.strings.add_new_keys))
                 }

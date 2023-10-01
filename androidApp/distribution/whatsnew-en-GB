@@ -1,3 +1,2 @@
-This version brings some small fixes:
-- not resetting hotp code now reset on click
-- updated icon of hotp codes reset button
+This version brings some small improvements:
+- add notification on code copied to clipboard

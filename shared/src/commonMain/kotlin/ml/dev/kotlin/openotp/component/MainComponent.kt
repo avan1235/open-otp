@@ -1,5 +1,7 @@
 package ml.dev.kotlin.openotp.component
 
+import androidx.compose.ui.platform.ClipboardManager
+import androidx.compose.ui.text.AnnotatedString
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
@@ -33,6 +35,8 @@ interface MainComponent {
     fun onOtpCodeDataRemove(otpData: OtpData): Boolean
 
     fun onOtpCodeDataRestart(otpData: OtpData)
+
+    fun copyOtpCode(clipboardManager: ClipboardManager, item: OtpData, timestamp: Long)
 
     fun onSearchBarActiveChange(isActive: Boolean)
 
@@ -102,6 +106,16 @@ class MainComponentImpl(
             val mapped = before.map { if (it != otpData) it else updated }
             userOtpCodeData.set(mapped)
         }
+    }
+
+    override fun copyOtpCode(clipboardManager: ClipboardManager, item: OtpData, timestamp: Long) {
+        val code = item.code(timestamp)
+        val string = AnnotatedString(code)
+        clipboardManager.setText(string)
+        toast(
+            message = stringResource(OpenOtpResources.strings.copied_code_to_clipboard, code),
+            withDismissAction = false,
+        )
     }
 
     override fun onSearchBarActiveChange(isActive: Boolean) {

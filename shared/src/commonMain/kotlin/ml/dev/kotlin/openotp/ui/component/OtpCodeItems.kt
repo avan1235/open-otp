@@ -34,7 +34,6 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -58,6 +57,7 @@ internal fun OtpCodeItems(
     timestamp: Long,
     onOtpCodeDataDismiss: (OtpData) -> Boolean,
     onRestartCode: (OtpData) -> Unit,
+    copyOtpCode: ClipboardManager.(item: OtpData, timestamp: Long) -> Unit,
     listState: LazyListState = rememberLazyListState(),
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -340,12 +340,6 @@ private fun DismissBackground(dismissState: DismissState) {
     ) {
         Icon(icon, contentDescription, Modifier.scale(scale))
     }
-}
-
-private fun ClipboardManager.copyOtpCode(item: OtpData, timestamp: Long) {
-    val code = item.code(timestamp)
-    val string = AnnotatedString(code)
-    setText(string)
 }
 
 private const val SINGLE_COLOR_REPEAT_ITERATIONS: Int = 2 * 10

@@ -14,6 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.zIndex
@@ -30,6 +31,7 @@ internal fun FilteredOtpCodeItems(
     onOtpCodeDataDismiss: (OtpData) -> Boolean,
     onSearchBarActiveChange: (Boolean) -> Unit,
     onRestartCode: (OtpData) -> Unit,
+    copyOtpCode: ClipboardManager.(item: OtpData, timestamp: Long) -> Unit,
 ) {
     Box(
         modifier = Modifier
@@ -91,7 +93,7 @@ internal fun FilteredOtpCodeItems(
             },
             interactionSource = interactionSource,
         ) {
-            OtpCodeItems(filteredCodeData, timestamp, onOtpCodeDataDismiss, onRestartCode)
+            OtpCodeItems(filteredCodeData, timestamp, onOtpCodeDataDismiss, onRestartCode, copyOtpCode)
         }
     }
 }
