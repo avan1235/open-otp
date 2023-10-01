@@ -11,6 +11,14 @@
 [![GitHub Repo stars](https://img.shields.io/github/stars/avan1235/open-otp?style=social)](https://github.com/avan1235/open-otp/stargazers)
 [![Fork OpenOTP](https://img.shields.io/github/forks/avan1235/open-otp?logo=github&style=social)](https://github.com/avan1235/open-otp/fork)
 
+### Android
+
+![android](https://github.com/avan1235/open-otp/assets/11787040/56d8fa10-f686-4f95-838b-3730770b8d41)
+
+### iOS
+
+![ios](https://github.com/avan1235/open-otp/assets/11787040/8ec711cd-e010-42b2-9167-90657f868c1f)
+
 ## Download and run application
 
 ### Download compiled application
