@@ -231,6 +231,7 @@ jobs:
           PUBLISH_TO_GOOGLE_PLAY: ${{secrets.PUBLISH_TO_GOOGLE_PLAY}}
 
       - name: Commit version code changes
+        if: contains(env.PUBLISH_TO_GOOGLE_PLAY, 'true')
         run: |
           git config --global user.name "${{ secrets.CI_COMMIT_AUTHOR }}"
           git config --global user.email "${{ secrets.CI_COMMIT_EMAIL }}"
