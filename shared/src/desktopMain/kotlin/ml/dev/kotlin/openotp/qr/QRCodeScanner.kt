@@ -23,6 +23,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import ml.dev.kotlin.openotp.qr.CameraPermission.Denied
 import ml.dev.kotlin.openotp.qr.CameraPermission.Granted
+import ml.dev.kotlin.openotp.util.OnceLaunchedEffect
 import ml.dev.kotlin.openotp.util.runIfNonNull
 import java.awt.image.BufferedImage
 import java.lang.System.currentTimeMillis
@@ -96,7 +97,7 @@ private fun analyzeCameraImage(
     imageBitmap: MutableState<ImageBitmap?>,
     onResult: (QRResult) -> Boolean,
 ) {
-    LaunchedEffect(Unit) {
+    OnceLaunchedEffect {
         while (isActive) {
             val isWebcamOpen = webcam.isOpen
             if (!isWebcamOpen) {

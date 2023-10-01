@@ -17,6 +17,7 @@ import kotlinx.cinterop.ObjCAction
 import ml.dev.kotlin.openotp.qr.CameraPermission.Denied
 import ml.dev.kotlin.openotp.qr.CameraPermission.Granted
 import ml.dev.kotlin.openotp.shared.OpenOtpResources
+import ml.dev.kotlin.openotp.util.OnceLaunchedEffect
 import ml.dev.kotlin.openotp.util.runIfNonNull
 import platform.AVFoundation.*
 import platform.AVFoundation.AVCaptureDeviceDiscoverySession.Companion.discoverySessionWithDeviceTypes
@@ -56,7 +57,7 @@ actual fun QRCodeScanner(
 actual fun rememberCameraPermissionState(): CameraPermissionState {
     var cameraPermission by remember { mutableStateOf(Denied) }
 
-    LaunchedEffect(Unit) {
+    OnceLaunchedEffect {
         cameraPermission = when (AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeVideo)) {
             AVAuthorizationStatusAuthorized -> Granted
             AVAuthorizationStatusDenied,
@@ -84,9 +85,7 @@ actual fun rememberCameraPermissionState(): CameraPermissionState {
 
 @Composable
 private fun NoAvailableCameraMessage(isLoading: MutableState<Boolean>) {
-    LaunchedEffect(Unit) {
-        isLoading.value = false
-    }
+    OnceLaunchedEffect { isLoading.value = false }
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,

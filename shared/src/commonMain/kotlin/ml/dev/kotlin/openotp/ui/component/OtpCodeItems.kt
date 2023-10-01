@@ -47,6 +47,7 @@ import ml.dev.kotlin.openotp.otp.TotpData
 import ml.dev.kotlin.openotp.otp.UserOtpCodeData
 import ml.dev.kotlin.openotp.shared.OpenOtpResources
 import ml.dev.kotlin.openotp.ui.issuerIcon
+import ml.dev.kotlin.openotp.util.OnceLaunchedEffect
 import ml.dev.kotlin.openotp.util.currentEpochMilliseconds
 import ml.dev.kotlin.openotp.util.letTrue
 import kotlin.math.roundToInt
@@ -93,7 +94,7 @@ internal fun OtpCodeItems(
                 },
             )
             if (dismissState.isDismissed(StartToEnd)) {
-                LaunchedEffect(Unit) { dismissState.reset() }
+                OnceLaunchedEffect { dismissState.reset() }
             }
             SwipeToDismiss(
                 state = dismissState,
