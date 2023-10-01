@@ -13,6 +13,7 @@ import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.slid
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import `in`.procyk.compose.util.OnceLaunchedEffect
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.serialization.builtins.ListSerializer
 import ml.dev.kotlin.openotp.component.LinkedAccountsSyncState.NothingToSync
@@ -20,7 +21,7 @@ import ml.dev.kotlin.openotp.component.OpenOtpAppComponent
 import ml.dev.kotlin.openotp.component.OpenOtpAppComponent.Child
 import ml.dev.kotlin.openotp.component.UserLinkedAccountsModel
 import ml.dev.kotlin.openotp.component.UserPreferencesModel
-import ml.dev.kotlin.openotp.otp.OtpData
+import ml.dev.kotlin.openotp.otp.*
 import ml.dev.kotlin.openotp.ui.screen.*
 import ml.dev.kotlin.openotp.ui.theme.OpenOtpTheme
 import ml.dev.kotlin.openotp.util.BindBiometryAuthenticatorEffect
@@ -101,7 +102,66 @@ private fun Module.userOtpCodeDataModule() {
             context = get(),
             serializer = ListSerializer(OtpData.serializer()),
             default = emptyList(),
-        )
+        ).also { settings ->
+            runBlocking {
+                settings.update {
+                    it.ifEmpty {
+                        listOf(
+                            TotpData(
+                                issuer = "Google",
+                                accountName = "Adam Smith",
+                                secret = "7HUX6BRVABYZUJMBSRLVR34YTGFWZHVEURFRXO4XGMWDFPJFTVEPXXJM56PR7EXKKQGHZE55VWFYHYZ44OU73JI43SREEWOZZYDBHBI",
+                                config = TotpConfig.DEFAULT,
+                            ),
+                            TotpData(
+                                issuer = "Unknown",
+                                accountName = "Adam Smith",
+                                secret = "UN3RME5C2ZE2WEIFMCQCRPPGLN7K665RGKWBFNW4HGPXYTRZM5XASVPKAHCPCLEMMOGLH4XLY44LIFD3XNUNS3FV5VYD437U7HTY5OI",
+                                config = TotpConfig.DEFAULT,
+                            ),
+                            HotpData(
+                                issuer = "Private Service",
+                                accountName = "Adam Smith",
+                                secret = "KLOWICTGST4FVN5QDTCPVUMKEVU4JZ2SOYIROWVI3AU5QQSKVUG4ZJIHOIU5BO2HQVFZCIBCWB4WMKWL4LPHCORCIPF24A3R6QYV3BA",
+                                counter = 0,
+                                config = HotpConfig.DEFAULT,
+                            ),
+                            TotpData(
+                                issuer = "Google",
+                                accountName = "adam.smith",
+                                secret = "7HUX6BRVABYZUJMBSRLVR34YTGLWZHVEURFRXO4XGMWDFPJFTVEPXXJM56PR7EXKKQGHZE55VWFYHYZ44OU73JI43SREEWOZZYDBHBI",
+                                config = TotpConfig.DEFAULT,
+                            ),
+                            TotpData(
+                                issuer = "Reddit",
+                                accountName = "adam.smith",
+                                secret = "BOCTKX243O5REIIHJVVFEC7Y47GTHN6FZP4NKNL4M37SKE6HQ4OFTDG5RTGZVKQTA3PGJ2LFCQT6B2V3H4KLD2HMSZWLSJ72JL6MM7Q",
+                                config = TotpConfig.DEFAULT,
+                            ),
+                            HotpData(
+                                issuer = "Facebook",
+                                accountName = "Adam.Smith",
+                                secret = "63LXSAVZTN3J3SUBO7ON6DY6WGU2L46CGSBHBHV2XFZ3NS2YK54GELJZMRYUR7ROUXA2QGTVBMVOV2KZ5ZK67XQK4RJZHLMGHA5APOI",
+                                counter = 0,
+                                config = HotpConfig.DEFAULT,
+                            ),
+                            TotpData(
+                                issuer = "Unknown",
+                                accountName = "adam@smith.com",
+                                secret = "MFTJSQJ5SFWEEUESNL6PEYSZFVC75TPFNINZQZ266ZGU3FPUEZJGVKYSSFK5WZMOZ2655FO4LQAZ7OPKPRV3H3HH6RKJCXKNIA76H4Q",
+                                config = TotpConfig.DEFAULT,
+                            ),
+                            TotpData(
+                                issuer = "Facebook",
+                                accountName = "Adam.Smith",
+                                secret = "BOCTKX243O5REIIHJVVFEC7Y47GTHN6FZP4NKNL4M37SLE6HQ4OFTDG5RTGZVKQTA3PGJ2LFCQT6B2V3H4KLD2HMSZWLSJ72JL6MM7Q",
+                                config = TotpConfig.DEFAULT,
+                            ),
+                        )
+                    }
+                }
+            }
+        }
     }
 }
 
