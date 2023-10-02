@@ -140,24 +140,28 @@ private fun CameraView(
     val cameraPreviewLayer = remember { AVCaptureVideoPreviewLayer(session = captureSession) }
 
     DisposableEffect(Unit) {
+        fun updateCameraVideoOrientation() {
+            val cameraConnection = cameraPreviewLayer.connection
+            if (cameraConnection != null) {
+                actualOrientation = when (UIDevice.currentDevice.orientation) {
+                    UIDeviceOrientationPortrait -> AVCaptureVideoOrientationPortrait
+                    UIDeviceOrientationLandscapeLeft -> AVCaptureVideoOrientationLandscapeRight
+                    UIDeviceOrientationLandscapeRight -> AVCaptureVideoOrientationLandscapeLeft
+                    UIDeviceOrientationPortraitUpsideDown -> AVCaptureVideoOrientationPortraitUpsideDown
+                    else -> cameraConnection.videoOrientation
+                }
+                cameraConnection.videoOrientation = actualOrientation
+            }
+            metadataOutput
+                .connectionWithMediaType(AVMediaTypeVideo)
+                ?.videoOrientation = actualOrientation
+        }
+
         class OrientationListener : NSObject() {
             @Suppress("UNUSED_PARAMETER")
             @ObjCAction
             fun orientationDidChange(arg: NSNotification) {
-                val cameraConnection = cameraPreviewLayer.connection
-                if (cameraConnection != null) {
-                    actualOrientation = when (UIDevice.currentDevice.orientation) {
-                        UIDeviceOrientationPortrait -> AVCaptureVideoOrientationPortrait
-                        UIDeviceOrientationLandscapeLeft -> AVCaptureVideoOrientationLandscapeRight
-                        UIDeviceOrientationLandscapeRight -> AVCaptureVideoOrientationLandscapeLeft
-                        UIDeviceOrientationPortraitUpsideDown -> AVCaptureVideoOrientationPortraitUpsideDown
-                        else -> cameraConnection.videoOrientation
-                    }
-                    cameraConnection.videoOrientation = actualOrientation
-                }
-                metadataOutput
-                    .connectionWithMediaType(AVMediaTypeVideo)
-                    ?.videoOrientation = actualOrientation
+                updateCameraVideoOrientation()
             }
         }
 
@@ -168,6 +172,8 @@ private fun CameraView(
             name = UIDeviceOrientationDidChangeNotification,
             `object` = null
         )
+        updateCameraVideoOrientation()
+
         onDispose {
             NSNotificationCenter.defaultCenter.removeObserver(
                 observer = listener,
