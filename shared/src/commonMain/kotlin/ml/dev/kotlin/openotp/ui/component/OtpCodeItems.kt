@@ -259,7 +259,7 @@ private fun RestartButton(
     onClick: () -> Unit,
     size: Dp = 36.dp,
 ) {
-    IconButton(
+    ClickableIconButton(
         onClick = onClick,
         modifier = Modifier.size(size),
     ) {

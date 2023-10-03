@@ -109,10 +109,8 @@ internal fun SearchBar(
                 with(localDensity) {
                     val animatedTopPadding =
                         lerp(topPadding.value, 0.dp, animationProgress.value).roundToPx()
-                    val startWidth = min(
-                        constraints.maxWidth,
-                        SearchBarMaxWidth.roundToPx()
-                    ) - (2 * SearchBarHorizontalPadding).roundToPx()
+                    val startWidth = min(constraints.maxWidth, SearchBarMaxWidth.roundToPx()) -
+                            (2 * SearchBarHorizontalPadding).roundToPx()
                     val startHeight = max(constraints.minHeight, InputFieldHeight.roundToPx())
                         .coerceAtMost(constraints.maxHeight)
                     val endWidth = constraints.maxWidth

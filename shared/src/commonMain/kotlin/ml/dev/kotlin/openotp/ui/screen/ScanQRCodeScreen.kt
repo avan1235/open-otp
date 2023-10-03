@@ -27,6 +27,7 @@ import dev.icerock.moko.resources.compose.stringResource
 import ml.dev.kotlin.openotp.component.ScanQRCodeComponent
 import ml.dev.kotlin.openotp.qr.QRCodeScanner
 import ml.dev.kotlin.openotp.shared.OpenOtpResources
+import ml.dev.kotlin.openotp.ui.component.ClickableIconButton
 import ml.dev.kotlin.openotp.ui.theme.Typography
 
 @Composable
@@ -57,13 +58,11 @@ internal fun ScanQRCodeScreen(
 @Composable
 private fun CancelScanQRCodeButton(onCancel: () -> Unit) {
     val cancelText = stringResource(OpenOtpResources.strings.cancel_button_name)
-    IconButton(
+    ClickableIconButton(
         onClick = onCancel,
-        colors = IconButtonDefaults.iconButtonColors(
-            containerColor = MaterialTheme.colorScheme.background,
-            contentColor = contentColorFor(MaterialTheme.colorScheme.background),
-        ),
-        modifier = Modifier.size(44.dp)
+        modifier = Modifier.size(44.dp),
+        containerColor = MaterialTheme.colorScheme.background,
+        contentColor = contentColorFor(MaterialTheme.colorScheme.background),
     ) {
         Icon(
             imageVector = Icons.Outlined.Close,

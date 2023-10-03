@@ -21,6 +21,7 @@ import dev.icerock.moko.resources.compose.stringResource
 import ml.dev.kotlin.openotp.component.OpenOtpAppTheme
 import ml.dev.kotlin.openotp.component.SettingsComponent
 import ml.dev.kotlin.openotp.shared.OpenOtpResources
+import ml.dev.kotlin.openotp.ui.component.ClickableIconButton
 import ml.dev.kotlin.openotp.ui.component.NamedDropdownMenu
 import ml.dev.kotlin.openotp.ui.component.NamedSwitch
 
@@ -43,7 +44,7 @@ internal fun SettingsScreen(
                     horizontalArrangement = Arrangement.Start,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    IconButton(
+                    ClickableIconButton(
                         onClick = component::onExitSettings,
                     ) {
                         Icon(

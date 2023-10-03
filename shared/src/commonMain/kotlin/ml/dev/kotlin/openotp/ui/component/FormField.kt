@@ -6,7 +6,10 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
@@ -66,7 +69,7 @@ private fun PasswordIcon(
     showPassword: Boolean,
     onIconClick: () -> Unit,
 ) {
-    IconButton(onClick = onIconClick) {
+    ClickableIconButton(onClick = onIconClick) {
         Icon(
             imageVector = if (showPassword) Icons.Default.Visibility else Icons.Default.VisibilityOff,
             contentDescription = stringResource(OpenOtpResources.strings.password_field_name)
