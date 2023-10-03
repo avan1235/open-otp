@@ -1,2 +1,4 @@
-This version brings some small improvements:
-- add notification on code copied to clipboard
+This version brings new features to app:
+- add screen settings
+- option to require confirmation before code is deleted
+- option to change app theme manually
