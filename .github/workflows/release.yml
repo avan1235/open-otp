@@ -237,3 +237,5 @@ jobs:
           git config --global user.email "${{ secrets.CI_COMMIT_EMAIL }}"
           git commit ./gradle/libs.versions.toml -m "update version code"
           git push origin HEAD:master
+        env:
+          PUBLISH_TO_GOOGLE_PLAY: ${{secrets.PUBLISH_TO_GOOGLE_PLAY}}
