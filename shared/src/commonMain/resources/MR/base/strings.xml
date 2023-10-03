@@ -7,6 +7,15 @@
     <string name="scan_qr_code">Scan QR Code</string>
     <string name="copied_code_to_clipboard">Copied "%s" to clipboard</string>
     <string name="camera_not_available">Camera is not available\non simulator. Please try\nto run on a real iOS device.</string>
+    <string name="confirm_delete_item_prompt">Are you sure you want to delete this item?</string>
+    <string name="confirm_delete_specific_item_prompt">Are you sure you want to delete\n%s?</string>
+    <string name="confirm_codes_deletion">Confirm codes deletion</string>
+    <string name="theme">Theme</string>
+    <string name="light_theme_name">Light</string>
+    <string name="dark_theme_name">Dark</string>
+    <string name="system_theme_name">System</string>
+
+    <string name="settings_screen_name">Settings</string>
 
     <string name="issuer_icon_name">Issuer</string>
     <string name="search_icon_name">Search</string>
@@ -15,8 +24,10 @@
     <string name="restart_icon_name">Restart</string>
     <string name="copy_icon_name">Copy</string>
     <string name="delete_icon_name">Delete</string>
+    <string name="question_icon_name">Question</string>
     <string name="dropdown_icon_name">Select from multiple options</string>
     <string name="camara_image_name">Camera image</string>
+    <string name="settings_name">Settings</string>
 
     <string name="search_field">Search...</string>
     <string name="secret_field">secret</string>
@@ -25,6 +36,8 @@
 
     <string name="account_details_group_name">Account Details</string>
     <string name="advanced_settings_group_name">Advanced Settings</string>
+    <string name="codes_management_group_name">Codes Management</string>
+    <string name="look_and_feel_group_name">Look &amp; Feel</string>
 
     <string name="issuer_field_name">Issuer</string>
     <string name="account_name_field_name">Account Name</string>
@@ -38,6 +51,7 @@
     <string name="add_button_name">Add</string>
     <string name="save_button_name">Save</string>
     <string name="cancel_button_name">Cancel</string>
+    <string name="proceed_button_name">Proceed</string>
 
     <string name="totp_presentation">TOTP - Time Based</string>
     <string name="hotp_presentation">HOTP - Counter Based</string>

@@ -7,6 +7,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -27,10 +28,12 @@ import ml.dev.kotlin.openotp.shared.OpenOtpResources
 internal fun FilteredOtpCodeItems(
     codeData: UserOtpCodeData,
     timestamp: Long,
+    confirmCodeDismiss: Boolean,
     isSearchActive: Boolean,
     onOtpCodeDataDismiss: (OtpData) -> Boolean,
     onSearchBarActiveChange: (Boolean) -> Unit,
     onRestartCode: (OtpData) -> Unit,
+    onSettingsIconClick: () -> Unit,
     copyOtpCode: ClipboardManager.(item: OtpData, timestamp: Long) -> Unit,
 ) {
     Box(
@@ -89,11 +92,25 @@ internal fun FilteredOtpCodeItems(
                             contentDescription = stringResource(OpenOtpResources.strings.remove_icon_name),
                         )
                     }
+                } else if (!isSearchActive) {
+                    IconButton(onSettingsIconClick) {
+                        Icon(
+                            imageVector = Icons.Default.Settings,
+                            contentDescription = stringResource(OpenOtpResources.strings.settings_name),
+                        )
+                    }
                 }
             },
             interactionSource = interactionSource,
         ) {
-            OtpCodeItems(filteredCodeData, timestamp, onOtpCodeDataDismiss, onRestartCode, copyOtpCode)
+            OtpCodeItems(
+                filteredCodeData,
+                timestamp,
+                confirmCodeDismiss,
+                onOtpCodeDataDismiss,
+                onRestartCode,
+                copyOtpCode,
+            )
         }
     }
 }

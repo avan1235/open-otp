@@ -91,13 +91,13 @@ class AddTotpProviderComponentImpl(
 
     private val model: MutableValue<TotpModel> = MutableValue(TotpModel())
 
-    override val issuer: Value<String> get() = model.map { it.issuer }
-    override val accountName: Value<String> get() = model.map { it.accountName }
-    override val secret: Value<String> get() = model.map { it.secret }
-    override val secretIsError: Value<Boolean> get() = model.map { it.secretIsError }
-    override val algorithm: Value<HmacAlgorithm> get() = model.map { it.algorithm }
-    override val digits: Value<OtpDigits> get() = model.map { it.digits }
-    override val period: Value<TotpPeriod> get() = model.map { it.period }
+    override val issuer: Value<String> = model.map { it.issuer }
+    override val accountName: Value<String> = model.map { it.accountName }
+    override val secret: Value<String> = model.map { it.secret }
+    override val secretIsError: Value<Boolean> = model.map { it.secretIsError }
+    override val algorithm: Value<HmacAlgorithm> = model.map { it.algorithm }
+    override val digits: Value<OtpDigits> = model.map { it.digits }
+    override val period: Value<TotpPeriod> = model.map { it.period }
 
     override fun onIssuerChanged(issuer: String) {
         model.update { it.copy(issuer = issuer) }
@@ -167,14 +167,14 @@ class AddHotpProviderComponentImpl(
 
     private val model: MutableValue<HotpModel> = MutableValue(HotpModel())
 
-    override val issuer: Value<String> get() = model.map { it.issuer }
-    override val accountName: Value<String> get() = model.map { it.accountName }
-    override val secret: Value<String> get() = model.map { it.secret }
-    override val secretIsError: Value<Boolean> get() = model.map { it.secretIsError }
-    override val algorithm: Value<HmacAlgorithm> get() = model.map { it.algorithm }
-    override val digits: Value<OtpDigits> get() = model.map { it.digits }
-    override val counter: Value<String> get() = model.map { it.counter }
-    override val counterIsError: Value<Boolean> get() = model.map { it.counterIsError }
+    override val issuer: Value<String> = model.map { it.issuer }
+    override val accountName: Value<String> = model.map { it.accountName }
+    override val secret: Value<String> = model.map { it.secret }
+    override val secretIsError: Value<Boolean> = model.map { it.secretIsError }
+    override val algorithm: Value<HmacAlgorithm> = model.map { it.algorithm }
+    override val digits: Value<OtpDigits> = model.map { it.digits }
+    override val counter: Value<String> = model.map { it.counter }
+    override val counterIsError: Value<Boolean> = model.map { it.counterIsError }
 
     override fun onIssuerChanged(issuer: String) {
         model.update { it.copy(issuer = issuer) }

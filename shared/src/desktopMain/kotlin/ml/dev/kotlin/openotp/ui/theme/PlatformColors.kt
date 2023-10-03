@@ -4,4 +4,4 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 @Composable
-actual fun rememberPlatformColors(colors: Color) = Unit
+actual fun rememberPlatformColors(top: Color, bottom: Color) = Unit

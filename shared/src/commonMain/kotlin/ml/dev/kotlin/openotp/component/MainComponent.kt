@@ -5,6 +5,7 @@ import androidx.compose.ui.text.AnnotatedString
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
+import com.arkivanov.decompose.value.operator.map
 import com.arkivanov.decompose.value.update
 import com.arkivanov.decompose.value.updateAndGet
 import com.arkivanov.essenty.backhandler.BackCallback
@@ -12,6 +13,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import ml.dev.kotlin.openotp.USER_OTP_CODE_DATA_MODULE_QUALIFIER
+import ml.dev.kotlin.openotp.USER_PREFERENCES_MODULE_QUALIFIER
 import ml.dev.kotlin.openotp.otp.HotpData
 import ml.dev.kotlin.openotp.otp.OtpData
 import ml.dev.kotlin.openotp.otp.TotpData
@@ -26,6 +28,7 @@ import kotlin.time.Duration.Companion.milliseconds
 interface MainComponent {
 
     val timestamp: Value<Long>
+    val confirmOtpDataDelete: Value<Boolean>
     val codeData: Value<UserOtpCodeData>
     val isSearchActive: Value<Boolean>
     val navigateToScanQRCodeWhenCameraPermissionChanged: Value<Boolean>
@@ -40,6 +43,8 @@ interface MainComponent {
 
     fun onSearchBarActiveChange(isActive: Boolean)
 
+    fun onSettingsClick()
+
     fun onScanQRCodeClick()
 
     fun onAddProviderClick()
@@ -49,13 +54,18 @@ class MainComponentImpl(
     componentContext: ComponentContext,
     private val navigateOnScanQRCode: () -> Unit,
     private val navigateOnAddProvider: () -> Unit,
+    private val navigateSettings: () -> Unit,
     private val updateTimeDelay: Duration = 10.milliseconds
 ) : AbstractComponent(componentContext), MainComponent {
 
     private val userOtpCodeData: ValueSettings<UserOtpCodeData> = get(USER_OTP_CODE_DATA_MODULE_QUALIFIER)
 
+    private val userPreferences: ValueSettings<UserPreferencesModel> = get(USER_PREFERENCES_MODULE_QUALIFIER)
+
     private val _timestamp: MutableValue<Long> = MutableValue(currentEpochMilliseconds())
     override val timestamp: Value<Long> = _timestamp
+
+    override val confirmOtpDataDelete: Value<Boolean> = userPreferences.value.map { it.confirmOtpDataDelete }
 
     private val _requestedCameraPermissionCount: MutableValue<Int> = MutableValue(0)
 
@@ -121,6 +131,10 @@ class MainComponentImpl(
     override fun onSearchBarActiveChange(isActive: Boolean) {
         val updated = isSearchActive.updateAndGet { isActive }
         searchBackCallback.isEnabled = updated
+    }
+
+    override fun onSettingsClick() {
+        navigateSettings()
     }
 
     override fun onScanQRCodeClick() {

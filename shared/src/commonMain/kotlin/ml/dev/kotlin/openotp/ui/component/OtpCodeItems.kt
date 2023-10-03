@@ -18,6 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cached
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.QuestionMark
 import androidx.compose.material3.*
 import androidx.compose.material3.DismissDirection.EndToStart
 import androidx.compose.material3.DismissDirection.StartToEnd
@@ -56,6 +57,7 @@ import kotlin.math.roundToInt
 internal fun OtpCodeItems(
     codeData: UserOtpCodeData,
     timestamp: Long,
+    confirmCodeDismiss: Boolean,
     onOtpCodeDataDismiss: (OtpData) -> Boolean,
     onRestartCode: (OtpData) -> Unit,
     copyOtpCode: ClipboardManager.(item: OtpData, timestamp: Long) -> Unit,
@@ -63,6 +65,8 @@ internal fun OtpCodeItems(
 ) {
     val coroutineScope = rememberCoroutineScope()
     val currentTimestamp by rememberUpdatedState(timestamp)
+    var dismissedCode by remember { mutableStateOf<OtpData?>(null) }
+
     LazyColumn(
         state = listState,
         modifier = Modifier
@@ -87,13 +91,16 @@ internal fun OtpCodeItems(
                 confirmValueChange = {
                     when (it) {
                         DismissedToEnd -> localClipboardManager.copyOtpCode(currentItem, currentTimestamp).letTrue()
-                        DismissedToStart -> onOtpCodeDataDismiss(currentItem)
+                        DismissedToStart -> when (confirmCodeDismiss) {
+                            true -> true.also { dismissedCode = currentItem }
+                            false -> onOtpCodeDataDismiss(currentItem)
+                        }
 
                         else -> false
                     }
                 },
             )
-            if (dismissState.isDismissed(StartToEnd)) {
+            if (dismissState.isDismissed(StartToEnd) || dismissState.isDismissed(EndToStart)) {
                 OnceLaunchedEffect { dismissState.reset() }
             }
             SwipeToDismiss(
@@ -110,6 +117,22 @@ internal fun OtpCodeItems(
                 }
             )
         }
+    }
+    when (val dismissed = dismissedCode) {
+        null -> Unit
+        else -> ConfirmDialog(
+            onDismissRequest = { dismissedCode = null },
+            onConfirmation = {
+                dismissedCode = null
+                onOtpCodeDataDismiss(dismissed)
+            },
+            text = when (val presentation = dismissed.namePresentation()) {
+                null -> stringResource(OpenOtpResources.strings.confirm_delete_item_prompt)
+                else -> stringResource(OpenOtpResources.strings.confirm_delete_specific_item_prompt, presentation)
+            },
+            icon = Icons.Default.QuestionMark,
+            imageDescription = stringResource(OpenOtpResources.strings.question_icon_name),
+        )
     }
 }
 

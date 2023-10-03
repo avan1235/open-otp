@@ -42,22 +42,27 @@ internal fun MainScreen(mainComponent: MainComponent) {
 
         val codeData by mainComponent.codeData.subscribeAsState()
         val timestamp by mainComponent.timestamp.subscribeAsState()
+        val confirmOtpDataDelete by mainComponent.confirmOtpDataDelete.subscribeAsState()
         val isSearchActive by mainComponent.isSearchActive.subscribeAsState()
 
         FilteredOtpCodeItems(
             codeData = codeData,
             timestamp = timestamp,
+            confirmCodeDismiss = confirmOtpDataDelete,
             isSearchActive = isSearchActive,
             onOtpCodeDataDismiss = mainComponent::onOtpCodeDataRemove,
             onSearchBarActiveChange = mainComponent::onSearchBarActiveChange,
             onRestartCode = mainComponent::onOtpCodeDataRestart,
-        copyOtpCode = mainComponent::copyOtpCode,)
+            copyOtpCode = mainComponent::copyOtpCode,
+            onSettingsIconClick = mainComponent::onSettingsClick
+        )
         AllOtpCodeItems(
             codeData = codeData,
             timestamp = timestamp,
+            confirmCodeDismiss = confirmOtpDataDelete,
             listState = listState,
             onOtpCodeDataDismiss = mainComponent::onOtpCodeDataRemove,
-            onRestartCode = mainComponent::onOtpCodeDataRestart,copyOtpCode = mainComponent::copyOtpCode,
+            onRestartCode = mainComponent::onOtpCodeDataRestart, copyOtpCode = mainComponent::copyOtpCode,
         )
         AddActionButton(
             expanded = isFirstListItemVisible.value,
@@ -80,6 +85,7 @@ internal fun MainScreen(mainComponent: MainComponent) {
 private fun AllOtpCodeItems(
     codeData: UserOtpCodeData,
     timestamp: Long,
+    confirmCodeDismiss: Boolean,
     listState: LazyListState,
     onOtpCodeDataDismiss: (OtpData) -> Boolean,
     onRestartCode: (OtpData) -> Unit,
@@ -98,7 +104,15 @@ private fun AllOtpCodeItems(
                 contentAlignment = Alignment.Center,
             ) {
                 if (codeData.isNotEmpty()) {
-                    OtpCodeItems(codeData, timestamp, onOtpCodeDataDismiss, onRestartCode, copyOtpCode, listState)
+                    OtpCodeItems(
+                        codeData,
+                        timestamp,
+                        confirmCodeDismiss,
+                        onOtpCodeDataDismiss,
+                        onRestartCode,
+                        copyOtpCode,
+                        listState,
+                    )
                 } else {
                     Text(text = stringResource(OpenOtpResources.strings.add_new_keys))
                 }

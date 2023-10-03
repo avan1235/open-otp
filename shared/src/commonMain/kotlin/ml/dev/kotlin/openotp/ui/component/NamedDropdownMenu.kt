@@ -13,6 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.stringResource
 import ml.dev.kotlin.openotp.shared.OpenOtpResources
@@ -26,8 +27,9 @@ internal fun <T : Named> NamedDropdownMenu(
     selected: T,
     onSelected: (T) -> Unit,
     anyItems: Collection<T>,
+    icon: ImageVector? = null,
 ) {
-    NamedBox(name) {
+    NamedBox(name, icon) {
         val dropDownWidth = maxWidth
         val items = anyItems.toList()
         var expanded by remember { mutableStateOf(false) }

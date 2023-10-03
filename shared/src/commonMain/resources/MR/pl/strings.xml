@@ -7,6 +7,15 @@
     <string name="scan_qr_code">Zeskanuj kod QR</string>
     <string name="copied_code_to_clipboard">Skopiowano "%s" do schowka</string>
     <string name="camera_not_available">Aparat nie jest dostępny\nna symulatorze. Proszę\nspróbowaź uruchomić na\nfizycznym urządzeniu z iOS.</string>
+    <string name="confirm_delete_item_prompt">Czy jesteś pewien, że chcesz usunąć ten element?</string>
+    <string name="confirm_delete_specific_item_prompt">Czy jesteś pewien, że chcesz usunąć\n%s?</string>
+    <string name="confirm_codes_deletion">Zatwierdzaj usunięcie kodu</string>
+    <string name="theme">Motyw</string>
+    <string name="light_theme_name">Jasny</string>
+    <string name="dark_theme_name">Ciemny</string>
+    <string name="system_theme_name">Systemowy</string>
+
+    <string name="settings_screen_name">Ustawienia</string>
 
     <string name="issuer_icon_name">Wystawca</string>
     <string name="search_icon_name">Wyszukaj</string>
@@ -15,8 +24,10 @@
     <string name="restart_icon_name">Zrestartuj</string>
     <string name="copy_icon_name">Skopiuj</string>
     <string name="delete_icon_name">Usuń</string>
+    <string name="question_icon_name">Pytanie</string>
     <string name="dropdown_icon_name">Wybierz z wielu opcji</string>
     <string name="camara_image_name">Widok kamery</string>
+    <string name="settings_name">Ustawienia</string>
 
     <string name="search_field">Wyszukaj...</string>
     <string name="secret_field">sekret</string>
@@ -25,6 +36,8 @@
 
     <string name="account_details_group_name">Szczegóły konta</string>
     <string name="advanced_settings_group_name">Zaawansowane ustawienia</string>
+    <string name="codes_management_group_name">Zarządzanie kodami</string>
+    <string name="look_and_feel_group_name">Wygląd aplikacji</string>
 
     <string name="issuer_field_name">Wystawca</string>
     <string name="account_name_field_name">Nazwa konta</string>
@@ -38,6 +51,7 @@
     <string name="add_button_name">Dodaj</string>
     <string name="save_button_name">Zapisz</string>
     <string name="cancel_button_name">Anuluj</string>
+    <string name="proceed_button_name">Zatwierdź</string>
 
     <string name="totp_presentation">TOTP - Czasowy</string>
     <string name="hotp_presentation">HOTP - Manualny</string>

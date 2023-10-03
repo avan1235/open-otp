@@ -1,12 +1,18 @@
 package ml.dev.kotlin.openotp.component
 
-import kotlinx.serialization.Serializable
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
+import com.arkivanov.decompose.value.operator.map
+import kotlinx.serialization.Serializable
+import ml.dev.kotlin.openotp.USER_PREFERENCES_MODULE_QUALIFIER
 import ml.dev.kotlin.openotp.component.OpenOtpAppComponent.Child
+import ml.dev.kotlin.openotp.util.ValueSettings
+import org.koin.core.component.get
 
 interface OpenOtpAppComponent {
+
+    val theme: Value<OpenOtpAppTheme>
 
     val stack: Value<ChildStack<*, Child>>
 
@@ -19,6 +25,8 @@ interface OpenOtpAppComponent {
             val totpComponent: AddTotpProviderComponent,
             val hotpComponent: AddHotpProviderComponent,
         ) : Child()
+
+        class Settings(val component: SettingsComponent) : Child()
     }
 }
 
@@ -36,12 +44,17 @@ class OpenOtpAppComponentImpl(
         childFactory = ::child,
     )
 
+    private val userPreferences: ValueSettings<UserPreferencesModel> = get(USER_PREFERENCES_MODULE_QUALIFIER)
+
+    override val theme: Value<OpenOtpAppTheme> = userPreferences.value.map { it.theme }
+
     private fun child(config: Config, childComponentContext: ComponentContext): Child = when (config) {
         is Config.Main -> Child.Main(
             MainComponentImpl(
                 componentContext = childComponentContext,
                 navigateOnScanQRCode = { navigation.push(Config.ScanQRCode) },
                 navigateOnAddProvider = { navigation.push(Config.AddProvider) },
+                navigateSettings = { navigation.push(Config.Settings) }
             )
         )
 
@@ -66,6 +79,13 @@ class OpenOtpAppComponentImpl(
                 navigateOnCancelClicked = navigation::pop,
             )
         )
+
+        is Config.Settings -> Child.Settings(
+            SettingsComponentImpl(
+                componentContext = childComponentContext,
+                navigateOnExit = navigation::pop,
+            )
+        )
     }
 
     override fun onBackClicked(toIndex: Int) {
@@ -82,5 +102,8 @@ class OpenOtpAppComponentImpl(
 
         @Serializable
         data object AddProvider : Config
+
+        @Serializable
+        data object Settings : Config
     }
 }

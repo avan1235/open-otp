@@ -6,10 +6,10 @@ import androidx.compose.ui.graphics.Color
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @Composable
-actual fun rememberPlatformColors(colors: Color) {
+actual fun rememberPlatformColors(top: Color, bottom: Color) {
     val sysUiController = rememberSystemUiController()
     SideEffect {
-        sysUiController.setSystemBarsColor(colors)
-        sysUiController.setNavigationBarColor(colors)
+        sysUiController.setSystemBarsColor(top)
+        sysUiController.setNavigationBarColor(bottom)
     }
 }

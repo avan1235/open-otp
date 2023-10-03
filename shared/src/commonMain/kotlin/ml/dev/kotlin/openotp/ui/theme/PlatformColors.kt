@@ -4,4 +4,4 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 @Composable
-expect fun rememberPlatformColors(colors: Color)
+expect fun rememberPlatformColors(top: Color, bottom: Color)
