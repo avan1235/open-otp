@@ -18,6 +18,25 @@ sealed class OtpData {
     abstract override fun hashCode(): Int
 
     abstract override fun equals(other: Any?): Boolean
+
+    val namePresentation: String? by lazy {
+        val issuer = issuer?.takeIf { it.isNotBlank() }
+        val accountName = accountName
+            ?.takeIf { it.isNotBlank() }
+            ?.run {
+                when {
+                    startsWith("$issuer: ") -> removePrefix("$issuer: ")
+                    startsWith("$issuer:") -> removePrefix("$issuer:")
+                    else -> this
+                }
+            }
+        when {
+            issuer != null && accountName != null -> "$issuer: $accountName"
+            issuer != null -> issuer
+            accountName != null -> accountName
+            else -> null
+        }
+    }
 }
 
 @Immutable

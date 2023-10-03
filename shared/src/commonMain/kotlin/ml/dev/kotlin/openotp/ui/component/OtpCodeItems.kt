@@ -126,7 +126,7 @@ internal fun OtpCodeItems(
                 dismissedCode = null
                 onOtpCodeDataDismiss(dismissed)
             },
-            text = when (val presentation = dismissed.namePresentation()) {
+            text = when (val presentation = dismissed.namePresentation) {
                 null -> stringResource(OpenOtpResources.strings.confirm_delete_item_prompt)
                 else -> stringResource(OpenOtpResources.strings.confirm_delete_specific_item_prompt, presentation)
             },
@@ -191,12 +191,11 @@ private fun OtpCodeItem(
                 )
             }
         }
-        val itemNamePresentation = remember(item) { item.namePresentation() }
         val itemIcon = remember(item) { item.issuer.issuerIcon }
         ListItem(
             overlineContent = overlineContent@{
                 Text(
-                    text = itemNamePresentation ?: return@overlineContent,
+                    text = item.namePresentation ?: return@overlineContent,
                     fontSize = 12.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -307,25 +306,6 @@ private fun OtpData.codePresentation(timestamp: Long): String {
     val length = code.length
     val halfLength = length / 2
     return code.substring(0..<halfLength) + " " + code.substring(halfLength..<length)
-}
-
-private fun OtpData.namePresentation(): String? {
-    val issuer = issuer?.takeIf { it.isNotBlank() }
-    val accountName = accountName
-        ?.takeIf { it.isNotBlank() }
-        ?.run {
-            when {
-                startsWith("$issuer: ") -> removePrefix("$issuer: ")
-                startsWith("$issuer:") -> removePrefix("$issuer:")
-                else -> this
-            }
-        }
-    return when {
-        issuer != null && accountName != null -> "$issuer: $accountName"
-        issuer != null -> issuer
-        accountName != null -> accountName
-        else -> null
-    }
 }
 
 @Composable
