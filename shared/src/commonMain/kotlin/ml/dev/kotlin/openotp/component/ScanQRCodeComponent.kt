@@ -2,11 +2,13 @@ package ml.dev.kotlin.openotp.component
 
 import com.arkivanov.decompose.ComponentContext
 import com.eygraber.uri.Uri
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.launch
 import ml.dev.kotlin.openotp.USER_OTP_CODE_DATA_MODULE_QUALIFIER
 import ml.dev.kotlin.openotp.otp.*
 import ml.dev.kotlin.openotp.qr.QRResult
 import ml.dev.kotlin.openotp.shared.OpenOtpResources
-import ml.dev.kotlin.openotp.util.ValueSettings
+import ml.dev.kotlin.openotp.util.StateFlowSettings
 import ml.dev.kotlin.openotp.util.isValidBase32Secret
 import ml.dev.kotlin.openotp.util.letFalse
 import org.koin.core.component.get
@@ -23,18 +25,22 @@ class ScanQRCodeComponentImpl(
     private val navigateOnCancel: (message: String?) -> Unit,
 ) : AbstractComponent(componentContext), ScanQRCodeComponent {
 
-    private val userOtpCodeData: ValueSettings<UserOtpCodeData> = get(USER_OTP_CODE_DATA_MODULE_QUALIFIER)
+    private val userOtpCodeData: StateFlowSettings<UserOtpCodeData> = get(USER_OTP_CODE_DATA_MODULE_QUALIFIER)
 
     override fun onQRCodeScanned(result: QRResult): Boolean = when (result) {
         is QRResult.QRError -> navigateOnCancel(invalidQRCodeMessage).letFalse()
         is QRResult.QRSuccess -> {
-            val otpData = result.nonEmptyCodes.distinct().map(::extractQRCodeUserOtpCodeData)
-            val nonNullOtpData = otpData.filterNotNull()
-            if (otpData.size != nonNullOtpData.size) {
+            val distinctOtpData = result.nonEmptyCodes.distinct().map(::extractQRCodeUserOtpCodeData)
+            val nonNullOtpData = distinctOtpData.filterNotNull()
+            if (distinctOtpData.size != nonNullOtpData.size) {
                 navigateOnCancel(invalidQRCodeMessage)
             } else {
-                nonNullOtpData.forEach(::updateUserOtpCodeData)
-                navigateOnCancel(null)
+                val updated = nonNullOtpData.map { otpData ->
+                    userOtpCodeData.updateInScope { it + otpData }
+                }
+                scope
+                    .launch { updated.awaitAll() }
+                    .invokeOnCompletion { navigateOnCancel(null) }
             }
             false
         }
@@ -76,12 +82,6 @@ class ScanQRCodeComponentImpl(
         }
     } catch (_: InvalidQRCodeException) {
         null
-    }
-
-    private fun updateUserOtpCodeData(otpData: OtpData) {
-        val userData = userOtpCodeData.get()
-        val updatedData = userData + otpData
-        userOtpCodeData.set(updatedData)
     }
 
     private val invalidQRCodeMessage: String

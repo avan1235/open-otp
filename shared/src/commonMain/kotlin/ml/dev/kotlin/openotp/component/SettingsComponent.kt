@@ -2,9 +2,8 @@ package ml.dev.kotlin.openotp.component
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.Value
-import com.arkivanov.decompose.value.operator.map
 import ml.dev.kotlin.openotp.USER_PREFERENCES_MODULE_QUALIFIER
-import ml.dev.kotlin.openotp.util.ValueSettings
+import ml.dev.kotlin.openotp.util.StateFlowSettings
 import org.koin.core.component.get
 
 interface SettingsComponent {
@@ -25,24 +24,20 @@ class SettingsComponentImpl(
     private val navigateOnExit: () -> Unit,
 ) : AbstractComponent(componentContext), SettingsComponent {
 
-    private val userPreferences: ValueSettings<UserPreferencesModel> = get(USER_PREFERENCES_MODULE_QUALIFIER)
+    private val userPreferences: StateFlowSettings<UserPreferencesModel> = get(USER_PREFERENCES_MODULE_QUALIFIER)
 
     override val theme: Value<OpenOtpAppTheme> =
-        userPreferences.value.map { it.theme }
+        userPreferences.stateFlow.map { it.theme }.asValue()
 
     override val confirmOtpDataDelete: Value<Boolean> =
-        userPreferences.value.map { it.confirmOtpDataDelete }
+        userPreferences.stateFlow.map { it.confirmOtpDataDelete }.asValue()
 
     override fun onSelectedTheme(theme: OpenOtpAppTheme) {
-        val preferences = userPreferences.get()
-        val updated = preferences.copy(theme = theme)
-        userPreferences.set(updated)
+        userPreferences.updateInScope { it.copy(theme = theme) }
     }
 
     override fun onConfirmOtpDataDeleteChange(confirm: Boolean) {
-        val preferences = userPreferences.get()
-        val updated = preferences.copy(confirmOtpDataDelete = confirm)
-        userPreferences.set(updated)
+        userPreferences.updateInScope { it.copy(confirmOtpDataDelete = confirm) }
     }
 
     override fun onExitSettings() {

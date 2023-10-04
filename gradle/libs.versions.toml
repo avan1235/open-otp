@@ -72,6 +72,7 @@ mlkit-barcodeScanning = { module = "com.google.mlkit:barcode-scanning", version.
 moko-resoures = { module = "dev.icerock.moko:resources", version.ref = "moko-resources" }
 moko-resoures-compose = { module = "dev.icerock.moko:resources-compose", version.ref = "moko-resources" }
 multiplatform-settings = { module = "com.russhwolf:multiplatform-settings", version.ref = "multiplatform-settings" }
+multiplatform-settings-coroutines = { module = "com.russhwolf:multiplatform-settings-coroutines", version.ref = "multiplatform-settings" }
 parcelize-darwinRuntime = { module = "com.arkivanov.parcelize.darwin:runtime", version.ref = "parcelize-darwin" }
 uriKmp = { module = "com.eygraber:uri-kmp", version.ref = "uri-kmp" }
 uuid = { module = "com.benasher44:uuid", version.ref = "uuid" }

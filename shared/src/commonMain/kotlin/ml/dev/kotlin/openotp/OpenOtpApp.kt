@@ -20,7 +20,7 @@ import ml.dev.kotlin.openotp.ui.screen.MainScreen
 import ml.dev.kotlin.openotp.ui.screen.ScanQRCodeScreen
 import ml.dev.kotlin.openotp.ui.screen.SettingsScreen
 import ml.dev.kotlin.openotp.ui.theme.OpenOtpTheme
-import ml.dev.kotlin.openotp.util.ValueSettings
+import ml.dev.kotlin.openotp.util.StateFlowSettings
 import org.koin.compose.koinInject
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
@@ -75,7 +75,7 @@ internal fun initOpenOtpKoin(appDeclaration: KoinAppDeclaration = {}) {
 
 private fun Module.userOtpCodeDataModule() {
     single(USER_OTP_CODE_DATA_MODULE_QUALIFIER) {
-        ValueSettings(
+        StateFlowSettings(
             name = "user-otp-code-data",
             context = get(),
             serializer = ListSerializer(OtpData.serializer()),
@@ -86,7 +86,7 @@ private fun Module.userOtpCodeDataModule() {
 
 private fun Module.userPreferencesModule() {
     single(USER_PREFERENCES_MODULE_QUALIFIER) {
-        ValueSettings(
+        StateFlowSettings(
             name = "user-preferences",
             context = get(),
             serializer = UserPreferencesModel.serializer(),

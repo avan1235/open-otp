@@ -1,15 +1,15 @@
 package ml.dev.kotlin.openotp.component
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
-import com.arkivanov.decompose.value.operator.map
-import com.arkivanov.decompose.value.update
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import ml.dev.kotlin.openotp.USER_OTP_CODE_DATA_MODULE_QUALIFIER
 import ml.dev.kotlin.openotp.otp.*
 import ml.dev.kotlin.openotp.shared.OpenOtpResources
-import ml.dev.kotlin.openotp.util.ValueSettings
+import ml.dev.kotlin.openotp.util.StateFlowSettings
 import ml.dev.kotlin.openotp.util.isValidBase32Secret
+import ml.dev.kotlin.openotp.util.unit
 import org.koin.core.component.get
 
 interface AddOtpProviderComponent {
@@ -51,7 +51,7 @@ abstract class AddOtpProviderComponentImpl(
     private val navigateOnCancelClicked: () -> Unit,
 ) : AbstractComponent(componentContext), AddOtpProviderComponent {
 
-    protected val secureStorage: ValueSettings<UserOtpCodeData> = get(USER_OTP_CODE_DATA_MODULE_QUALIFIER)
+    protected val secureStorage: StateFlowSettings<UserOtpCodeData> = get(USER_OTP_CODE_DATA_MODULE_QUALIFIER)
 
     protected fun notifyInvalid(fieldName: String) {
         toast(message = stringResource(OpenOtpResources.strings.invalid_field_name_provided_formatted, fieldName))
@@ -89,15 +89,15 @@ class AddTotpProviderComponentImpl(
         val period: TotpPeriod = TotpConfig.DEFAULT.period,
     )
 
-    private val model: MutableValue<TotpModel> = MutableValue(TotpModel())
+    private val model: MutableStateFlow<TotpModel> = MutableStateFlow(TotpModel())
 
-    override val issuer: Value<String> = model.map { it.issuer }
-    override val accountName: Value<String> = model.map { it.accountName }
-    override val secret: Value<String> = model.map { it.secret }
-    override val secretIsError: Value<Boolean> = model.map { it.secretIsError }
-    override val algorithm: Value<HmacAlgorithm> = model.map { it.algorithm }
-    override val digits: Value<OtpDigits> = model.map { it.digits }
-    override val period: Value<TotpPeriod> = model.map { it.period }
+    override val issuer: Value<String> = model.map { it.issuer }.asValue()
+    override val accountName: Value<String> = model.map { it.accountName }.asValue()
+    override val secret: Value<String> = model.map { it.secret }.asValue()
+    override val secretIsError: Value<Boolean> = model.map { it.secretIsError }.asValue()
+    override val algorithm: Value<HmacAlgorithm> = model.map { it.algorithm }.asValue()
+    override val digits: Value<OtpDigits> = model.map { it.digits }.asValue()
+    override val period: Value<TotpPeriod> = model.map { it.period }.asValue()
 
     override fun onIssuerChanged(issuer: String) {
         model.update { it.copy(issuer = issuer) }
@@ -137,10 +137,11 @@ class AddTotpProviderComponentImpl(
 
         val config = TotpConfig(period, digits, algorithm)
         val codeData = TotpData(issuer, accountName, secret, config)
-        val updated = secureStorage.get() + codeData
-        secureStorage.set(updated)
-
-        super.onSaveClicked()
+        secureStorage
+            .updateInScope { it + codeData }
+            .invokeOnCompletion {
+                super.onSaveClicked()
+            }.unit()
     }
 }
 
@@ -165,16 +166,16 @@ class AddHotpProviderComponentImpl(
         val counterIsError: Boolean = false,
     )
 
-    private val model: MutableValue<HotpModel> = MutableValue(HotpModel())
+    private val model: MutableStateFlow<HotpModel> = MutableStateFlow(HotpModel())
 
-    override val issuer: Value<String> = model.map { it.issuer }
-    override val accountName: Value<String> = model.map { it.accountName }
-    override val secret: Value<String> = model.map { it.secret }
-    override val secretIsError: Value<Boolean> = model.map { it.secretIsError }
-    override val algorithm: Value<HmacAlgorithm> = model.map { it.algorithm }
-    override val digits: Value<OtpDigits> = model.map { it.digits }
-    override val counter: Value<String> = model.map { it.counter }
-    override val counterIsError: Value<Boolean> = model.map { it.counterIsError }
+    override val issuer: Value<String> = model.map { it.issuer }.asValue()
+    override val accountName: Value<String> = model.map { it.accountName }.asValue()
+    override val secret: Value<String> = model.map { it.secret }.asValue()
+    override val secretIsError: Value<Boolean> = model.map { it.secretIsError }.asValue()
+    override val algorithm: Value<HmacAlgorithm> = model.map { it.algorithm }.asValue()
+    override val digits: Value<OtpDigits> = model.map { it.digits }.asValue()
+    override val counter: Value<String> = model.map { it.counter }.asValue()
+    override val counterIsError: Value<Boolean> = model.map { it.counterIsError }.asValue()
 
     override fun onIssuerChanged(issuer: String) {
         model.update { it.copy(issuer = issuer) }
@@ -228,10 +229,11 @@ class AddHotpProviderComponentImpl(
 
         val config = HotpConfig(digits, algorithm)
         val codeData = HotpData(issuer, accountName, secret, counter, config)
-        val updated = secureStorage.get() + codeData
-        secureStorage.set(updated)
-
-        super.onSaveClicked()
+        secureStorage
+            .updateInScope { it + codeData }
+            .invokeOnCompletion {
+                super.onSaveClicked()
+            }.unit()
     }
 
     private fun notifyInvalidCounter() =

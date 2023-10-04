@@ -3,11 +3,10 @@ package ml.dev.kotlin.openotp.component
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
-import com.arkivanov.decompose.value.operator.map
 import kotlinx.serialization.Serializable
 import ml.dev.kotlin.openotp.USER_PREFERENCES_MODULE_QUALIFIER
 import ml.dev.kotlin.openotp.component.OpenOtpAppComponent.Child
-import ml.dev.kotlin.openotp.util.ValueSettings
+import ml.dev.kotlin.openotp.util.StateFlowSettings
 import org.koin.core.component.get
 
 interface OpenOtpAppComponent {
@@ -44,9 +43,9 @@ class OpenOtpAppComponentImpl(
         childFactory = ::child,
     )
 
-    private val userPreferences: ValueSettings<UserPreferencesModel> = get(USER_PREFERENCES_MODULE_QUALIFIER)
+    private val userPreferences: StateFlowSettings<UserPreferencesModel> = get(USER_PREFERENCES_MODULE_QUALIFIER)
 
-    override val theme: Value<OpenOtpAppTheme> = userPreferences.value.map { it.theme }
+    override val theme: Value<OpenOtpAppTheme> = userPreferences.stateFlow.map { it.theme }.asValue()
 
     private fun child(config: Config, childComponentContext: ComponentContext): Child = when (config) {
         is Config.Main -> Child.Main(

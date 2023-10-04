@@ -36,6 +36,7 @@ kotlin {
             languageSettings.apply {
                 optIn("kotlin.contracts.ExperimentalContracts")
                 optIn("kotlinx.serialization.ExperimentalSerializationApi")
+                optIn("com.russhwolf.settings.ExperimentalSettingsApi")
                 optIn("com.russhwolf.settings.ExperimentalSettingsImplementation")
                 optIn("androidx.compose.foundation.ExperimentalFoundationApi")
                 optIn("androidx.compose.ui.ExperimentalComposeUiApi")
@@ -71,6 +72,7 @@ kotlin {
                 implementation(libs.uriKmp)
 
                 implementation(libs.multiplatform.settings)
+                implementation(libs.multiplatform.settings.coroutines)
 
                 api(libs.decompose)
                 api(libs.decompose.extensionsComposeJetbrains)

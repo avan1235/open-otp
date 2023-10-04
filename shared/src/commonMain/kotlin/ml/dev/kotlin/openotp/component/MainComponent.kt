@@ -3,13 +3,12 @@ package ml.dev.kotlin.openotp.component
 import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.text.AnnotatedString
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
-import com.arkivanov.decompose.value.operator.map
-import com.arkivanov.decompose.value.update
-import com.arkivanov.decompose.value.updateAndGet
 import com.arkivanov.essenty.backhandler.BackCallback
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import ml.dev.kotlin.openotp.USER_OTP_CODE_DATA_MODULE_QUALIFIER
@@ -19,8 +18,9 @@ import ml.dev.kotlin.openotp.otp.OtpData
 import ml.dev.kotlin.openotp.otp.TotpData
 import ml.dev.kotlin.openotp.otp.UserOtpCodeData
 import ml.dev.kotlin.openotp.shared.OpenOtpResources
-import ml.dev.kotlin.openotp.util.ValueSettings
+import ml.dev.kotlin.openotp.util.StateFlowSettings
 import ml.dev.kotlin.openotp.util.currentEpochMilliseconds
+import ml.dev.kotlin.openotp.util.unit
 import org.koin.core.component.get
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
@@ -58,28 +58,35 @@ class MainComponentImpl(
     private val updateTimeDelay: Duration = 10.milliseconds
 ) : AbstractComponent(componentContext), MainComponent {
 
-    private val userOtpCodeData: ValueSettings<UserOtpCodeData> = get(USER_OTP_CODE_DATA_MODULE_QUALIFIER)
+    private data class CameraPermissionRequest(
+        val count: Int = 0,
+        val changed: Boolean = false,
+    )
 
-    private val userPreferences: ValueSettings<UserPreferencesModel> = get(USER_PREFERENCES_MODULE_QUALIFIER)
+    private val userOtpCodeData: StateFlowSettings<UserOtpCodeData> = get(USER_OTP_CODE_DATA_MODULE_QUALIFIER)
 
-    private val _timestamp: MutableValue<Long> = MutableValue(currentEpochMilliseconds())
-    override val timestamp: Value<Long> = _timestamp
+    private val userPreferences: StateFlowSettings<UserPreferencesModel> = get(USER_PREFERENCES_MODULE_QUALIFIER)
 
-    override val confirmOtpDataDelete: Value<Boolean> = userPreferences.value.map { it.confirmOtpDataDelete }
+    private val _timestamp: MutableStateFlow<Long> = MutableStateFlow(currentEpochMilliseconds())
+    override val timestamp: Value<Long> = _timestamp.asValue()
 
-    private val _requestedCameraPermissionCount: MutableValue<Int> = MutableValue(0)
+    override val confirmOtpDataDelete: Value<Boolean> =
+        userPreferences.stateFlow.map { it.confirmOtpDataDelete }.asValue()
 
-    private val _navigateToScanQRCodeWhenCameraPermissionChanged: MutableValue<Boolean> = MutableValue(false)
+    private val _cameraPermissionRequest: MutableStateFlow<CameraPermissionRequest> =
+        MutableStateFlow(CameraPermissionRequest())
+
     override val navigateToScanQRCodeWhenCameraPermissionChanged: Value<Boolean> =
-        _navigateToScanQRCodeWhenCameraPermissionChanged
+        _cameraPermissionRequest.map { it.changed }.asValue()
 
 
-    override val codeData: Value<UserOtpCodeData> = userOtpCodeData.value
+    override val codeData: Value<UserOtpCodeData> = userOtpCodeData.stateFlow.asValue()
 
-    override val isSearchActive: MutableValue<Boolean> = MutableValue(false)
+    private val _isSearchActive: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    override val isSearchActive: Value<Boolean> = _isSearchActive.asValue()
 
     private val searchBackCallback: BackCallback = BackCallback {
-        isSearchActive.value = false
+        _isSearchActive.value = false
     }
 
     init {
@@ -87,35 +94,33 @@ class MainComponentImpl(
         scope.launch {
             while (isActive) {
                 delay(updateTimeDelay)
-                _timestamp.update { currentEpochMilliseconds() }
+                _timestamp.emit(currentEpochMilliseconds())
             }
         }
     }
 
     override fun onRequestedCameraPermission() {
-        val updated = _requestedCameraPermissionCount.updateAndGet { it + 1 }
-        _navigateToScanQRCodeWhenCameraPermissionChanged.update { true }
-
-        if (updated < MAX_CAMERA_PERMISSION_SILENT_REQUESTS) return
+        val updated = _cameraPermissionRequest.updateAndGet {
+            it.copy(count = it.count + 1, changed = true)
+        }
+        if (updated.count < MAX_CAMERA_PERMISSION_SILENT_REQUESTS) return
 
         toast(message = stringResource(OpenOtpResources.strings.missing_camera_permissions))
     }
 
     override fun onOtpCodeDataRemove(otpData: OtpData): Boolean {
-        val before = userOtpCodeData.get()
-        val filtered = before.filter { it != otpData }
-        userOtpCodeData.set(filtered)
-        return userOtpCodeData.get() != before
+        userOtpCodeData.updateInScope { before ->
+            before.filter { it != otpData }
+        }.unit()
+        return true
     }
 
     override fun onOtpCodeDataRestart(otpData: OtpData) = when (otpData) {
         is TotpData -> Unit
-        is HotpData -> {
-            val before = userOtpCodeData.get()
+        is HotpData -> userOtpCodeData.updateInScope { before ->
             val updated = otpData.increaseCounter()
-            val mapped = before.map { if (it != otpData) it else updated }
-            userOtpCodeData.set(mapped)
-        }
+            before.map { if (it != otpData) it else updated }
+        }.unit()
     }
 
     override fun copyOtpCode(clipboardManager: ClipboardManager, item: OtpData, timestamp: Long) {
@@ -129,7 +134,7 @@ class MainComponentImpl(
     }
 
     override fun onSearchBarActiveChange(isActive: Boolean) {
-        val updated = isSearchActive.updateAndGet { isActive }
+        val updated = _isSearchActive.updateAndGet { isActive }
         searchBackCallback.isEnabled = updated
     }
 
@@ -138,7 +143,7 @@ class MainComponentImpl(
     }
 
     override fun onScanQRCodeClick() {
-        _navigateToScanQRCodeWhenCameraPermissionChanged.update { false }
+        _cameraPermissionRequest.update { it.copy(changed = false) }
         navigateOnScanQRCode()
     }
 
