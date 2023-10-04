@@ -224,7 +224,8 @@ private fun AccountDetails(component: AddOtpProviderComponent) {
                 is AddTotpProviderComponent -> FormFieldButtonType.Done
                 is AddHotpProviderComponent -> FormFieldButtonType.Next
                 else -> FormFieldButtonType.Done
-            }
+            },
+            password = true,
         )
     }
 }
