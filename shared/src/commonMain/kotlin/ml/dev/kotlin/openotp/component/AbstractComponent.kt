@@ -16,11 +16,12 @@ import ml.dev.kotlin.openotp.util.coroutineScope
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import kotlin.coroutines.CoroutineContext
+import kotlinx.coroutines.flow.combine as coroutinesFlowCombine
 import kotlinx.coroutines.flow.map as coroutinesFlowMap
 import ml.dev.kotlin.openotp.util.asValue as asValueUtil
 
 abstract class AbstractComponent(
-    componentContext: ComponentContext
+    componentContext: ComponentContext,
 ) : ComponentContext by componentContext, KoinComponent {
 
     protected val scope: CoroutineScope = coroutineScope(Dispatchers.Main.immediate)
@@ -33,7 +34,7 @@ abstract class AbstractComponent(
         message: String,
         actionLabel: String? = null,
         withDismissAction: Boolean = false,
-        duration: SnackbarDuration = if (actionLabel == null) SnackbarDuration.Short else SnackbarDuration.Indefinite
+        duration: SnackbarDuration = if (actionLabel == null) SnackbarDuration.Short else SnackbarDuration.Indefinite,
     ) {
         scope.launch {
             snackbarHostState.showSnackbar(message, actionLabel, withDismissAction, duration)
@@ -54,13 +55,55 @@ abstract class AbstractComponent(
 
     protected fun <T, M> StateFlow<T>.map(
         coroutineScope: CoroutineScope = scope,
-        mapper: (value: T) -> M
+        mapper: (value: T) -> M,
     ): StateFlow<M> =
         coroutinesFlowMap(mapper)
             .stateIn(
                 coroutineScope,
                 SharingStarted.Eagerly,
                 mapper(value),
+            )
+
+    protected fun <T1, T2, R> combine(
+        flow1: StateFlow<T1>,
+        flow2: StateFlow<T2>,
+        coroutineScope: CoroutineScope = scope,
+        transform: (T1, T2) -> R,
+    ): StateFlow<R> =
+        coroutinesFlowCombine(flow1, flow2, transform)
+            .stateIn(
+                coroutineScope,
+                SharingStarted.Eagerly,
+                transform(flow1.value, flow2.value)
+            )
+
+    protected fun <T1, T2, T3, R> combine(
+        flow1: StateFlow<T1>,
+        flow2: StateFlow<T2>,
+        flow3: StateFlow<T3>,
+        coroutineScope: CoroutineScope = scope,
+        transform: (T1, T2, T3) -> R,
+    ): StateFlow<R> =
+        coroutinesFlowCombine(flow1, flow2, flow3, transform)
+            .stateIn(
+                coroutineScope,
+                SharingStarted.Eagerly,
+                transform(flow1.value, flow2.value, flow3.value)
+            )
+
+    protected fun <T1, T2, T3, T4, R> combine(
+        flow1: StateFlow<T1>,
+        flow2: StateFlow<T2>,
+        flow3: StateFlow<T3>,
+        flow4: StateFlow<T4>,
+        coroutineScope: CoroutineScope = scope,
+        transform: (T1, T2, T3, T4) -> R,
+    ): StateFlow<R> =
+        coroutinesFlowCombine(flow1, flow2, flow3, flow4, transform)
+            .stateIn(
+                coroutineScope,
+                SharingStarted.Eagerly,
+                transform(flow1.value, flow2.value, flow3.value, flow4.value)
             )
 
     protected fun <T : Any> StateFlow<T>.asValue(

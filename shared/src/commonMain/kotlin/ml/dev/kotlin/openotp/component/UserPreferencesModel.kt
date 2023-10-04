@@ -7,6 +7,8 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import kotlinx.serialization.Serializable
 import ml.dev.kotlin.openotp.component.OpenOtpAppTheme.System
+import ml.dev.kotlin.openotp.component.SortOtpDataBy.Dont
+import ml.dev.kotlin.openotp.otp.OtpData
 import ml.dev.kotlin.openotp.shared.OpenOtpResources
 import ml.dev.kotlin.openotp.ui.theme.*
 import ml.dev.kotlin.openotp.util.Named
@@ -37,8 +39,25 @@ enum class OpenOtpAppTheme : Named {
 }
 
 @Serializable
+enum class SortOtpDataBy(val selector: ((OtpData) -> String?)?) : Named {
+    Dont(selector = null),
+    Issuer(selector = { data -> data.issuer?.takeIf { it.isNotBlank() } }),
+    AccountName(selector = { data -> data.accountName?.takeIf { it.isNotBlank() } });
+
+    override val OpenOtpAppComponentContext.presentableName: String
+        get() = when (this@SortOtpDataBy) {
+            Dont -> stringResource(OpenOtpResources.strings.dont_sort_name)
+            Issuer -> stringResource(OpenOtpResources.strings.issuer_sort_name)
+            AccountName -> stringResource(OpenOtpResources.strings.account_name_sort_name)
+        }
+}
+
+@Serializable
 data class UserPreferencesModel(
     val theme: OpenOtpAppTheme = System,
+    val sortOtpDataBy: SortOtpDataBy = Dont,
+    val sortOtpDataNullsFirst: Boolean = false,
+    val sortOtpDataReversed: Boolean = false,
     val confirmOtpDataDelete: Boolean = true,
 )
 

@@ -12,7 +12,6 @@ import org.koin.core.component.get
 interface OpenOtpAppComponent {
 
     val theme: Value<OpenOtpAppTheme>
-
     val stack: Value<ChildStack<*, Child>>
 
     fun onBackClicked(toIndex: Int)

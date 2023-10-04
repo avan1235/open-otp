@@ -20,6 +20,7 @@ import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import dev.icerock.moko.resources.compose.stringResource
 import ml.dev.kotlin.openotp.component.OpenOtpAppTheme
 import ml.dev.kotlin.openotp.component.SettingsComponent
+import ml.dev.kotlin.openotp.component.SortOtpDataBy
 import ml.dev.kotlin.openotp.shared.OpenOtpResources
 import ml.dev.kotlin.openotp.ui.component.ClickableIconButton
 import ml.dev.kotlin.openotp.ui.component.NamedDropdownMenu
@@ -85,12 +86,32 @@ private fun CodesManagementSettingsGroup(component: SettingsComponent) {
         name = stringResource(OpenOtpResources.strings.codes_management_group_name),
     ) {
         val confirmOtpDataDelete by component.confirmOtpDataDelete.subscribeAsState()
-
         NamedSwitch(
             name = stringResource(OpenOtpResources.strings.confirm_codes_deletion),
             checked = confirmOtpDataDelete,
             onCheckedChange = component::onConfirmOtpDataDeleteChange,
-            icon = null,
+        )
+
+        val sortOtpDataBy by component.sortOtpDataBy.subscribeAsState()
+        NamedDropdownMenu(
+            name = stringResource(OpenOtpResources.strings.sort_type),
+            selected = sortOtpDataBy,
+            onSelected = component::onSelectedSortType,
+            anyItems = SortOtpDataBy.entries
+        )
+
+        val sortOtpDataNullsFirst by component.sortOtpDataNullsFirst.subscribeAsState()
+        NamedSwitch(
+            name = stringResource(OpenOtpResources.strings.nulls_first),
+            checked = sortOtpDataNullsFirst,
+            onCheckedChange = component::onSortNullsFirstChange,
+        )
+
+        val sortOtpDataReversed by component.sortOtpDataReversed.subscribeAsState()
+        NamedSwitch(
+            name = stringResource(OpenOtpResources.strings.reversed_sort),
+            checked = sortOtpDataReversed,
+            onCheckedChange = component::onSortReversedChange,
         )
     }
 }

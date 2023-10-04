@@ -11,9 +11,15 @@
     <string name="confirm_delete_specific_item_prompt">Are you sure you want to delete\n%s?</string>
     <string name="confirm_codes_deletion">Confirm codes deletion</string>
     <string name="theme">Theme</string>
+    <string name="sort_type">Sort codes by</string>
+    <string name="reversed_sort">Reverse sort order</string>
+    <string name="nulls_first">Empty values first</string>
     <string name="light_theme_name">Light</string>
     <string name="dark_theme_name">Dark</string>
     <string name="system_theme_name">System</string>
+    <string name="issuer_sort_name">Issuer</string>
+    <string name="account_name_sort_name">Account name</string>
+    <string name="dont_sort_name">Disabled</string>
 
     <string name="settings_screen_name">Settings</string>
 

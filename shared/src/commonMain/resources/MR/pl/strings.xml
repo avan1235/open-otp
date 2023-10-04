@@ -11,9 +11,15 @@
     <string name="confirm_delete_specific_item_prompt">Czy jesteś pewien, że chcesz usunąć\n%s?</string>
     <string name="confirm_codes_deletion">Zatwierdzaj usunięcie kodu</string>
     <string name="theme">Motyw</string>
+    <string name="sort_type">Sortuj kody po</string>
+    <string name="reversed_sort">Odwróć kolejność sortowania</string>
+    <string name="nulls_first">Puste wartości na początku</string>
     <string name="light_theme_name">Jasny</string>
     <string name="dark_theme_name">Ciemny</string>
     <string name="system_theme_name">Systemowy</string>
+    <string name="issuer_sort_name">Wystawcy</string>
+    <string name="account_name_sort_name">Nazwie konta</string>
+    <string name="dont_sort_name">Wyłączone</string>
 
     <string name="settings_screen_name">Ustawienia</string>
 

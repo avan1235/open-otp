@@ -2,6 +2,8 @@ package ml.dev.kotlin.openotp.component
 
 import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.intl.Locale
+import androidx.compose.ui.text.toLowerCase
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.backhandler.BackCallback
@@ -55,7 +57,7 @@ class MainComponentImpl(
     private val navigateOnScanQRCode: () -> Unit,
     private val navigateOnAddProvider: () -> Unit,
     private val navigateSettings: () -> Unit,
-    private val updateTimeDelay: Duration = 10.milliseconds
+    private val updateTimeDelay: Duration = 10.milliseconds,
 ) : AbstractComponent(componentContext), MainComponent {
 
     private data class CameraPermissionRequest(
@@ -79,8 +81,18 @@ class MainComponentImpl(
     override val navigateToScanQRCodeWhenCameraPermissionChanged: Value<Boolean> =
         _cameraPermissionRequest.map { it.changed }.asValue()
 
-
-    override val codeData: Value<UserOtpCodeData> = userOtpCodeData.stateFlow.asValue()
+    override val codeData: Value<UserOtpCodeData> = combine(
+        userOtpCodeData.stateFlow,
+        userPreferences.stateFlow.map { it.sortOtpDataBy },
+        userPreferences.stateFlow.map { it.sortOtpDataReversed },
+        userPreferences.stateFlow.map { it.sortOtpDataNullsFirst },
+    ) transform@{ codes, sortBy, sortReversed, sortNullsFirst ->
+        val selector = sortBy.selector ?: return@transform codes
+        val comparator: Comparator<String?> = if (sortNullsFirst) nullsFirst() else nullsLast()
+        val otpDataComparator: Comparator<OtpData> = compareBy(comparator) { selector(it)?.toLowerCase(Locale.current) }
+        val reversedComparator = if (sortReversed) otpDataComparator.reversed() else otpDataComparator
+        codes.sortedWith(reversedComparator)
+    }.asValue()
 
     private val _isSearchActive: MutableStateFlow<Boolean> = MutableStateFlow(false)
     override val isSearchActive: Value<Boolean> = _isSearchActive.asValue()
