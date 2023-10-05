@@ -4,9 +4,8 @@ import ml.dev.kotlin.openotp.component.OpenOtpAppComponent
 import org.koin.compose.KoinContext
 import platform.UIKit.UIViewController
 
-fun MainViewController(component: OpenOtpAppComponent): UIViewController = ComposeUIViewController() {
+fun MainViewController(component: OpenOtpAppComponent): UIViewController = ComposeUIViewController {
     KoinContext {
         OpenOtpApp(component)
-//        CameraView()
     }
 }
