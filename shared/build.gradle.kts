@@ -86,6 +86,8 @@ kotlin {
 
                 api(libs.moko.resoures)
                 api(libs.moko.resoures.compose)
+
+                implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.2")
             }
         }
         val commonTest by getting {

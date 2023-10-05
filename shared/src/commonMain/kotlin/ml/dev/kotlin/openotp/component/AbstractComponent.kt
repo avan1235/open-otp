@@ -24,7 +24,8 @@ abstract class AbstractComponent(
     componentContext: ComponentContext,
 ) : ComponentContext by componentContext, KoinComponent {
 
-    protected val scope: CoroutineScope = coroutineScope(Dispatchers.Main.immediate)
+    protected val scope: CoroutineScope
+        get() = coroutineScope(Dispatchers.Main.immediate)
 
     private val snackbarHostState: SnackbarHostState = get<SnackbarHostState>()
 

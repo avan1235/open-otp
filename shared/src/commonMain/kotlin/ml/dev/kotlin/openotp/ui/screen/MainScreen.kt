@@ -1,10 +1,11 @@
 package ml.dev.kotlin.openotp.ui.screen
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ClipboardManager
@@ -18,9 +19,7 @@ import ml.dev.kotlin.openotp.qr.CameraPermission.Denied
 import ml.dev.kotlin.openotp.qr.CameraPermission.Granted
 import ml.dev.kotlin.openotp.qr.rememberCameraPermissionState
 import ml.dev.kotlin.openotp.shared.OpenOtpResources
-import ml.dev.kotlin.openotp.ui.component.AddActionButton
-import ml.dev.kotlin.openotp.ui.component.FilteredOtpCodeItems
-import ml.dev.kotlin.openotp.ui.component.OtpCodeItems
+import ml.dev.kotlin.openotp.ui.component.*
 
 @Composable
 internal fun MainScreen(mainComponent: MainComponent) {
@@ -33,11 +32,6 @@ internal fun MainScreen(mainComponent: MainComponent) {
             if (isGranted && navigateToScanQRCodeWhenCameraPermissionChanged) {
                 mainComponent.onScanQRCodeClick()
             }
-        }
-
-        val listState = rememberLazyListState()
-        val isFirstListItemVisible = remember {
-            derivedStateOf { listState.firstVisibleItemIndex == 0 }
         }
 
         val codeData by mainComponent.codeData.subscribeAsState()
@@ -53,19 +47,26 @@ internal fun MainScreen(mainComponent: MainComponent) {
             onOtpCodeDataDismiss = mainComponent::onOtpCodeDataRemove,
             onSearchBarActiveChange = mainComponent::onSearchBarActiveChange,
             onRestartCode = mainComponent::onOtpCodeDataRestart,
+            onMoveCode = mainComponent::onOtpCodeDataReordered,
             copyOtpCode = mainComponent::copyOtpCode,
             onSettingsIconClick = mainComponent::onSettingsClick
         )
+
+        val listState = rememberLazyListState()
+        val dragDropState = rememberDragDropState(listState, mainComponent::onOtpCodeDataReordered)
+        val isDragAndDropEnabled by mainComponent.isDragAndDropEnabled.subscribeAsState()
         AllOtpCodeItems(
             codeData = codeData,
             timestamp = timestamp,
             confirmCodeDismiss = confirmOtpDataDelete,
-            listState = listState,
+            isDragAndDropEnabled = isDragAndDropEnabled,
             onOtpCodeDataDismiss = mainComponent::onOtpCodeDataRemove,
-            onRestartCode = mainComponent::onOtpCodeDataRestart, copyOtpCode = mainComponent::copyOtpCode,
+            onRestartCode = mainComponent::onOtpCodeDataRestart,
+            copyOtpCode = mainComponent::copyOtpCode,
+            dragDropState = dragDropState,
         )
         AddActionButton(
-            expanded = isFirstListItemVisible.value,
+            dragDropState = dragDropState,
             visible = !isSearchActive,
             onScanQRCodeClick = {
                 when (cameraPermissionState.permission) {
@@ -86,9 +87,10 @@ private fun AllOtpCodeItems(
     codeData: UserOtpCodeData,
     timestamp: Long,
     confirmCodeDismiss: Boolean,
-    listState: LazyListState,
+    isDragAndDropEnabled: Boolean,
     onOtpCodeDataDismiss: (OtpData) -> Boolean,
     onRestartCode: (OtpData) -> Unit,
+    dragDropState: DragDropState,
     copyOtpCode: ClipboardManager.(item: OtpData, timestamp: Long) -> Unit,
 ) {
     Box(
@@ -108,10 +110,11 @@ private fun AllOtpCodeItems(
                         codeData,
                         timestamp,
                         confirmCodeDismiss,
+                        isDragAndDropEnabled,
                         onOtpCodeDataDismiss,
                         onRestartCode,
+                        dragDropState,
                         copyOtpCode,
-                        listState,
                     )
                 } else {
                     Text(text = stringResource(OpenOtpResources.strings.add_new_keys))

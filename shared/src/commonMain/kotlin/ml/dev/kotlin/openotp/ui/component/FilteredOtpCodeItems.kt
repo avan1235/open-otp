@@ -3,6 +3,7 @@ package ml.dev.kotlin.openotp.ui.component
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
@@ -32,6 +33,7 @@ internal fun FilteredOtpCodeItems(
     onOtpCodeDataDismiss: (OtpData) -> Boolean,
     onSearchBarActiveChange: (Boolean) -> Unit,
     onRestartCode: (OtpData) -> Unit,
+    onMoveCode: (Int, Int) -> Unit,
     onSettingsIconClick: () -> Unit,
     copyOtpCode: ClipboardManager.(item: OtpData, timestamp: Long) -> Unit,
 ) {
@@ -100,13 +102,17 @@ internal fun FilteredOtpCodeItems(
             },
             interactionSource = interactionSource,
         ) {
+            val listState = rememberLazyListState()
+            val dragDropState = rememberDragDropState(listState, onMoveCode)
             OtpCodeItems(
-                filteredCodeData,
-                timestamp,
-                confirmCodeDismiss,
-                onOtpCodeDataDismiss,
-                onRestartCode,
-                copyOtpCode,
+                codeData = filteredCodeData,
+                timestamp = timestamp,
+                confirmCodeDismiss = confirmCodeDismiss,
+                isDragAndDropEnabled = false,
+                onOtpCodeDataDismiss = onOtpCodeDataDismiss,
+                onRestartCode = onRestartCode,
+                copyOtpCode = copyOtpCode,
+                dragDropState = dragDropState,
             )
         }
     }

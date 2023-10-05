@@ -12,6 +12,9 @@ import androidx.compose.material.icons.filled.EditNote
 import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -20,7 +23,7 @@ import ml.dev.kotlin.openotp.shared.OpenOtpResources
 
 @Composable
 internal fun AddActionButton(
-    expanded: Boolean,
+    dragDropState: DragDropState,
     visible: Boolean,
     onScanQRCodeClick: (() -> Unit)?,
     onAddWithTextClick: () -> Unit,
@@ -38,6 +41,20 @@ internal fun AddActionButton(
         ) {
             val fabState = rememberMultiFabState()
             val buttonText = stringResource(OpenOtpResources.strings.add_button_name)
+
+            val expanded by remember {
+                derivedStateOf {
+                    val listState = dragDropState.listState
+                    when (listState.firstVisibleItemIndex) {
+                        0 -> true
+                        1 -> {
+                            val draggedItemIndex = dragDropState.currentDraggedItemIndex
+                            draggedItemIndex == 0 || draggedItemIndex == 1
+                        }
+                        else -> false
+                    }
+                }
+            }
             MultiFloatingActionButton(
                 items = listOfNotNull(
                     MultiFabItem(

@@ -11,6 +11,7 @@ interface SettingsComponent {
     val theme: Value<OpenOtpAppTheme>
     val confirmOtpDataDelete: Value<Boolean>
     val sortOtpDataBy: Value<SortOtpDataBy>
+    val canReorderDataManually: Value<Boolean>
     val sortOtpDataNullsFirst: Value<Boolean>
     val sortOtpDataReversed: Value<Boolean>
 
@@ -42,6 +43,9 @@ class SettingsComponentImpl(
 
     override val sortOtpDataBy: Value<SortOtpDataBy> =
         userPreferences.stateFlow.map { it.sortOtpDataBy }.asValue()
+
+    override val canReorderDataManually: Value<Boolean> =
+        userPreferences.stateFlow.map { it.sortOtpDataBy == SortOtpDataBy.Dont }.asValue()
 
     override val sortOtpDataNullsFirst: Value<Boolean> =
         userPreferences.stateFlow.map { it.sortOtpDataNullsFirst }.asValue()

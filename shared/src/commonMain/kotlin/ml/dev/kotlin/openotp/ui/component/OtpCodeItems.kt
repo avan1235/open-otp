@@ -4,15 +4,7 @@ import androidx.compose.animation.VectorConverter
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.draggable
-import androidx.compose.foundation.gestures.rememberDraggableState
-import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cached
@@ -41,7 +33,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
 import ml.dev.kotlin.openotp.otp.HotpData
 import ml.dev.kotlin.openotp.otp.OtpData
 import ml.dev.kotlin.openotp.otp.TotpData
@@ -58,65 +49,55 @@ internal fun OtpCodeItems(
     codeData: UserOtpCodeData,
     timestamp: Long,
     confirmCodeDismiss: Boolean,
+    isDragAndDropEnabled: Boolean,
     onOtpCodeDataDismiss: (OtpData) -> Boolean,
     onRestartCode: (OtpData) -> Unit,
+    dragDropState: DragDropState,
     copyOtpCode: ClipboardManager.(item: OtpData, timestamp: Long) -> Unit,
-    listState: LazyListState = rememberLazyListState(),
 ) {
-    val coroutineScope = rememberCoroutineScope()
     val currentTimestamp by rememberUpdatedState(timestamp)
     var dismissedCode by remember { mutableStateOf<OtpData?>(null) }
 
-    LazyColumn(
-        state = listState,
+    DragDropList(
+        items = codeData,
+        key = { it.uuid },
+        dragDropState = dragDropState,
+        enabled = isDragAndDropEnabled,
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 12.dp)
-            .draggable(
-                orientation = Orientation.Vertical,
-                state = rememberDraggableState { delta ->
-                    coroutineScope.launch {
-                        listState.scrollBy(-delta)
+            .padding(top = 12.dp),
+    ) { item, modifier ->
+        val currentItem by rememberUpdatedState(item)
+        val localClipboardManager = LocalClipboardManager.current
+        val dismissState = rememberDismissState(
+            confirmValueChange = {
+                when (it) {
+                    DismissedToEnd -> localClipboardManager.copyOtpCode(currentItem, currentTimestamp).letTrue()
+                    DismissedToStart -> when (confirmCodeDismiss) {
+                        true -> true.also { dismissedCode = currentItem }
+                        false -> onOtpCodeDataDismiss(currentItem)
                     }
-                },
-            ),
-    ) {
-        items(
-            items = codeData,
-            key = { it.uuid },
-        ) { item ->
-            val currentItem by rememberUpdatedState(item)
-            val localClipboardManager = LocalClipboardManager.current
-            val dismissState = rememberDismissState(
-                confirmValueChange = {
-                    when (it) {
-                        DismissedToEnd -> localClipboardManager.copyOtpCode(currentItem, currentTimestamp).letTrue()
-                        DismissedToStart -> when (confirmCodeDismiss) {
-                            true -> true.also { dismissedCode = currentItem }
-                            false -> onOtpCodeDataDismiss(currentItem)
-                        }
 
-                        else -> false
-                    }
-                },
-            )
-            if (dismissState.isDismissed(StartToEnd) || dismissState.isDismissed(EndToStart)) {
-                OnceLaunchedEffect { dismissState.reset() }
-            }
-            SwipeToDismiss(
-                state = dismissState,
-                modifier = Modifier.animateItemPlacement(),
-                background = { DismissBackground(dismissState) },
-                dismissContent = {
-                    OtpCodeItem(
-                        timestamp = currentTimestamp,
-                        item = currentItem,
-                        onClick = { localClipboardManager.copyOtpCode(currentItem, currentTimestamp) },
-                        onRestartCode = { onRestartCode(currentItem) },
-                    )
+                    else -> false
                 }
-            )
+            },
+        )
+        if (dismissState.isDismissed(StartToEnd) || dismissState.isDismissed(EndToStart)) {
+            OnceLaunchedEffect { dismissState.reset() }
         }
+        SwipeToDismiss(
+            state = dismissState,
+            modifier = modifier,
+            background = { DismissBackground(dismissState) },
+            dismissContent = {
+                OtpCodeItem(
+                    timestamp = currentTimestamp,
+                    item = currentItem,
+                    onClick = { localClipboardManager.copyOtpCode(currentItem, currentTimestamp) },
+                    onRestartCode = { onRestartCode(currentItem) },
+                )
+            }
+        )
     }
     when (val dismissed = dismissedCode) {
         null -> Unit
@@ -277,7 +258,7 @@ private fun CountDownStatusCircle(
     color: Color,
     size: Dp = 28.dp,
     borderSize: Dp = 2.dp,
-    padding: PaddingValues = PaddingValues(horizontal = 3.dp, vertical = 5.dp)
+    padding: PaddingValues = PaddingValues(horizontal = 3.dp, vertical = 5.dp),
 ) = with(LocalDensity.current) {
     val sizePx = remember(size) { size.toPx() }
     val borderSizePx = remember(borderSize) { borderSize.toPx() }

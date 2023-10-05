@@ -25,5 +25,5 @@ inline fun <T> runCatchingOrNull(action: () -> T): T? = try {
     null
 }
 
-inline fun <T, U : Any> runIfNonNull(t: T?, crossinline action: (T) -> U): U? =
+inline fun <T, U> runIfNonNull(t: T?, crossinline action: (T) -> U): U? =
     if (t != null) action(t) else null

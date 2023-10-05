@@ -20,6 +20,7 @@
     <string name="issuer_sort_name">Wystawcy</string>
     <string name="account_name_sort_name">Nazwie konta</string>
     <string name="dont_sort_name">Wyłączone</string>
+    <string name="can_manually_reorder">Możliwość ręcznej zmiany kolejności kodów dzięki gestom przytrzymania i przesuwania.</string>
 
     <string name="settings_screen_name">Ustawienia</string>
 

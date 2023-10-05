@@ -1,5 +1,6 @@
 package ml.dev.kotlin.openotp.ui.screen
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -14,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
@@ -91,6 +93,7 @@ private fun CodesManagementSettingsGroup(component: SettingsComponent) {
             checked = confirmOtpDataDelete,
             onCheckedChange = component::onConfirmOtpDataDeleteChange,
         )
+        Divider()
 
         val sortOtpDataBy by component.sortOtpDataBy.subscribeAsState()
         NamedDropdownMenu(
@@ -99,6 +102,14 @@ private fun CodesManagementSettingsGroup(component: SettingsComponent) {
             onSelected = component::onSelectedSortType,
             anyItems = SortOtpDataBy.entries
         )
+        val canReorderDataManually by component.canReorderDataManually.subscribeAsState()
+        AnimatedVisibility(visible = canReorderDataManually) {
+            Text(
+                text = stringResource(OpenOtpResources.strings.can_manually_reorder),
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.alpha(0.75f)
+            )
+        }
 
         val sortOtpDataNullsFirst by component.sortOtpDataNullsFirst.subscribeAsState()
         NamedSwitch(
@@ -154,7 +165,7 @@ private fun SettingsGroup(
         Surface(
             color = MaterialTheme.colorScheme.surfaceColorAtElevation(4.dp),
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(10),
+            shape = RoundedCornerShape(size = 12.dp),
         ) {
             Column(
                 modifier = Modifier

@@ -33,11 +33,14 @@ interface MainComponent {
     val confirmOtpDataDelete: Value<Boolean>
     val codeData: Value<UserOtpCodeData>
     val isSearchActive: Value<Boolean>
+    val isDragAndDropEnabled: Value<Boolean>
     val navigateToScanQRCodeWhenCameraPermissionChanged: Value<Boolean>
 
     fun onRequestedCameraPermission()
 
     fun onOtpCodeDataRemove(otpData: OtpData): Boolean
+
+    fun onOtpCodeDataReordered(currentIndex: Int, updatedIndex: Int)
 
     fun onOtpCodeDataRestart(otpData: OtpData)
 
@@ -97,6 +100,9 @@ class MainComponentImpl(
     private val _isSearchActive: MutableStateFlow<Boolean> = MutableStateFlow(false)
     override val isSearchActive: Value<Boolean> = _isSearchActive.asValue()
 
+    override val isDragAndDropEnabled: Value<Boolean> =
+        userPreferences.stateFlow.map { it.sortOtpDataBy == SortOtpDataBy.Dont }.asValue()
+
     private val searchBackCallback: BackCallback = BackCallback {
         _isSearchActive.value = false
     }
@@ -125,6 +131,16 @@ class MainComponentImpl(
             before.filter { it != otpData }
         }.unit()
         return true
+    }
+
+    override fun onOtpCodeDataReordered(currentIndex: Int, updatedIndex: Int) {
+        userOtpCodeData.updateInScope {
+            buildList {
+                addAll(it)
+                set(currentIndex, it[updatedIndex])
+                set(updatedIndex, it[currentIndex])
+            }
+        }.unit()
     }
 
     override fun onOtpCodeDataRestart(otpData: OtpData) = when (otpData) {

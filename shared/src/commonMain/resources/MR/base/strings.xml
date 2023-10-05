@@ -6,7 +6,9 @@
     <string name="missing_camera_permissions">Missing camera permissions</string>
     <string name="scan_qr_code">Scan QR Code</string>
     <string name="copied_code_to_clipboard">Copied "%s" to clipboard</string>
-    <string name="camera_not_available">Camera is not available\non simulator. Please try\nto run on a real iOS device.</string>
+    <string name="camera_not_available">Camera is not available\non simulator. Please try\nto run on a real iOS
+        device.
+    </string>
     <string name="confirm_delete_item_prompt">Are you sure you want to delete this item?</string>
     <string name="confirm_delete_specific_item_prompt">Are you sure you want to delete\n%s?</string>
     <string name="confirm_codes_deletion">Confirm codes deletion</string>
@@ -20,6 +22,7 @@
     <string name="issuer_sort_name">Issuer</string>
     <string name="account_name_sort_name">Account name</string>
     <string name="dont_sort_name">Disabled</string>
+    <string name="can_manually_reorder">You can manually reorder items with drag &amp; drop gesture.</string>
 
     <string name="settings_screen_name">Settings</string>
 
