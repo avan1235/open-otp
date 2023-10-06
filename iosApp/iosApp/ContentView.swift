@@ -27,7 +27,8 @@ struct ContentView: View {
         )
         ZStack {
             backgroundColor
-                .edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
+                .edgesIgnoringSafeArea(.all)
+            
             
             ComposeView(component: component)
                 .ignoresSafeArea(.all)
