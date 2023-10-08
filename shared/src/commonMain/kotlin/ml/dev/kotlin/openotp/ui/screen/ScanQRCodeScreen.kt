@@ -1,10 +1,6 @@
 package ml.dev.kotlin.openotp.ui.screen
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.QrCodeScanner
@@ -28,6 +24,7 @@ import ml.dev.kotlin.openotp.component.ScanQRCodeComponent
 import ml.dev.kotlin.openotp.qr.QRCodeScanner
 import ml.dev.kotlin.openotp.shared.OpenOtpResources
 import ml.dev.kotlin.openotp.ui.component.ClickableIconButton
+import ml.dev.kotlin.openotp.ui.component.LoadingAnimatedVisibility
 import ml.dev.kotlin.openotp.ui.theme.Typography
 
 @Composable
@@ -41,16 +38,19 @@ internal fun ScanQRCodeScreen(
         Scaffold(
             modifier = Modifier.fillMaxSize(),
         ) {
-            QRCodeScanner(
-                onResult = scanQRCodeComponent::onQRCodeScanned,
-                isLoading = isLoading,
-            )
-            QRCodeCameraHole(holePercent)
-            ScanQRCodeScreenDescription(
-                holePercent = holePercent,
-                onCancel = scanQRCodeComponent::onCancelClick,
-            )
-            CoverErrorsLoadingAnimation(isLoading.value)
+            LoadingAnimatedVisibility(
+                visibleContent = !isLoading.value
+            ) {
+                QRCodeScanner(
+                    onResult = scanQRCodeComponent::onQRCodeScanned,
+                    isLoading = isLoading,
+                )
+                QRCodeCameraHole(holePercent)
+                ScanQRCodeScreenDescription(
+                    holePercent = holePercent,
+                    onCancel = scanQRCodeComponent::onCancelClick,
+                )
+            }
         }
     }
 }
@@ -78,7 +78,7 @@ private fun ScanQRCodeScreenDescription(
     onCancel: () -> Unit,
     buttons: @Composable BoxWithConstraintsScope.() -> Unit = {
         CancelScanQRCodeButton(onCancel)
-    }
+    },
 ) {
     BoxWithConstraints(
         modifier = Modifier.fillMaxSize()
@@ -94,26 +94,6 @@ private fun ScanQRCodeScreenDescription(
             Box(modifier, Alignment.Center) { ScanQRCodeIcon() }
             Box(Modifier.width(cameraSize).fillMaxHeight())
             BoxWithConstraints(modifier, Alignment.Center, false, buttons)
-        }
-    }
-}
-
-@Composable
-private fun CoverErrorsLoadingAnimation(isLoading: Boolean) {
-    AnimatedVisibility(
-        visible = isLoading,
-        enter = fadeIn(),
-        exit = fadeOut()
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background),
-        ) {
-
-            CircularProgressIndicator()
         }
     }
 }

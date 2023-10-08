@@ -6,7 +6,9 @@
     <string name="missing_camera_permissions">Brak uprawnień do używania kamery</string>
     <string name="scan_qr_code">Zeskanuj kod QR</string>
     <string name="copied_code_to_clipboard">Skopiowano "%s" do schowka</string>
-    <string name="camera_not_available">Aparat nie jest dostępny\nna symulatorze. Proszę\nspróbowaź uruchomić na\nfizycznym urządzeniu z iOS.</string>
+    <string name="camera_not_available">
+        Aparat nie jest dostępny\nna symulatorze. Proszę\nspróbowaź uruchomić na\nfizycznym urządzeniu z iOS.
+    </string>
     <string name="confirm_delete_item_prompt">Czy jesteś pewien, że chcesz usunąć ten element?</string>
     <string name="confirm_delete_specific_item_prompt">Czy jesteś pewien, że chcesz usunąć\n%s?</string>
     <string name="confirm_codes_deletion">Zatwierdzaj usunięcie kodu</string>
@@ -20,7 +22,14 @@
     <string name="issuer_sort_name">Wystawcy</string>
     <string name="account_name_sort_name">Nazwie konta</string>
     <string name="dont_sort_name">Wyłączone</string>
-    <string name="can_manually_reorder">Możliwość ręcznej zmiany kolejności kodów dzięki gestom przytrzymania i przesuwania.</string>
+    <string name="can_manually_reorder">
+        Możliwość ręcznej zmiany kolejności kodów dzięki gestom przytrzymania i przesuwania.
+    </string>
+    <string name="require_authentication">Wymagaj uwierzytelnienia przed uruchomieniem</string>
+    <string name="authenticate_request">Uwierzytelnij</string>
+    <string name="authenticate_request_title">Uwierzytelnienie użytkownika</string>
+    <string name="authenticate_request_description">Uwierzytelnij, aby uzyskać dostęp do kodów aplikacji.</string>
+    <string name="app_icon">Ikona aplikacji</string>
 
     <string name="settings_screen_name">Ustawienia</string>
 
@@ -33,6 +42,7 @@
     <string name="delete_icon_name">Usuń</string>
     <string name="question_icon_name">Pytanie</string>
     <string name="dropdown_icon_name">Wybierz z wielu opcji</string>
+    <string name="locked_icon_name">Zablokowane</string>
     <string name="camara_image_name">Widok kamery</string>
     <string name="settings_name">Ustawienia</string>
 
@@ -45,6 +55,7 @@
     <string name="advanced_settings_group_name">Zaawansowane ustawienia</string>
     <string name="codes_management_group_name">Zarządzanie kodami</string>
     <string name="look_and_feel_group_name">Wygląd aplikacji</string>
+    <string name="security_group_name">Bezpieczeństwo</string>
 
     <string name="issuer_field_name">Wystawca</string>
     <string name="account_name_field_name">Nazwa konta</string>

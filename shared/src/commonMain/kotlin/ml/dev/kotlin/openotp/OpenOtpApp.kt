@@ -6,20 +6,22 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.Children
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.slide
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.stackAnimation
+import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import kotlinx.serialization.builtins.ListSerializer
 import ml.dev.kotlin.openotp.component.OpenOtpAppComponent
 import ml.dev.kotlin.openotp.component.OpenOtpAppComponent.Child
 import ml.dev.kotlin.openotp.component.UserPreferencesModel
 import ml.dev.kotlin.openotp.otp.OtpData
-import ml.dev.kotlin.openotp.ui.screen.AddProviderScreen
-import ml.dev.kotlin.openotp.ui.screen.MainScreen
-import ml.dev.kotlin.openotp.ui.screen.ScanQRCodeScreen
-import ml.dev.kotlin.openotp.ui.screen.SettingsScreen
+import ml.dev.kotlin.openotp.ui.screen.*
 import ml.dev.kotlin.openotp.ui.theme.OpenOtpTheme
+import ml.dev.kotlin.openotp.util.BindBiometryAuthenticatorEffect
+import ml.dev.kotlin.openotp.util.BiometryAuthenticator
+import ml.dev.kotlin.openotp.util.OnceLaunchedEffect
 import ml.dev.kotlin.openotp.util.StateFlowSettings
 import org.koin.compose.koinInject
 import org.koin.core.context.startKoin
@@ -35,21 +37,30 @@ internal fun OpenOtpApp(component: OpenOtpAppComponent) {
         Surface(
             modifier = Modifier.fillMaxSize(),
         ) {
-            Children(
-                stack = component.stack,
-                modifier = Modifier.fillMaxSize(),
-                animation = stackAnimation(slide())
-            ) { child ->
-                val snackbarHostState = koinInject<SnackbarHostState>()
-                Scaffold(
-                    snackbarHost = { SnackbarHost(snackbarHostState) },
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    when (val instance = child.instance) {
-                        is Child.Main -> MainScreen(instance.component)
-                        is Child.ScanQRCode -> ScanQRCodeScreen(instance.component)
-                        is Child.AddProvider -> AddProviderScreen(instance.totpComponent, instance.hotpComponent)
-                        is Child.Settings -> SettingsScreen(instance.component)
+            BindBiometryAuthenticatorEffect(koinInject<BiometryAuthenticator>())
+            OnceLaunchedEffect { component.onAuthenticate() }
+
+            val authenticated by component.authenticated.subscribeAsState()
+            AuthenticationScreen(
+                authenticated = authenticated,
+                onAuthenticate = component::onAuthenticate,
+            ) {
+                Children(
+                    stack = component.stack,
+                    modifier = Modifier.fillMaxSize(),
+                    animation = stackAnimation(slide())
+                ) { child ->
+                    val snackbarHostState = koinInject<SnackbarHostState>()
+                    Scaffold(
+                        snackbarHost = { SnackbarHost(snackbarHostState) },
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        when (val instance = child.instance) {
+                            is Child.Main -> MainScreen(instance.component)
+                            is Child.ScanQRCode -> ScanQRCodeScreen(instance.component)
+                            is Child.AddProvider -> AddProviderScreen(instance.totpComponent, instance.hotpComponent)
+                            is Child.Settings -> SettingsScreen(instance.component)
+                        }
                     }
                 }
             }

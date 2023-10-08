@@ -6,8 +6,8 @@
     <string name="missing_camera_permissions">Missing camera permissions</string>
     <string name="scan_qr_code">Scan QR Code</string>
     <string name="copied_code_to_clipboard">Copied "%s" to clipboard</string>
-    <string name="camera_not_available">Camera is not available\non simulator. Please try\nto run on a real iOS
-        device.
+    <string name="camera_not_available">
+        Camera is not available\non simulator. Please try\nto run on a real iOS device.
     </string>
     <string name="confirm_delete_item_prompt">Are you sure you want to delete this item?</string>
     <string name="confirm_delete_specific_item_prompt">Are you sure you want to delete\n%s?</string>
@@ -23,6 +23,11 @@
     <string name="account_name_sort_name">Account name</string>
     <string name="dont_sort_name">Disabled</string>
     <string name="can_manually_reorder">You can manually reorder items with drag &amp; drop gesture.</string>
+    <string name="require_authentication">Require authentication before start</string>
+    <string name="authenticate_request">Authenticate</string>
+    <string name="authenticate_request_title">User authentication</string>
+    <string name="authenticate_request_description">Authenticate to get access to application codes.</string>
+    <string name="app_icon">App icon</string>
 
     <string name="settings_screen_name">Settings</string>
 
@@ -35,6 +40,7 @@
     <string name="delete_icon_name">Delete</string>
     <string name="question_icon_name">Question</string>
     <string name="dropdown_icon_name">Select from multiple options</string>
+    <string name="locked_icon_name">Locked</string>
     <string name="camara_image_name">Camera image</string>
     <string name="settings_name">Settings</string>
 
@@ -47,6 +53,7 @@
     <string name="advanced_settings_group_name">Advanced Settings</string>
     <string name="codes_management_group_name">Codes Management</string>
     <string name="look_and_feel_group_name">Look &amp; Feel</string>
+    <string name="security_group_name">Security</string>
 
     <string name="issuer_field_name">Issuer</string>
     <string name="account_name_field_name">Account Name</string>

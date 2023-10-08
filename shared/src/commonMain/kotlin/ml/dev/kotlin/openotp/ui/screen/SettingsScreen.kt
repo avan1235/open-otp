@@ -77,8 +77,26 @@ internal fun SettingsScreen(
                 Spacer(Modifier.height(4.dp))
                 LookAndFeelSettingsGroup(component)
                 CodesManagementSettingsGroup(component)
+                SecuritySettingsGroup(component)
             }
         }
+    }
+}
+
+@Composable
+private fun SecuritySettingsGroup(component: SettingsComponent) {
+    if (!component.isAuthenticationAvailable) return
+
+    SettingsGroup(
+        name = stringResource(OpenOtpResources.strings.security_group_name),
+    ) {
+        val requireAuthentication by component.requireAuthentication.subscribeAsState()
+        NamedSwitch(
+            name = stringResource(OpenOtpResources.strings.require_authentication),
+            checked = requireAuthentication,
+            onCheckedChange = component::onRequireAuthenticationChange,
+            nameModifier = Modifier.fillMaxWidth(0.7f)
+        )
     }
 }
 
@@ -150,7 +168,7 @@ private fun LookAndFeelSettingsGroup(component: SettingsComponent) {
 @Composable
 private fun SettingsGroup(
     name: String,
-    content: @Composable ColumnScope.() -> Unit
+    content: @Composable ColumnScope.() -> Unit,
 ) {
     Column(
         modifier = Modifier

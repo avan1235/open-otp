@@ -1,4 +1,3 @@
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.res.loadImageBitmap
 import androidx.compose.ui.res.useResource
@@ -14,6 +13,7 @@ import ml.dev.kotlin.openotp.OpenOtpApp
 import ml.dev.kotlin.openotp.component.OpenOtpAppComponentContext
 import ml.dev.kotlin.openotp.component.OpenOtpAppComponentImpl
 import ml.dev.kotlin.openotp.initOpenOtpKoin
+import ml.dev.kotlin.openotp.util.BiometryAuthenticator
 import ml.dev.kotlin.openotp.util.runOnUiThread
 import org.koin.compose.KoinContext
 import org.koin.dsl.module
@@ -22,6 +22,7 @@ fun desktopOpenOtpApp() {
     initOpenOtpKoin {
         modules(module {
             single { OpenOtpAppComponentContext() }
+            single { BiometryAuthenticator() }
         })
     }
     val lifecycle = LifecycleRegistry()

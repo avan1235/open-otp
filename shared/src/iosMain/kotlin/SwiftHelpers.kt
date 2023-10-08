@@ -1,7 +1,8 @@
 import ml.dev.kotlin.openotp.component.OpenOtpAppComponentContext
 import ml.dev.kotlin.openotp.initOpenOtpKoin
-import ml.dev.kotlin.openotp.ui.theme.md_theme_light_background
 import ml.dev.kotlin.openotp.ui.theme.md_theme_dark_background
+import ml.dev.kotlin.openotp.ui.theme.md_theme_light_background
+import ml.dev.kotlin.openotp.util.BiometryAuthenticator
 import org.koin.dsl.module
 import platform.UIKit.UIColor
 
@@ -9,6 +10,7 @@ fun initIOSKoin() {
     initOpenOtpKoin {
         modules(module {
             single { OpenOtpAppComponentContext() }
+            single { BiometryAuthenticator() }
         })
     }
 }

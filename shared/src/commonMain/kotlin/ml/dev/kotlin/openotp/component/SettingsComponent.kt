@@ -3,6 +3,7 @@ package ml.dev.kotlin.openotp.component
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.Value
 import ml.dev.kotlin.openotp.USER_PREFERENCES_MODULE_QUALIFIER
+import ml.dev.kotlin.openotp.util.BiometryAuthenticator
 import ml.dev.kotlin.openotp.util.StateFlowSettings
 import org.koin.core.component.get
 
@@ -14,6 +15,8 @@ interface SettingsComponent {
     val canReorderDataManually: Value<Boolean>
     val sortOtpDataNullsFirst: Value<Boolean>
     val sortOtpDataReversed: Value<Boolean>
+    val requireAuthentication: Value<Boolean>
+    val isAuthenticationAvailable: Boolean
 
     fun onSelectedTheme(theme: OpenOtpAppTheme)
 
@@ -25,6 +28,8 @@ interface SettingsComponent {
 
     fun onSortReversedChange(reversed: Boolean)
 
+    fun onRequireAuthenticationChange(require: Boolean)
+
     fun onExitSettings()
 }
 
@@ -34,6 +39,8 @@ class SettingsComponentImpl(
 ) : AbstractComponent(componentContext), SettingsComponent {
 
     private val userPreferences: StateFlowSettings<UserPreferencesModel> = get(USER_PREFERENCES_MODULE_QUALIFIER)
+
+    private val authenticator: BiometryAuthenticator = get()
 
     override val theme: Value<OpenOtpAppTheme> =
         userPreferences.stateFlow.map { it.theme }.asValue()
@@ -53,6 +60,12 @@ class SettingsComponentImpl(
     override val sortOtpDataReversed: Value<Boolean> =
         userPreferences.stateFlow.map { it.sortOtpDataReversed }.asValue()
 
+    override val requireAuthentication: Value<Boolean> =
+        userPreferences.stateFlow.map { it.requireAuthentication }.asValue()
+
+    override val isAuthenticationAvailable: Boolean
+        get() = authenticator.isBiometricAvailable()
+
     override fun onSelectedTheme(theme: OpenOtpAppTheme) {
         userPreferences.updateInScope { it.copy(theme = theme) }
     }
@@ -71,6 +84,10 @@ class SettingsComponentImpl(
 
     override fun onSortReversedChange(reversed: Boolean) {
         userPreferences.updateInScope { it.copy(sortOtpDataReversed = reversed) }
+    }
+
+    override fun onRequireAuthenticationChange(require: Boolean) {
+        userPreferences.updateInScope { it.copy(requireAuthentication = require) }
     }
 
     override fun onExitSettings() {

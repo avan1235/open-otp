@@ -15,12 +15,14 @@ internal fun NamedSwitch(
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
     icon: ImageVector? = null,
+    nameModifier: Modifier = Modifier.wrapContentWidth(),
+    contentModifier: Modifier = Modifier.wrapContentWidth(),
 ) {
     NamedBox(
         name = name,
         icon = icon,
-        nameModifier = Modifier.wrapContentWidth(),
-        contentModifier = Modifier.wrapContentWidth(),
+        nameModifier = nameModifier,
+        contentModifier = contentModifier,
     ) {
         Box(
             modifier = Modifier.fillMaxWidth(),

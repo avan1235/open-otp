@@ -86,8 +86,6 @@ kotlin {
 
                 api(libs.moko.resoures)
                 api(libs.moko.resoures.compose)
-
-                implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.2")
             }
         }
         val commonTest by getting {
@@ -106,6 +104,7 @@ kotlin {
                 implementation(libs.androidx.camera)
                 implementation(libs.androidx.cameraLifecycle)
                 implementation(libs.androidx.cameraPreview)
+                implementation(libs.androidx.biometric)
 
                 implementation(libs.mlkit.barcodeScanning)
                 implementation(libs.androidx.security.crypto)

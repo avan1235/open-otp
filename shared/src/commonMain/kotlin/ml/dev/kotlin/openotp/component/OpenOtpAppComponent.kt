@@ -3,9 +3,13 @@ package ml.dev.kotlin.openotp.component
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import ml.dev.kotlin.openotp.USER_PREFERENCES_MODULE_QUALIFIER
 import ml.dev.kotlin.openotp.component.OpenOtpAppComponent.Child
+import ml.dev.kotlin.openotp.shared.OpenOtpResources
+import ml.dev.kotlin.openotp.util.BiometryAuthenticator
 import ml.dev.kotlin.openotp.util.StateFlowSettings
 import org.koin.core.component.get
 
@@ -13,6 +17,10 @@ interface OpenOtpAppComponent {
 
     val theme: Value<OpenOtpAppTheme>
     val stack: Value<ChildStack<*, Child>>
+    val requireAuthentication: Value<Boolean>
+    val authenticated: Value<Boolean>
+
+    fun onAuthenticate()
 
     fun onBackClicked(toIndex: Int)
 
@@ -44,7 +52,21 @@ class OpenOtpAppComponentImpl(
 
     private val userPreferences: StateFlowSettings<UserPreferencesModel> = get(USER_PREFERENCES_MODULE_QUALIFIER)
 
+    private val authenticator: BiometryAuthenticator = get()
+
     override val theme: Value<OpenOtpAppTheme> = userPreferences.stateFlow.map { it.theme }.asValue()
+
+    override val requireAuthentication: Value<Boolean> =
+        userPreferences.stateFlow.map { it.requireAuthentication }.asValue()
+
+    private val _authenticated: MutableStateFlow<Boolean> = MutableStateFlow(!requireAuthentication.value)
+
+    override val authenticated: Value<Boolean> = combine(
+        _authenticated,
+        userPreferences.stateFlow.map { it.requireAuthentication },
+    ) { authenticated, require ->
+        !require || authenticated
+    }.asValue()
 
     private fun child(config: Config, childComponentContext: ComponentContext): Child = when (config) {
         is Config.Main -> Child.Main(
@@ -84,6 +106,17 @@ class OpenOtpAppComponentImpl(
                 navigateOnExit = navigation::pop,
             )
         )
+    }
+
+    override fun onAuthenticate() {
+        if (!requireAuthentication.value) return
+
+        scope.launch {
+            _authenticated.value = authenticator.checkBiometryAuthentication(
+                requestTitle = stringResource(OpenOtpResources.strings.authenticate_request_title),
+                requestReason = stringResource(OpenOtpResources.strings.authenticate_request_description)
+            )
+        }
     }
 
     override fun onBackClicked(toIndex: Int) {

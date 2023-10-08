@@ -29,7 +29,6 @@ struct ContentView: View {
             backgroundColor
                 .edgesIgnoringSafeArea(.all)
             
-            
             ComposeView(component: component)
                 .ignoresSafeArea(.all)
         }.ignoresSafeArea(.all)

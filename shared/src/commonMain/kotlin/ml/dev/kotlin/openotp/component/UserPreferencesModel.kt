@@ -59,6 +59,7 @@ data class UserPreferencesModel(
     val sortOtpDataNullsFirst: Boolean = false,
     val sortOtpDataReversed: Boolean = false,
     val confirmOtpDataDelete: Boolean = true,
+    val requireAuthentication: Boolean = false,
 )
 
 private val LightColors: ColorScheme = lightColorScheme(

@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Density
 import ml.dev.kotlin.openotp.ui.theme.rememberPlatformColors
 
 @Composable
@@ -38,7 +39,9 @@ internal fun SystemBarsScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .windowInsetsPadding(WindowInsets.systemBars),
+                .windowInsetsPadding(object : WindowInsets by WindowInsets.systemBars {
+                    override fun getBottom(density: Density): Int = 0
+                }),
             contentAlignment = contentAlignment,
             propagateMinConstraints = propagateMinConstraints,
             content = content,
