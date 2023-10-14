@@ -16,12 +16,16 @@
     <string name="sort_type">Sortuj kody po</string>
     <string name="reversed_sort">Odwróć kolejność sortowania</string>
     <string name="nulls_first">Puste wartości na początku</string>
+    <string name="show_headers">Pokazuj nagłówki grup</string>
     <string name="light_theme_name">Jasny</string>
     <string name="dark_theme_name">Ciemny</string>
     <string name="system_theme_name">Systemowy</string>
     <string name="issuer_sort_name">Wystawcy</string>
     <string name="account_name_sort_name">Nazwie konta</string>
     <string name="dont_sort_name">Wyłączone</string>
+    <string name="default_group_name_issuer_sort_name">Brak wystawcy</string>
+    <string name="default_group_name_account_name_sort_name">Brak nazwy konta</string>
+    <string name="default_group_name_dont_sort_name"/>
     <string name="can_manually_reorder">
         Możliwość ręcznej zmiany kolejności kodów dzięki gestom przytrzymania i przesuwania.
     </string>

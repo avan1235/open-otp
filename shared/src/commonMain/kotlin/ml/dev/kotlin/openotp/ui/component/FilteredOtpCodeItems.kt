@@ -21,12 +21,13 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.zIndex
 import dev.icerock.moko.resources.compose.stringResource
 import ml.dev.kotlin.openotp.otp.OtpData
-import ml.dev.kotlin.openotp.otp.UserOtpCodeData
+import ml.dev.kotlin.openotp.otp.PresentedOtpCodeData
 import ml.dev.kotlin.openotp.shared.OpenOtpResources
+import ml.dev.kotlin.openotp.ui.component.DragDropListData.Companion.emptyDragDropListData
 
 @Composable
 internal fun FilteredOtpCodeItems(
-    codeData: UserOtpCodeData,
+    codeData: PresentedOtpCodeData,
     timestamp: Long,
     confirmCodeDismiss: Boolean,
     isSearchActive: Boolean,
@@ -45,8 +46,8 @@ internal fun FilteredOtpCodeItems(
         contentAlignment = Alignment.TopCenter,
     ) {
         var searchQuery by rememberSaveable { mutableStateOf("") }
-        val filteredCodeData = remember(searchQuery, codeData) {
-            if (searchQuery.isEmpty()) emptyList() else codeData.filter {
+        val filteredCodeData = remember(searchQuery, codeData) filtered@{
+            if (searchQuery.isEmpty()) emptyDragDropListData() else codeData.filter {
                 it.accountName?.contains(searchQuery, ignoreCase = true) == true ||
                         it.issuer?.contains(searchQuery, ignoreCase = true) == true
             }
@@ -109,6 +110,7 @@ internal fun FilteredOtpCodeItems(
                 timestamp = timestamp,
                 confirmCodeDismiss = confirmCodeDismiss,
                 isDragAndDropEnabled = false,
+                showSortedGroupsHeaders = false,
                 onOtpCodeDataDismiss = onOtpCodeDataDismiss,
                 onRestartCode = onRestartCode,
                 copyOtpCode = copyOtpCode,

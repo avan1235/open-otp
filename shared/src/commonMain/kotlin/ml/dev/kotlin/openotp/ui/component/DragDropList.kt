@@ -1,14 +1,22 @@
 package ml.dev.kotlin.openotp.ui.component
 
 import androidx.compose.animation.core.*
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -16,13 +24,47 @@ import kotlinx.coroutines.launch
 import ml.dev.kotlin.openotp.util.runIfNonNull
 import kotlin.math.roundToInt
 
+interface DragDropListData<out T : Any> {
+    data class Listed<U : Any>(override val items: List<U>) : DragDropListData<U> {
+        override val isEmpty: Boolean = items.isEmpty()
+
+        override fun filter(predicate: (U) -> Boolean): DragDropListData<U> =
+            Listed(items.filter(predicate))
+    }
+
+    data class Grouped<U : Any>(val groups: List<Group<U>>) : DragDropListData<U> {
+        data class Group<V>(val groupName: String, val items: List<V>)
+
+        override val isEmpty: Boolean = groups.all { it.items.isEmpty() }
+
+        override fun filter(predicate: (U) -> Boolean): DragDropListData<U> =
+            Grouped(groups.map { Group(it.groupName, it.items.filter(predicate)) })
+
+        override val items: List<U> by lazy { groups.flatMap { it.items } }
+    }
+
+    val isEmpty: Boolean
+
+    val items: List<T>
+
+    fun filter(predicate: (T) -> Boolean): DragDropListData<T>
+
+    companion object {
+        private val EMPTY: DragDropListData<Nothing> = Listed(emptyList())
+
+        fun <U : Any> emptyDragDropListData(): DragDropListData<U> = EMPTY
+    }
+}
+
 @Composable
 internal fun <T : Any> DragDropList(
-    items: List<T>,
+    items: DragDropListData<T>,
     key: (T) -> Any,
     modifier: Modifier,
     enabled: Boolean,
+    showHeaders: Boolean,
     dragDropState: DragDropState,
+    headerColor: Color = MaterialTheme.colorScheme.background,
     itemContent: @Composable LazyItemScope.(item: T, modifier: Modifier) -> Unit,
 ) {
     var overscrollJob by remember { mutableStateOf<Job?>(null) }
@@ -30,8 +72,7 @@ internal fun <T : Any> DragDropList(
 
     LazyColumn(
         modifier = when {
-            !enabled -> modifier
-            else -> modifier
+            enabled && items is DragDropListData.Listed -> modifier
                 .pointerInput(dragDropState) {
                     detectDragGesturesAfterLongPress(
                         onDrag = { change, offset ->
@@ -62,18 +103,52 @@ internal fun <T : Any> DragDropList(
                         }
                     )
                 }
+
+            else -> modifier
         },
         state = dragDropState.listState,
     ) {
-        itemsIndexed(
-            items = items,
-            key = { _, item -> key(item) }
-        ) { index, item ->
-            DraggableItem(
-                dragDropState = dragDropState,
-                index = index,
-            ) { modifier ->
-                itemContent(item, modifier)
+        when {
+            showHeaders && items is DragDropListData.Grouped -> items.groups.forEach { group ->
+                if (group.items.isNotEmpty()) stickyHeader(group.groupName) {
+                    Text(
+                        text = group.groupName,
+                        style = MaterialTheme.typography.labelLarge,
+                        color = contentColorFor(headerColor),
+                        maxLines = 1,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(headerColor)
+                            .padding(
+                                bottom = 12.dp,
+                                start = 12.dp,
+                                end = 12.dp,
+                            )
+                    )
+                }
+                itemsIndexed(
+                    items = group.items,
+                    key = { _, item -> key(item) }
+                ) { index, item ->
+                    DraggableItem(
+                        dragDropState = dragDropState,
+                        index = index,
+                    ) { modifier ->
+                        itemContent(item, modifier)
+                    }
+                }
+            }
+
+            else -> itemsIndexed(
+                items = items.items,
+                key = { _, item -> key(item) }
+            ) { index, item ->
+                DraggableItem(
+                    dragDropState = dragDropState,
+                    index = index,
+                ) { modifier ->
+                    itemContent(item, modifier)
+                }
             }
         }
     }

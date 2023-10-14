@@ -15,6 +15,7 @@ interface SettingsComponent {
     val canReorderDataManually: Value<Boolean>
     val sortOtpDataNullsFirst: Value<Boolean>
     val sortOtpDataReversed: Value<Boolean>
+    val showSortedGroupsHeaders: Value<Boolean>
     val requireAuthentication: Value<Boolean>
     val isAuthenticationAvailable: Boolean
 
@@ -27,6 +28,8 @@ interface SettingsComponent {
     fun onSortNullsFirstChange(nullsFirst: Boolean)
 
     fun onSortReversedChange(reversed: Boolean)
+
+    fun onShowSortedGroupsHeadersChange(show: Boolean)
 
     fun onRequireAuthenticationChange(require: Boolean)
 
@@ -60,6 +63,9 @@ class SettingsComponentImpl(
     override val sortOtpDataReversed: Value<Boolean> =
         userPreferences.stateFlow.map { it.sortOtpDataReversed }.asValue()
 
+    override val showSortedGroupsHeaders: Value<Boolean> =
+        userPreferences.stateFlow.map { it.showSortedGroupsHeaders }.asValue()
+
     override val requireAuthentication: Value<Boolean> =
         userPreferences.stateFlow.map { it.requireAuthentication }.asValue()
 
@@ -84,6 +90,10 @@ class SettingsComponentImpl(
 
     override fun onSortReversedChange(reversed: Boolean) {
         userPreferences.updateInScope { it.copy(sortOtpDataReversed = reversed) }
+    }
+
+    override fun onShowSortedGroupsHeadersChange(show: Boolean) {
+        userPreferences.updateInScope { it.copy(showSortedGroupsHeaders = show) }
     }
 
     override fun onRequireAuthenticationChange(require: Boolean) {

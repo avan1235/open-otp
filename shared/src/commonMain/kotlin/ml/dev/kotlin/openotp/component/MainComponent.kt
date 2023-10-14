@@ -15,11 +15,11 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import ml.dev.kotlin.openotp.USER_OTP_CODE_DATA_MODULE_QUALIFIER
 import ml.dev.kotlin.openotp.USER_PREFERENCES_MODULE_QUALIFIER
-import ml.dev.kotlin.openotp.otp.HotpData
-import ml.dev.kotlin.openotp.otp.OtpData
-import ml.dev.kotlin.openotp.otp.TotpData
-import ml.dev.kotlin.openotp.otp.UserOtpCodeData
+import ml.dev.kotlin.openotp.otp.*
 import ml.dev.kotlin.openotp.shared.OpenOtpResources
+import ml.dev.kotlin.openotp.ui.component.DragDropListData
+import ml.dev.kotlin.openotp.ui.component.DragDropListData.Grouped
+import ml.dev.kotlin.openotp.ui.component.DragDropListData.Listed
 import ml.dev.kotlin.openotp.util.StateFlowSettings
 import ml.dev.kotlin.openotp.util.currentEpochMilliseconds
 import ml.dev.kotlin.openotp.util.unit
@@ -31,9 +31,10 @@ interface MainComponent {
 
     val timestamp: Value<Long>
     val confirmOtpDataDelete: Value<Boolean>
-    val codeData: Value<UserOtpCodeData>
+    val codeData: Value<PresentedOtpCodeData>
     val isSearchActive: Value<Boolean>
     val isDragAndDropEnabled: Value<Boolean>
+    val showSortedGroupsHeaders: Value<Boolean>
     val navigateToScanQRCodeWhenCameraPermissionChanged: Value<Boolean>
 
     fun onRequestedCameraPermission()
@@ -68,7 +69,9 @@ class MainComponentImpl(
         val changed: Boolean = false,
     )
 
-    private val userOtpCodeData: StateFlowSettings<UserOtpCodeData> = get(USER_OTP_CODE_DATA_MODULE_QUALIFIER)
+    private val appContext: OpenOtpAppComponentContext = get()
+
+    private val userOtpCodeData: StateFlowSettings<StoredOtpCodeData> = get(USER_OTP_CODE_DATA_MODULE_QUALIFIER)
 
     private val userPreferences: StateFlowSettings<UserPreferencesModel> = get(USER_PREFERENCES_MODULE_QUALIFIER)
 
@@ -84,17 +87,13 @@ class MainComponentImpl(
     override val navigateToScanQRCodeWhenCameraPermissionChanged: Value<Boolean> =
         _cameraPermissionRequest.map { it.changed }.asValue()
 
-    override val codeData: Value<UserOtpCodeData> = combine(
+    override val codeData: Value<PresentedOtpCodeData> = combine(
         userOtpCodeData.stateFlow,
         userPreferences.stateFlow.map { it.sortOtpDataBy },
         userPreferences.stateFlow.map { it.sortOtpDataReversed },
         userPreferences.stateFlow.map { it.sortOtpDataNullsFirst },
-    ) transform@{ codes, sortBy, sortReversed, sortNullsFirst ->
-        val selector = sortBy.selector ?: return@transform codes
-        val comparator: Comparator<String?> = if (sortNullsFirst) nullsFirst() else nullsLast()
-        val otpDataComparator: Comparator<OtpData> = compareBy(comparator) { selector(it)?.toLowerCase(Locale.current) }
-        val reversedComparator = if (sortReversed) otpDataComparator.reversed() else otpDataComparator
-        codes.sortedWith(reversedComparator)
+    ) { codes, sortBy, sortReversed, sortNullsFirst ->
+        appContext.sortOtpCodeDataWithRules(codes, sortBy, sortReversed, sortNullsFirst)
     }.asValue()
 
     private val _isSearchActive: MutableStateFlow<Boolean> = MutableStateFlow(false)
@@ -102,6 +101,9 @@ class MainComponentImpl(
 
     override val isDragAndDropEnabled: Value<Boolean> =
         userPreferences.stateFlow.map { it.sortOtpDataBy == SortOtpDataBy.Dont }.asValue()
+
+    override val showSortedGroupsHeaders: Value<Boolean> =
+        userPreferences.stateFlow.map { it.showSortedGroupsHeaders }.asValue()
 
     private val searchBackCallback: BackCallback = BackCallback {
         _isSearchActive.value = false
@@ -181,3 +183,24 @@ class MainComponentImpl(
 }
 
 private const val MAX_CAMERA_PERMISSION_SILENT_REQUESTS: Int = 2
+
+private fun OpenOtpAppComponentContext.sortOtpCodeDataWithRules(
+    codes: StoredOtpCodeData,
+    sortBy: SortOtpDataBy,
+    sortReversed: Boolean,
+    sortNullsFirst: Boolean,
+): DragDropListData<OtpData> {
+    val selector = sortBy.selector ?: return Listed(codes)
+    val comparator: Comparator<String?> = if (sortNullsFirst) nullsFirst() else nullsLast()
+    val otpDataComparator: Comparator<OtpData> = compareBy(comparator) { selector(it)?.toLowerCase(Locale.current) }
+    val reversedComparator = if (sortReversed) otpDataComparator.reversed() else otpDataComparator
+    val sorted = codes.sortedWith(reversedComparator)
+
+    val groupedCodes = linkedMapOf<String, MutableList<OtpData>>()
+    for (otpData in sorted) {
+        val groupName = selector(otpData) ?: with(sortBy) { defaultGroupName }
+        groupedCodes[groupName] ?: ArrayList<OtpData>().also { groupedCodes[groupName] = it } += otpData
+    }
+    val groups = groupedCodes.map { Grouped.Group(it.key, it.value) }
+    return Grouped(groups)
+}

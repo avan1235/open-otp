@@ -16,12 +16,16 @@
     <string name="sort_type">Sort codes by</string>
     <string name="reversed_sort">Reverse sort order</string>
     <string name="nulls_first">Empty values first</string>
+    <string name="show_headers">Show group header</string>
     <string name="light_theme_name">Light</string>
     <string name="dark_theme_name">Dark</string>
     <string name="system_theme_name">System</string>
     <string name="issuer_sort_name">Issuer</string>
     <string name="account_name_sort_name">Account name</string>
     <string name="dont_sort_name">Disabled</string>
+    <string name="default_group_name_issuer_sort_name">Empty issuer</string>
+    <string name="default_group_name_account_name_sort_name">Empty account name</string>
+    <string name="default_group_name_dont_sort_name"/>
     <string name="can_manually_reorder">You can manually reorder items with drag &amp; drop gesture.</string>
     <string name="require_authentication">Require authentication before start</string>
     <string name="authenticate_request">Authenticate</string>

@@ -1,6 +1,7 @@
 package ml.dev.kotlin.openotp.ui.screen
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -11,8 +12,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -121,27 +121,47 @@ private fun CodesManagementSettingsGroup(component: SettingsComponent) {
             anyItems = SortOtpDataBy.entries
         )
         val canReorderDataManually by component.canReorderDataManually.subscribeAsState()
-        AnimatedVisibility(visible = canReorderDataManually) {
+        val reorderManuallyVisibleState =
+            remember { MutableTransitionState(false) }.apply { targetState = canReorderDataManually }
+        AnimatedVisibility(
+            visibleState = reorderManuallyVisibleState,
+        ) {
             Text(
                 text = stringResource(OpenOtpResources.strings.can_manually_reorder),
                 style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.alpha(0.75f)
+                modifier = Modifier.alpha(0.75f).padding(bottom = 12.dp)
             )
         }
+        var visibleDetailedOptions by remember { mutableStateOf(!canReorderDataManually) }
+        visibleDetailedOptions = when {
+            reorderManuallyVisibleState.run { targetState && currentState } -> false
+            reorderManuallyVisibleState.run { !targetState && !currentState } -> true
+            else -> visibleDetailedOptions
+        }
+        AnimatedVisibility(visible = visibleDetailedOptions) {
+            Column {
+                val showSortedGroupsHeaders by component.showSortedGroupsHeaders.subscribeAsState()
+                NamedSwitch(
+                    name = stringResource(OpenOtpResources.strings.show_headers),
+                    checked = showSortedGroupsHeaders,
+                    onCheckedChange = component::onShowSortedGroupsHeadersChange,
+                )
 
-        val sortOtpDataNullsFirst by component.sortOtpDataNullsFirst.subscribeAsState()
-        NamedSwitch(
-            name = stringResource(OpenOtpResources.strings.nulls_first),
-            checked = sortOtpDataNullsFirst,
-            onCheckedChange = component::onSortNullsFirstChange,
-        )
+                val sortOtpDataNullsFirst by component.sortOtpDataNullsFirst.subscribeAsState()
+                NamedSwitch(
+                    name = stringResource(OpenOtpResources.strings.nulls_first),
+                    checked = sortOtpDataNullsFirst,
+                    onCheckedChange = component::onSortNullsFirstChange,
+                )
 
-        val sortOtpDataReversed by component.sortOtpDataReversed.subscribeAsState()
-        NamedSwitch(
-            name = stringResource(OpenOtpResources.strings.reversed_sort),
-            checked = sortOtpDataReversed,
-            onCheckedChange = component::onSortReversedChange,
-        )
+                val sortOtpDataReversed by component.sortOtpDataReversed.subscribeAsState()
+                NamedSwitch(
+                    name = stringResource(OpenOtpResources.strings.reversed_sort),
+                    checked = sortOtpDataReversed,
+                    onCheckedChange = component::onSortReversedChange,
+                )
+            }
+        }
     }
 }
 

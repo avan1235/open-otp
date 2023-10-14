@@ -25,7 +25,7 @@ class ScanQRCodeComponentImpl(
     private val navigateOnCancel: (message: String?) -> Unit,
 ) : AbstractComponent(componentContext), ScanQRCodeComponent {
 
-    private val userOtpCodeData: StateFlowSettings<UserOtpCodeData> = get(USER_OTP_CODE_DATA_MODULE_QUALIFIER)
+    private val userOtpCodeData: StateFlowSettings<StoredOtpCodeData> = get(USER_OTP_CODE_DATA_MODULE_QUALIFIER)
 
     override fun onQRCodeScanned(result: QRResult): Boolean = when (result) {
         is QRResult.QRError -> navigateOnCancel(invalidQRCodeMessage).letFalse()

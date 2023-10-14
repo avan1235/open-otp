@@ -4,6 +4,7 @@ import androidx.compose.runtime.Immutable
 import com.benasher44.uuid.uuid4
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
+import ml.dev.kotlin.openotp.ui.component.DragDropListData
 
 @Immutable
 @Serializable
@@ -103,4 +104,6 @@ data class TotpData(
     }
 }
 
-typealias UserOtpCodeData = List<OtpData>
+typealias StoredOtpCodeData = List<OtpData>
+
+typealias PresentedOtpCodeData = DragDropListData<OtpData>

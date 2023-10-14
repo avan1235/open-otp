@@ -51,7 +51,7 @@ abstract class AddOtpProviderComponentImpl(
     private val navigateOnCancelClicked: () -> Unit,
 ) : AbstractComponent(componentContext), AddOtpProviderComponent {
 
-    protected val secureStorage: StateFlowSettings<UserOtpCodeData> = get(USER_OTP_CODE_DATA_MODULE_QUALIFIER)
+    protected val secureStorage: StateFlowSettings<StoredOtpCodeData> = get(USER_OTP_CODE_DATA_MODULE_QUALIFIER)
 
     protected fun notifyInvalid(fieldName: String) {
         toast(message = stringResource(OpenOtpResources.strings.invalid_field_name_provided_formatted, fieldName))

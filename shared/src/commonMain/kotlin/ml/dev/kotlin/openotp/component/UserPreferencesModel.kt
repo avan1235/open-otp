@@ -39,7 +39,9 @@ enum class OpenOtpAppTheme : Named {
 }
 
 @Serializable
-enum class SortOtpDataBy(val selector: ((OtpData) -> String?)?) : Named {
+enum class SortOtpDataBy(
+    val selector: ((OtpData) -> String?)?,
+) : Named {
     Dont(selector = null),
     Issuer(selector = { data -> data.issuer?.takeIf { it.isNotBlank() } }),
     AccountName(selector = { data -> data.accountName?.takeIf { it.isNotBlank() } });
@@ -49,6 +51,13 @@ enum class SortOtpDataBy(val selector: ((OtpData) -> String?)?) : Named {
             Dont -> stringResource(OpenOtpResources.strings.dont_sort_name)
             Issuer -> stringResource(OpenOtpResources.strings.issuer_sort_name)
             AccountName -> stringResource(OpenOtpResources.strings.account_name_sort_name)
+        }
+
+    val OpenOtpAppComponentContext.defaultGroupName: String
+        get() = when (this@SortOtpDataBy) {
+            Dont -> stringResource(OpenOtpResources.strings.default_group_name_dont_sort_name)
+            Issuer -> stringResource(OpenOtpResources.strings.default_group_name_issuer_sort_name)
+            AccountName -> stringResource(OpenOtpResources.strings.default_group_name_account_name_sort_name)
         }
 }
 
@@ -60,6 +69,7 @@ data class UserPreferencesModel(
     val sortOtpDataReversed: Boolean = false,
     val confirmOtpDataDelete: Boolean = true,
     val requireAuthentication: Boolean = false,
+    val showSortedGroupsHeaders: Boolean = true,
 )
 
 private val LightColors: ColorScheme = lightColorScheme(

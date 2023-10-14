@@ -35,8 +35,8 @@ import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.isActive
 import ml.dev.kotlin.openotp.otp.HotpData
 import ml.dev.kotlin.openotp.otp.OtpData
+import ml.dev.kotlin.openotp.otp.PresentedOtpCodeData
 import ml.dev.kotlin.openotp.otp.TotpData
-import ml.dev.kotlin.openotp.otp.UserOtpCodeData
 import ml.dev.kotlin.openotp.shared.OpenOtpResources
 import ml.dev.kotlin.openotp.ui.issuerIcon
 import ml.dev.kotlin.openotp.util.OnceLaunchedEffect
@@ -46,10 +46,11 @@ import kotlin.math.roundToInt
 
 @Composable
 internal fun OtpCodeItems(
-    codeData: UserOtpCodeData,
+    codeData: PresentedOtpCodeData,
     timestamp: Long,
     confirmCodeDismiss: Boolean,
     isDragAndDropEnabled: Boolean,
+    showSortedGroupsHeaders: Boolean,
     onOtpCodeDataDismiss: (OtpData) -> Boolean,
     onRestartCode: (OtpData) -> Unit,
     dragDropState: DragDropState,
@@ -63,6 +64,7 @@ internal fun OtpCodeItems(
         key = { it.uuid },
         dragDropState = dragDropState,
         enabled = isDragAndDropEnabled,
+        showHeaders = showSortedGroupsHeaders,
         modifier = Modifier
             .fillMaxSize()
             .padding(top = 12.dp),

@@ -14,7 +14,7 @@ import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import dev.icerock.moko.resources.compose.stringResource
 import ml.dev.kotlin.openotp.component.MainComponent
 import ml.dev.kotlin.openotp.otp.OtpData
-import ml.dev.kotlin.openotp.otp.UserOtpCodeData
+import ml.dev.kotlin.openotp.otp.PresentedOtpCodeData
 import ml.dev.kotlin.openotp.qr.CameraPermission.Denied
 import ml.dev.kotlin.openotp.qr.CameraPermission.Granted
 import ml.dev.kotlin.openotp.qr.rememberCameraPermissionState
@@ -55,11 +55,13 @@ internal fun MainScreen(mainComponent: MainComponent) {
         val listState = rememberLazyListState()
         val dragDropState = rememberDragDropState(listState, mainComponent::onOtpCodeDataReordered)
         val isDragAndDropEnabled by mainComponent.isDragAndDropEnabled.subscribeAsState()
+        val showSortedGroupsHeaders by mainComponent.showSortedGroupsHeaders.subscribeAsState()
         AllOtpCodeItems(
             codeData = codeData,
             timestamp = timestamp,
             confirmCodeDismiss = confirmOtpDataDelete,
             isDragAndDropEnabled = isDragAndDropEnabled,
+            showSortedGroupsHeaders = showSortedGroupsHeaders,
             onOtpCodeDataDismiss = mainComponent::onOtpCodeDataRemove,
             onRestartCode = mainComponent::onOtpCodeDataRestart,
             copyOtpCode = mainComponent::copyOtpCode,
@@ -84,10 +86,11 @@ internal fun MainScreen(mainComponent: MainComponent) {
 
 @Composable
 private fun AllOtpCodeItems(
-    codeData: UserOtpCodeData,
+    codeData: PresentedOtpCodeData,
     timestamp: Long,
     confirmCodeDismiss: Boolean,
     isDragAndDropEnabled: Boolean,
+    showSortedGroupsHeaders: Boolean,
     onOtpCodeDataDismiss: (OtpData) -> Boolean,
     onRestartCode: (OtpData) -> Unit,
     dragDropState: DragDropState,
@@ -105,12 +108,13 @@ private fun AllOtpCodeItems(
                     .weight(weight = 1f, fill = true),
                 contentAlignment = Alignment.Center,
             ) {
-                if (codeData.isNotEmpty()) {
+                if (!codeData.isEmpty) {
                     OtpCodeItems(
                         codeData,
                         timestamp,
                         confirmCodeDismiss,
                         isDragAndDropEnabled,
+                        showSortedGroupsHeaders,
                         onOtpCodeDataDismiss,
                         onRestartCode,
                         dragDropState,
