@@ -134,6 +134,7 @@ kotlin {
             dependencies {
                 implementation(compose.desktop.common)
                 implementation(libs.webcam.capture)
+                implementation(libs.webcam.capture.driver.native)
                 implementation(libs.zxing.core)
                 implementation(libs.zxing.javase)
 

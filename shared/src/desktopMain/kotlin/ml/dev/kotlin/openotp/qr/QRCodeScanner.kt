@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.toComposeImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import com.github.eduramiba.webcamcapture.drivers.NativeDriver
 import com.github.sarxos.webcam.Webcam
 import com.github.sarxos.webcam.WebcamException
 import com.github.sarxos.webcam.WebcamResolution
@@ -76,6 +77,13 @@ actual fun QRCodeScanner(
 @Composable
 actual fun rememberCameraPermissionState(): CameraPermissionState = remember {
     object : CameraPermissionState {
+        init {
+            val os = System.getProperty("os.name")
+            if (os.contains("mac", ignoreCase = true)) {
+                Webcam.setDriver(NativeDriver())
+            }
+        }
+
         override val isAvailable: Boolean by lazy {
             try {
                 runIfNonNull(Webcam.getDefault()) { true } ?: false

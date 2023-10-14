@@ -45,6 +45,13 @@ compose.desktop {
                 signing {
                     sign.set(false)
                 }
+                runtimeEntitlementsFile.set(project.file("runtime-entitlements.plist"))
+                infoPlist {
+                    extraKeysRawXml = """
+                        <key>NSCameraUsageDescription</key>
+                        <string></string>
+                    """.trimIndent()
+                }
             }
         }
         buildTypes.release.proguard {

@@ -40,6 +40,7 @@ version-catalog-update = "0.8.1"
 # @keep
 versionCode = "15"
 webcamCapture = "0.3.12"
+webcamCaptureDriverNative = "1.0.0"
 zxing-core = "3.5.2"
 
 [libraries]
@@ -79,6 +80,7 @@ parcelize-darwinRuntime = { module = "com.arkivanov.parcelize.darwin:runtime", v
 uriKmp = { module = "com.eygraber:uri-kmp", version.ref = "uri-kmp" }
 uuid = { module = "com.benasher44:uuid", version.ref = "uuid" }
 webcam-capture = { module = "com.github.sarxos:webcam-capture", version.ref = "webcamCapture" }
+webcam-capture-driver-native = { module = "io.github.eduramiba:webcam-capture-driver-native", version.ref = "webcamCaptureDriverNative" }
 zxing-core = { module = "com.google.zxing:core", version.ref = "zxing-core" }
 zxing-javase = { module = "com.google.zxing:javase", version.ref = "zxing-core" }
 
