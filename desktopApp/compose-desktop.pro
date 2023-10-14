@@ -15,3 +15,5 @@
 -dontwarn org.osgi.framework.**
 -dontwarn org.slf4j.impl.**
 -dontwarn ch.qos.logback.classic.**
+-dontwarn javafx.**
+-dontwarn com.github.eduramiba.webcamcapture.**
