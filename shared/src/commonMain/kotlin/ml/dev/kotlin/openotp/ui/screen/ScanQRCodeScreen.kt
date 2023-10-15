@@ -5,10 +5,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.outlined.Close
-import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.contentColorFor
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.*
@@ -16,12 +17,13 @@ import androidx.compose.ui.graphics.ClipOp
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.clipPath
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.min
 import dev.icerock.moko.resources.compose.stringResource
+import `in`.procyk.compose.camera.qr.QRCodeScanner
 import ml.dev.kotlin.openotp.component.ScanQRCodeComponent
-import ml.dev.kotlin.openotp.qr.QRCodeScanner
 import ml.dev.kotlin.openotp.shared.OpenOtpResources
 import ml.dev.kotlin.openotp.ui.component.ClickableIconButton
 import ml.dev.kotlin.openotp.ui.component.LoadingAnimatedVisibility
@@ -33,17 +35,30 @@ internal fun ScanQRCodeScreen(
     holePercent: Float = 0.75f,
 ) {
     NoSystemBarsScreen {
-        val isLoading = remember { mutableStateOf(true) }
+        var isLoading by remember { mutableStateOf(true) }
 
-        Scaffold(
+        Box(
             modifier = Modifier.fillMaxSize(),
         ) {
             LoadingAnimatedVisibility(
-                visibleContent = !isLoading.value
+                visibleContent = !isLoading
             ) {
                 QRCodeScanner(
                     onResult = scanQRCodeComponent::onQRCodeScanned,
-                    isLoading = isLoading,
+                    onIsLoadingChange = { isLoading = it },
+                    backgroundColor = MaterialTheme.colorScheme.background,
+                    contentDescription = stringResource(OpenOtpResources.strings.camera_image_name),
+                    missingCameraContent = {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Text(
+                                text = stringResource(OpenOtpResources.strings.camera_not_available),
+                                textAlign = TextAlign.Center,
+                            )
+                        }
+                    }
                 )
                 QRCodeCameraHole(holePercent)
                 ScanQRCodeScreenDescription(

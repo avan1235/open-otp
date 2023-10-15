@@ -45,7 +45,7 @@
     <string name="question_icon_name">Question</string>
     <string name="dropdown_icon_name">Select from multiple options</string>
     <string name="locked_icon_name">Locked</string>
-    <string name="camara_image_name">Camera image</string>
+    <string name="camera_image_name">Camera image</string>
     <string name="settings_name">Settings</string>
 
     <string name="search_field">Search...</string>

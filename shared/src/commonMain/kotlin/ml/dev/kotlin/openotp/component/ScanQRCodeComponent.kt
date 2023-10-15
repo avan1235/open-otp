@@ -2,11 +2,11 @@ package ml.dev.kotlin.openotp.component
 
 import com.arkivanov.decompose.ComponentContext
 import com.eygraber.uri.Uri
+import `in`.procyk.compose.camera.qr.QRResult
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import ml.dev.kotlin.openotp.USER_OTP_CODE_DATA_MODULE_QUALIFIER
 import ml.dev.kotlin.openotp.otp.*
-import ml.dev.kotlin.openotp.qr.QRResult
 import ml.dev.kotlin.openotp.shared.OpenOtpResources
 import ml.dev.kotlin.openotp.util.StateFlowSettings
 import ml.dev.kotlin.openotp.util.isValidBase32Secret

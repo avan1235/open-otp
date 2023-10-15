@@ -12,12 +12,12 @@ import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import dev.icerock.moko.resources.compose.stringResource
+import `in`.procyk.compose.camera.qr.CameraPermission.Denied
+import `in`.procyk.compose.camera.qr.CameraPermission.Granted
+import `in`.procyk.compose.camera.qr.rememberCameraPermissionState
 import ml.dev.kotlin.openotp.component.MainComponent
 import ml.dev.kotlin.openotp.otp.OtpData
 import ml.dev.kotlin.openotp.otp.PresentedOtpCodeData
-import ml.dev.kotlin.openotp.qr.CameraPermission.Denied
-import ml.dev.kotlin.openotp.qr.CameraPermission.Granted
-import ml.dev.kotlin.openotp.qr.rememberCameraPermissionState
 import ml.dev.kotlin.openotp.shared.OpenOtpResources
 import ml.dev.kotlin.openotp.ui.component.*
 

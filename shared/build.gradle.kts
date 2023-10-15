@@ -86,6 +86,8 @@ kotlin {
 
                 api(libs.moko.resoures)
                 api(libs.moko.resoures.compose)
+
+                implementation(libs.compose.extensions.camera.qr)
             }
         }
         val commonTest by getting {
@@ -101,9 +103,6 @@ kotlin {
                 api(libs.androidx.appcompat.appcompat)
                 api(libs.androidx.core.ktx)
 
-                implementation(libs.androidx.camera)
-                implementation(libs.androidx.cameraLifecycle)
-                implementation(libs.androidx.cameraPreview)
                 implementation(libs.androidx.biometric)
 
                 implementation(libs.mlkit.barcodeScanning)

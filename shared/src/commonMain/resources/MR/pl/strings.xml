@@ -47,7 +47,7 @@
     <string name="question_icon_name">Pytanie</string>
     <string name="dropdown_icon_name">Wybierz z wielu opcji</string>
     <string name="locked_icon_name">Zablokowane</string>
-    <string name="camara_image_name">Widok kamery</string>
+    <string name="camera_image_name">Widok kamery</string>
     <string name="settings_name">Ustawienia</string>
 
     <string name="search_field">Wyszukaj...</string>
