@@ -2,6 +2,8 @@
 accompanist = "0.32.0"
 # @keep
 android-compileSdk = "34"
+# @pin
+android-gradle-plugin = "8.1.0"
 # @keep
 android-minSdk = "26"
 # @keep
@@ -19,8 +21,6 @@ compose = "1.5.3"
 decompose = "2.2.0-compose-experimental-alpha01"
 encoding-base32 = "2.0.0"
 essenty = "1.3.0-alpha01"
-# @pin
-gradle-plugin = "8.1.0"
 gradle-versions = "0.49.0"
 kermit = "2.0.0-RC5"
 koin = "3.5.0"
@@ -85,8 +85,8 @@ zxing-core = { module = "com.google.zxing:core", version.ref = "zxing-core" }
 zxing-javase = { module = "com.google.zxing:javase", version.ref = "zxing-core" }
 
 [plugins]
-android-application = { id = "com.android.application", version.ref = "gradle-plugin" }
-android-library = { id = "com.android.library", version.ref = "gradle-plugin" }
+android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }
+android-library = { id = "com.android.library", version.ref = "android-gradle-plugin" }
 compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "compose" }
 gradle-versions = { id = "com.github.ben-manes.versions", version.ref = "gradle-versions" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
