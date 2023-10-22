@@ -87,7 +87,9 @@ kotlin {
                 api(libs.moko.resoures)
                 api(libs.moko.resoures.compose)
 
+                implementation(libs.compose.extensions.camera.permission)
                 implementation(libs.compose.extensions.camera.qr)
+                implementation(libs.compose.extensions.util)
             }
         }
         val commonTest by getting {
@@ -107,9 +109,6 @@ kotlin {
 
                 implementation(libs.mlkit.barcodeScanning)
                 implementation(libs.androidx.security.crypto)
-
-                implementation(libs.accompanist.permissions)
-                implementation(libs.accompanist.systemuicontroller)
 
                 runtimeOnly(libs.kotlinx.coroutines.android)
             }

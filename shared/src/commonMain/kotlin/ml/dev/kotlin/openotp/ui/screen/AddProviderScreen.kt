@@ -9,15 +9,13 @@ import androidx.compose.material.icons.filled.Pin
 import androidx.compose.material.icons.filled.Update
 import androidx.compose.material.icons.outlined.Cancel
 import androidx.compose.material.icons.outlined.Save
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import dev.icerock.moko.resources.compose.stringResource
+import `in`.procyk.compose.util.SystemBarsScreen
 import ml.dev.kotlin.openotp.component.AddHotpProviderComponent
 import ml.dev.kotlin.openotp.component.AddOtpProviderComponent
 import ml.dev.kotlin.openotp.component.AddTotpProviderComponent
@@ -35,7 +33,10 @@ internal fun AddProviderScreen(
     totpComponent: AddTotpProviderComponent,
     hotpComponent: AddHotpProviderComponent,
 ) {
-    SystemBarsScreen {
+    SystemBarsScreen(
+        top = MaterialTheme.colorScheme.background,
+        bottom = MaterialTheme.colorScheme.background,
+    ) {
         Column(modifier = Modifier.fillMaxWidth()) {
             var selected by remember { mutableStateOf(OtpType.entries.first()) }
             TabRow(selectedTabIndex = selected.ordinal) {

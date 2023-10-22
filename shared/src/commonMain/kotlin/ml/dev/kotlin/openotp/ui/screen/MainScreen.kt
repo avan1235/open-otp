@@ -2,6 +2,7 @@ package ml.dev.kotlin.openotp.ui.screen
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -12,9 +13,10 @@ import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import dev.icerock.moko.resources.compose.stringResource
-import `in`.procyk.compose.camera.qr.CameraPermission.Denied
-import `in`.procyk.compose.camera.qr.CameraPermission.Granted
-import `in`.procyk.compose.camera.qr.rememberCameraPermissionState
+import `in`.procyk.compose.camera.permission.CameraPermission.Denied
+import `in`.procyk.compose.camera.permission.CameraPermission.Granted
+import `in`.procyk.compose.camera.permission.rememberCameraPermissionState
+import `in`.procyk.compose.util.SystemBarsScreen
 import ml.dev.kotlin.openotp.component.MainComponent
 import ml.dev.kotlin.openotp.otp.OtpData
 import ml.dev.kotlin.openotp.otp.PresentedOtpCodeData
@@ -23,7 +25,10 @@ import ml.dev.kotlin.openotp.ui.component.*
 
 @Composable
 internal fun MainScreen(mainComponent: MainComponent) {
-    SystemBarsScreen {
+    SystemBarsScreen(
+        top = MaterialTheme.colorScheme.background,
+        bottom = MaterialTheme.colorScheme.background,
+    ) {
         val cameraPermissionState = rememberCameraPermissionState()
         val navigateToScanQRCodeWhenCameraPermissionChanged by mainComponent.navigateToScanQRCodeWhenCameraPermissionChanged.subscribeAsState()
 
