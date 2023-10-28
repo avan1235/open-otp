@@ -34,6 +34,12 @@
     <string name="authenticate_request_title">Uwierzytelnienie użytkownika</string>
     <string name="authenticate_request_description">Uwierzytelnij, aby uzyskać dostęp do kodów aplikacji.</string>
     <string name="app_icon">Ikona aplikacji</string>
+    <string name="dropbox_name">Dropbox</string>
+    <string name="synced_all">Pomyślnie stworzono kopię zapasową</string>
+    <string name="failed_some">Niektóre kopie zapasowe nie mogły zostać ukończone poprawnie</string>
+    <string name="failed_all">Wszystkie kopie zapasowe nie mogły zostać ukończone poprawnie</string>
+    <string name="backups_state">Stan kopii zapasowych</string>
+    <string name="request_app_permissions">Poproś o uprawnienia</string>
 
     <string name="settings_screen_name">Ustawienia</string>
 
@@ -60,6 +66,7 @@
     <string name="codes_management_group_name">Zarządzanie kodami</string>
     <string name="look_and_feel_group_name">Wygląd aplikacji</string>
     <string name="security_group_name">Bezpieczeństwo</string>
+    <string name="cloud_backups_group_name">Kopia zapasowa w chmurze</string>
 
     <string name="issuer_field_name">Wystawca</string>
     <string name="account_name_field_name">Nazwa konta</string>
@@ -74,6 +81,8 @@
     <string name="save_button_name">Zapisz</string>
     <string name="cancel_button_name">Anuluj</string>
     <string name="proceed_button_name">Zatwierdź</string>
+    <string name="link_account_button_name">Połącz konto</string>
+    <string name="unlink_account_button_name">Rozłącz konto</string>
 
     <string name="totp_presentation">TOTP - Czasowy</string>
     <string name="hotp_presentation">HOTP - Manualny</string>

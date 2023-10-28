@@ -8,77 +8,88 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import dev.icerock.moko.resources.compose.stringResource
-import `in`.procyk.compose.util.SystemBarsScreen
 import ml.dev.kotlin.openotp.component.OpenOtpAppTheme
 import ml.dev.kotlin.openotp.component.SettingsComponent
+import ml.dev.kotlin.openotp.component.SettingsComponentImpl
+import ml.dev.kotlin.openotp.component.SettingsComponentImpl.Linked
+import ml.dev.kotlin.openotp.component.SettingsComponentImpl.Unlinked
 import ml.dev.kotlin.openotp.component.SortOtpDataBy
 import ml.dev.kotlin.openotp.shared.OpenOtpResources
-import ml.dev.kotlin.openotp.ui.component.ClickableIconButton
+import ml.dev.kotlin.openotp.ui.component.NamedBox
 import ml.dev.kotlin.openotp.ui.component.NamedDropdownMenu
 import ml.dev.kotlin.openotp.ui.component.NamedSwitch
+import ml.dev.kotlin.openotp.util.TopBarClickableIconScreen
 
 @Composable
 internal fun SettingsScreen(
     component: SettingsComponent,
     accent: Color = MaterialTheme.colorScheme.primary,
 ) {
-    SystemBarsScreen(
-        top = accent,
-        bottom = MaterialTheme.colorScheme.background,
+    TopBarClickableIconScreen(
+        onIconClick = component::onExitSettings,
+        accent = accent,
+        text = stringResource(OpenOtpResources.strings.settings_screen_name),
     ) {
-        Scaffold(
-            topBar = {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(64.dp)
-                        .background(accent),
-                    horizontalArrangement = Arrangement.Start,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    ClickableIconButton(
-                        onClick = component::onExitSettings,
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = stringResource(OpenOtpResources.strings.back_icon_name),
-                            tint = contentColorFor(accent),
-                        )
-                    }
-                    Text(
-                        text = stringResource(OpenOtpResources.strings.settings_screen_name),
-                        style = MaterialTheme.typography.titleLarge,
-                        color = contentColorFor(accent)
-                    )
-                }
-            }
+        Column(
+            modifier = Modifier
+                .padding(
+                    top = 64.dp,
+                    start = 20.dp,
+                    end = 20.dp,
+                )
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Column(
-                modifier = Modifier
-                    .padding(
-                        top = 64.dp,
-                        start = 20.dp,
-                        end = 20.dp,
-                    )
-                    .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                Spacer(Modifier.height(4.dp))
-                LookAndFeelSettingsGroup(component)
-                CodesManagementSettingsGroup(component)
-                SecuritySettingsGroup(component)
+            Spacer(Modifier.height(4.dp))
+            LookAndFeelSettingsGroup(component)
+            CodesManagementSettingsGroup(component)
+            SecuritySettingsGroup(component)
+            CloudBackupsSettingsGroup(component)
+            Spacer(Modifier.height(48.dp))
+        }
+    }
+}
+
+@Composable
+private fun CloudBackupsSettingsGroup(component: SettingsComponent) {
+    SettingsGroup(
+        name = stringResource(OpenOtpResources.strings.cloud_backups_group_name),
+    ) {
+        val states by component.linkedAccountsStates.subscribeAsState()
+        for (state in states) {
+            LinkdedAccountState(state)
+        }
+    }
+}
+
+@Composable
+private fun LinkdedAccountState(accountState: SettingsComponentImpl.LinkedAccountState) {
+    NamedBox(
+        icon = accountState.icon,
+        name = accountState.iconContentDescription(),
+        iconModifier = Modifier.alpha(
+            alpha = when (accountState) {
+                is Unlinked -> 0.7f
+                is Linked -> 1.0f
+            }
+        )
+    ) {
+        Row(
+            modifier = Modifier.fillMaxSize(),
+            horizontalArrangement = Arrangement.End,
+        ) {
+            ElevatedButton(onClick = accountState::onClick) {
+                Text(text = accountState.presentableName())
             }
         }
     }

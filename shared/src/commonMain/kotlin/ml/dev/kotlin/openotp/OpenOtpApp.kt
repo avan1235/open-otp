@@ -1,12 +1,8 @@
 package ml.dev.kotlin.openotp
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Surface
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.Children
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.slide
@@ -15,14 +11,12 @@ import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import kotlinx.serialization.builtins.ListSerializer
 import ml.dev.kotlin.openotp.component.OpenOtpAppComponent
 import ml.dev.kotlin.openotp.component.OpenOtpAppComponent.Child
+import ml.dev.kotlin.openotp.component.UserLinkedAccountsModel
 import ml.dev.kotlin.openotp.component.UserPreferencesModel
 import ml.dev.kotlin.openotp.otp.OtpData
 import ml.dev.kotlin.openotp.ui.screen.*
 import ml.dev.kotlin.openotp.ui.theme.OpenOtpTheme
-import ml.dev.kotlin.openotp.util.BindBiometryAuthenticatorEffect
-import ml.dev.kotlin.openotp.util.BiometryAuthenticator
-import ml.dev.kotlin.openotp.util.OnceLaunchedEffect
-import ml.dev.kotlin.openotp.util.StateFlowSettings
+import ml.dev.kotlin.openotp.util.*
 import org.koin.compose.koinInject
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
@@ -60,6 +54,7 @@ internal fun OpenOtpApp(component: OpenOtpAppComponent) {
                             is Child.ScanQRCode -> ScanQRCodeScreen(instance.component)
                             is Child.AddProvider -> AddProviderScreen(instance.totpComponent, instance.hotpComponent)
                             is Child.Settings -> SettingsScreen(instance.component)
+                            is Child.LinkAccount -> LinkAccountScreen(instance.component)
                         }
                     }
                 }
@@ -72,6 +67,8 @@ internal val USER_OTP_CODE_DATA_MODULE_QUALIFIER: StringQualifier = named("userO
 
 internal val USER_PREFERENCES_MODULE_QUALIFIER: StringQualifier = named("userPreferencesModule")
 
+internal val USER_LINKED_ACCOUNTS_MODULE_QUALIFIER: StringQualifier = named("userLinkedAccountsModule")
+
 
 internal fun initOpenOtpKoin(appDeclaration: KoinAppDeclaration = {}) {
     startKoin {
@@ -79,6 +76,7 @@ internal fun initOpenOtpKoin(appDeclaration: KoinAppDeclaration = {}) {
         modules(module {
             userOtpCodeDataModule()
             userPreferencesModule()
+            userLinkedAccountsModule()
             snackbarHostStateModule()
         })
     }
@@ -102,6 +100,17 @@ private fun Module.userPreferencesModule() {
             context = get(),
             serializer = UserPreferencesModel.serializer(),
             default = UserPreferencesModel(),
+        )
+    }
+}
+
+private fun Module.userLinkedAccountsModule() {
+    single(USER_LINKED_ACCOUNTS_MODULE_QUALIFIER) {
+        StateFlowSettings(
+            name = "user-linked-accounts",
+            context = get(),
+            serializer = UserLinkedAccountsModel.serializer(),
+            default = UserLinkedAccountsModel(),
         )
     }
 }

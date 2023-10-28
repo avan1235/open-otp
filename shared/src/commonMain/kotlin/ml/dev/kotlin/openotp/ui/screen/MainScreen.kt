@@ -2,7 +2,9 @@ package ml.dev.kotlin.openotp.ui.screen
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -16,19 +18,17 @@ import dev.icerock.moko.resources.compose.stringResource
 import `in`.procyk.compose.camera.permission.CameraPermission.Denied
 import `in`.procyk.compose.camera.permission.CameraPermission.Granted
 import `in`.procyk.compose.camera.permission.rememberCameraPermissionState
-import `in`.procyk.compose.util.SystemBarsScreen
+import ml.dev.kotlin.openotp.component.LinkedAccountsSyncState
 import ml.dev.kotlin.openotp.component.MainComponent
 import ml.dev.kotlin.openotp.otp.OtpData
 import ml.dev.kotlin.openotp.otp.PresentedOtpCodeData
 import ml.dev.kotlin.openotp.shared.OpenOtpResources
 import ml.dev.kotlin.openotp.ui.component.*
+import ml.dev.kotlin.openotp.util.SystemBarsScreen
 
 @Composable
 internal fun MainScreen(mainComponent: MainComponent) {
-    SystemBarsScreen(
-        top = MaterialTheme.colorScheme.background,
-        bottom = MaterialTheme.colorScheme.background,
-    ) {
+    SystemBarsScreen {
         val cameraPermissionState = rememberCameraPermissionState()
         val navigateToScanQRCodeWhenCameraPermissionChanged by mainComponent.navigateToScanQRCodeWhenCameraPermissionChanged.subscribeAsState()
 
@@ -43,18 +43,21 @@ internal fun MainScreen(mainComponent: MainComponent) {
         val timestamp by mainComponent.timestamp.subscribeAsState()
         val confirmOtpDataDelete by mainComponent.confirmOtpDataDelete.subscribeAsState()
         val isSearchActive by mainComponent.isSearchActive.subscribeAsState()
+        val syncState by mainComponent.linkedAccountsSyncState.subscribeAsState()
 
         FilteredOtpCodeItems(
             codeData = codeData,
             timestamp = timestamp,
             confirmCodeDismiss = confirmOtpDataDelete,
             isSearchActive = isSearchActive,
+            syncState = syncState,
             onOtpCodeDataDismiss = mainComponent::onOtpCodeDataRemove,
             onSearchBarActiveChange = mainComponent::onSearchBarActiveChange,
             onRestartCode = mainComponent::onOtpCodeDataRestart,
             onMoveCode = mainComponent::onOtpCodeDataReordered,
             copyOtpCode = mainComponent::copyOtpCode,
-            onSettingsIconClick = mainComponent::onSettingsClick
+            onSettingsIconClick = mainComponent::onSettingsClick,
+            onCloudBackupClick = mainComponent::onRefresh
         )
 
         val listState = rememberLazyListState()
@@ -71,6 +74,8 @@ internal fun MainScreen(mainComponent: MainComponent) {
             onRestartCode = mainComponent::onOtpCodeDataRestart,
             copyOtpCode = mainComponent::copyOtpCode,
             dragDropState = dragDropState,
+            syncState = syncState,
+            onRefresh = mainComponent::onRefresh,
         )
         AddActionButton(
             dragDropState = dragDropState,
@@ -100,12 +105,17 @@ private fun AllOtpCodeItems(
     onRestartCode: (OtpData) -> Unit,
     dragDropState: DragDropState,
     copyOtpCode: ClipboardManager.(item: OtpData, timestamp: Long) -> Unit,
+    syncState: LinkedAccountsSyncState,
+    onRefresh: () -> Unit,
 ) {
+    val state = rememberPullRefreshState(syncState.isRefreshing, onRefresh, refreshingOffset = 68.dp)
     Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.BottomCenter,
+        modifier = Modifier
+            .fillMaxSize()
+            .run { if (syncState.isSyncAvailable) pullRefresh(state) else this },
+        contentAlignment = Alignment.TopCenter,
     ) {
-        Column {
+        Column(modifier = Modifier.fillMaxWidth()) {
             Spacer(Modifier.height(70.dp))
             Box(
                 modifier = Modifier
@@ -128,6 +138,15 @@ private fun AllOtpCodeItems(
                 } else {
                     Text(text = stringResource(OpenOtpResources.strings.add_new_keys))
                 }
+            }
+        }
+        if (syncState.isSyncAvailable) {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Spacer(Modifier.height(70.dp))
+                PullRefreshIndicator(syncState.isRefreshing, state)
             }
         }
     }

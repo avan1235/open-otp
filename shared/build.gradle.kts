@@ -36,12 +36,14 @@ kotlin {
             languageSettings.apply {
                 optIn("kotlin.contracts.ExperimentalContracts")
                 optIn("kotlinx.serialization.ExperimentalSerializationApi")
+                optIn("kotlin.ExperimentalStdlibApi")
                 optIn("com.russhwolf.settings.ExperimentalSettingsApi")
                 optIn("com.russhwolf.settings.ExperimentalSettingsImplementation")
                 optIn("androidx.compose.foundation.ExperimentalFoundationApi")
                 optIn("androidx.compose.ui.ExperimentalComposeUiApi")
                 optIn("androidx.compose.foundation.layout.ExperimentalLayoutApi")
                 optIn("androidx.compose.material3.ExperimentalMaterial3Api")
+                optIn("androidx.compose.material.ExperimentalMaterialApi")
                 optIn("com.arkivanov.decompose.ExperimentalDecomposeApi")
                 optIn("com.google.accompanist.permissions.ExperimentalPermissionsApi")
             }
@@ -50,6 +52,7 @@ kotlin {
             dependencies {
                 implementation(compose.runtime)
                 implementation(compose.foundation)
+                implementation(compose.material)
                 implementation(compose.material3)
                 implementation(compose.materialIconsExtended)
                 implementation(compose.animationGraphics)
@@ -62,8 +65,11 @@ kotlin {
                 implementation(libs.uuid)
                 implementation(libs.encoding.base32)
 
+                implementation(libs.kotlincrypto.hash.sha2)
                 implementation(libs.kotlincrypto.macs.hmac.sha1)
                 implementation(libs.kotlincrypto.macs.hmac.sha2)
+                implementation(libs.kotlincrypto.secure.random)
+                implementation(libs.kotlincrypto.secure.random)
 
                 implementation(libs.koin.core)
                 implementation(libs.koin.compose)
@@ -78,6 +84,7 @@ kotlin {
                 api(libs.decompose.extensionsComposeJetbrains)
 
                 implementation(libs.kotlinx.serialization.json)
+                implementation(libs.kotlinx.serialization.cbor)
 
                 api(libs.essenty.lifecycle)
                 api(libs.essenty.stateKeeper)
@@ -90,6 +97,10 @@ kotlin {
                 implementation(libs.compose.extensions.camera.permission)
                 implementation(libs.compose.extensions.camera.qr)
                 implementation(libs.compose.extensions.util)
+
+                implementation(libs.ktor.client.content.negotiation)
+                implementation(libs.ktor.client.core)
+                implementation(libs.ktor.serialization.kotlinx.json)
             }
         }
         val commonTest by getting {
@@ -110,6 +121,8 @@ kotlin {
                 implementation(libs.mlkit.barcodeScanning)
                 implementation(libs.androidx.security.crypto)
 
+                implementation(libs.ktor.client.okhttp)
+
                 runtimeOnly(libs.kotlinx.coroutines.android)
             }
         }
@@ -123,6 +136,8 @@ kotlin {
             iosSimulatorArm64Main.dependsOn(this)
 
             dependencies {
+                implementation(libs.ktor.client.darwin)
+
                 api(libs.parcelize.darwinRuntime)
             }
         }
@@ -137,6 +152,8 @@ kotlin {
                 implementation(libs.zxing.javase)
 
                 runtimeOnly(libs.kotlinx.coroutines.swing)
+
+                implementation(libs.ktor.client.okhttp)
             }
         }
     }

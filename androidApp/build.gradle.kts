@@ -44,6 +44,11 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"))
         }
     }
+    packaging {
+        resources {
+            excludes += "META-INF/versions/**"
+        }
+    }
 }
 
 fun getAndBumpVersionCode(): Int {

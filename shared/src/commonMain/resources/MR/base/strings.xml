@@ -32,6 +32,12 @@
     <string name="authenticate_request_title">User authentication</string>
     <string name="authenticate_request_description">Authenticate to get access to application codes.</string>
     <string name="app_icon">App icon</string>
+    <string name="dropbox_name">Dropbox</string>
+    <string name="synced_all">Synced successfully all backups destinations</string>
+    <string name="failed_some">Some backups destinations have failed</string>
+    <string name="failed_all">All backups destinations have failed</string>
+    <string name="backups_state">Backups state</string>
+    <string name="request_app_permissions">Request app permissions</string>
 
     <string name="settings_screen_name">Settings</string>
 
@@ -58,6 +64,7 @@
     <string name="codes_management_group_name">Codes Management</string>
     <string name="look_and_feel_group_name">Look &amp; Feel</string>
     <string name="security_group_name">Security</string>
+    <string name="cloud_backups_group_name">Cloud backups</string>
 
     <string name="issuer_field_name">Issuer</string>
     <string name="account_name_field_name">Account Name</string>
@@ -72,6 +79,8 @@
     <string name="save_button_name">Save</string>
     <string name="cancel_button_name">Cancel</string>
     <string name="proceed_button_name">Proceed</string>
+    <string name="link_account_button_name">Link account</string>
+    <string name="unlink_account_button_name">Unlink account</string>
 
     <string name="totp_presentation">TOTP - Time Based</string>
     <string name="hotp_presentation">HOTP - Counter Based</string>

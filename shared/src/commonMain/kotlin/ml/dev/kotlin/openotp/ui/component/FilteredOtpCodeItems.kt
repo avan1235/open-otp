@@ -2,13 +2,18 @@ package ml.dev.kotlin.openotp.ui.component
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.outlined.CloudDone
+import androidx.compose.material.icons.outlined.CloudOff
+import androidx.compose.material.icons.outlined.CloudUpload
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -18,8 +23,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import dev.icerock.moko.resources.compose.stringResource
+import ml.dev.kotlin.openotp.component.LinkedAccountsSyncState
+import ml.dev.kotlin.openotp.component.LinkedAccountsSyncState.*
 import ml.dev.kotlin.openotp.otp.OtpData
 import ml.dev.kotlin.openotp.otp.PresentedOtpCodeData
 import ml.dev.kotlin.openotp.shared.OpenOtpResources
@@ -31,11 +39,13 @@ internal fun FilteredOtpCodeItems(
     timestamp: Long,
     confirmCodeDismiss: Boolean,
     isSearchActive: Boolean,
+    syncState: LinkedAccountsSyncState,
     onOtpCodeDataDismiss: (OtpData) -> Boolean,
     onSearchBarActiveChange: (Boolean) -> Unit,
     onRestartCode: (OtpData) -> Unit,
     onMoveCode: (Int, Int) -> Unit,
     onSettingsIconClick: () -> Unit,
+    onCloudBackupClick: () -> Unit,
     copyOtpCode: ClipboardManager.(item: OtpData, timestamp: Long) -> Unit,
 ) {
     Box(
@@ -93,11 +103,29 @@ internal fun FilteredOtpCodeItems(
                         )
                     }
                 } else if (!isSearchActive) {
-                    ClickableIconButton(onSettingsIconClick) {
-                        Icon(
-                            imageVector = Icons.Default.Settings,
-                            contentDescription = stringResource(OpenOtpResources.strings.settings_name),
-                        )
+                    Row {
+                        when (syncState) {
+                            Synced -> Icons.Outlined.CloudDone
+                            Refreshing -> Icons.Outlined.CloudUpload
+                            NotSynced -> Icons.Outlined.CloudOff
+                            NothingToSync -> null
+                        }?.let { imageVector ->
+                            ClickableIconButton(
+                                onClick = onCloudBackupClick,
+                                modifier = Modifier.offset(x = 12.dp),
+                            ) {
+                                Icon(
+                                    imageVector = imageVector,
+                                    contentDescription = stringResource(OpenOtpResources.strings.backups_state),
+                                )
+                            }
+                        }
+                        ClickableIconButton(onSettingsIconClick) {
+                            Icon(
+                                imageVector = Icons.Default.Settings,
+                                contentDescription = stringResource(OpenOtpResources.strings.settings_name),
+                            )
+                        }
                     }
                 }
             },

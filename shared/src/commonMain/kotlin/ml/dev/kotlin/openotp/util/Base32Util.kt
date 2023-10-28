@@ -14,3 +14,4 @@ val String.isValidBase32Secret: Boolean
 
 fun String.decodeBase32ToByteArray(): ByteArray =
     encodeToByteArray().decodeToByteArray(Base32.Default)
+

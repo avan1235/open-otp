@@ -12,6 +12,7 @@ val String?.issuerIcon: ImageVector
         this == null -> Icons.Default.Lock
         contains("amazon", ignoreCase = true) -> OtpIcons.Amazon
         contains("cloudflare", ignoreCase = true) -> OtpIcons.Cloudflare
+        contains("dropbox", ignoreCase = true) -> OtpIcons.Dropbox
         contains("facebook", ignoreCase = true) -> OtpIcons.Facebook
         contains("github", ignoreCase = true) -> OtpIcons.Github
         contains("gitlab", ignoreCase = true) -> OtpIcons.Gitlab

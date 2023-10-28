@@ -7,15 +7,15 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Pin
 import androidx.compose.material.icons.filled.Update
-import androidx.compose.material.icons.outlined.Cancel
-import androidx.compose.material.icons.outlined.Save
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import dev.icerock.moko.resources.compose.stringResource
-import `in`.procyk.compose.util.SystemBarsScreen
 import ml.dev.kotlin.openotp.component.AddHotpProviderComponent
 import ml.dev.kotlin.openotp.component.AddOtpProviderComponent
 import ml.dev.kotlin.openotp.component.AddTotpProviderComponent
@@ -27,16 +27,14 @@ import ml.dev.kotlin.openotp.otp.OtpType.TOTP
 import ml.dev.kotlin.openotp.otp.TotpPeriod
 import ml.dev.kotlin.openotp.shared.OpenOtpResources
 import ml.dev.kotlin.openotp.ui.component.*
+import ml.dev.kotlin.openotp.util.SystemBarsScreen
 
 @Composable
 internal fun AddProviderScreen(
     totpComponent: AddTotpProviderComponent,
     hotpComponent: AddHotpProviderComponent,
 ) {
-    SystemBarsScreen(
-        top = MaterialTheme.colorScheme.background,
-        bottom = MaterialTheme.colorScheme.background,
-    ) {
+    SystemBarsScreen {
         Column(modifier = Modifier.fillMaxWidth()) {
             var selected by remember { mutableStateOf(OtpType.entries.first()) }
             TabRow(selectedTabIndex = selected.ordinal) {
@@ -89,6 +87,14 @@ internal fun AddProviderScreen(
             }
         }
     }
+}
+
+@Composable
+private fun AddProviderFormConfirmButtons(component: AddOtpProviderComponent) {
+    SaveCancelFormConfirmButtons(
+        onSaveClicked = component::onSaveClicked,
+        onCancelClicked = component::onCancelClicked
+    )
 }
 
 @Composable
@@ -154,7 +160,7 @@ private fun AddHotpProviderScreen(component: AddHotpProviderComponent) {
 @Composable
 private fun AddOtpProviderScreen(
     component: AddOtpProviderComponent,
-    advancedSettingsContent: @Composable ColumnScope.() -> Unit
+    advancedSettingsContent: @Composable ColumnScope.() -> Unit,
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -173,26 +179,6 @@ private fun AddOtpProviderScreen(
             Spacer(Modifier.height(48.dp))
         }
     }
-}
-
-@Composable
-private fun AddProviderFormConfirmButtons(component: AddOtpProviderComponent) {
-    val saveText = stringResource(OpenOtpResources.strings.save_button_name)
-    val cancelText = stringResource(OpenOtpResources.strings.cancel_button_name)
-    FormConfirmButtons(
-        confirm = FormConfirmButtonData(
-            text = saveText,
-            contentDescription = saveText,
-            imageVector = Icons.Outlined.Save,
-            onClick = component::onSaveClicked,
-        ),
-        cancel = FormConfirmButtonData(
-            text = cancelText,
-            contentDescription = cancelText,
-            imageVector = Icons.Outlined.Cancel,
-            onClick = component::onCancelClicked,
-        )
-    )
 }
 
 @Composable

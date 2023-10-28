@@ -33,6 +33,7 @@ interface OpenOtpAppComponent {
         ) : Child()
 
         class Settings(val component: SettingsComponent) : Child()
+        class LinkAccount(val component: LinkAccountComponent) : Child()
     }
 }
 
@@ -103,7 +104,16 @@ class OpenOtpAppComponentImpl(
         is Config.Settings -> Child.Settings(
             SettingsComponentImpl(
                 componentContext = childComponentContext,
+                navigateOnLinkAccount = { navigation.push(Config.LinkAccount(it)) },
                 navigateOnExit = navigation::pop,
+            )
+        )
+
+        is Config.LinkAccount -> Child.LinkAccount(
+            LinkAccountComponentImpl(
+                accountType = config.accountType,
+                componentContext = childComponentContext,
+                navigateOnCancel = navigation::pop,
             )
         )
     }
@@ -136,5 +146,8 @@ class OpenOtpAppComponentImpl(
 
         @Serializable
         data object Settings : Config
+
+        @Serializable
+        data class LinkAccount(val accountType: UserLinkedAccountType) : Config
     }
 }
