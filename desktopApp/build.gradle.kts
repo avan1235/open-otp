@@ -3,6 +3,7 @@ import java.lang.System.getenv
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.compose.multiplatform)
 }
 
