@@ -4,13 +4,10 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.Value
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
-import ml.dev.kotlin.openotp.USER_OTP_CODE_DATA_MODULE_QUALIFIER
 import ml.dev.kotlin.openotp.otp.*
 import ml.dev.kotlin.openotp.shared.OpenOtpResources
-import ml.dev.kotlin.openotp.util.StateFlowSettings
 import ml.dev.kotlin.openotp.util.isValidBase32Secret
 import ml.dev.kotlin.openotp.util.unit
-import org.koin.core.component.get
 
 interface AddOtpProviderComponent {
 
@@ -49,9 +46,7 @@ abstract class AddOtpProviderComponentImpl(
     componentContext: ComponentContext,
     private val navigateOnSaveClicked: () -> Unit,
     private val navigateOnCancelClicked: () -> Unit,
-) : AbstractComponent(componentContext), AddOtpProviderComponent {
-
-    protected val secureStorage: StateFlowSettings<StoredOtpCodeData> = get(USER_OTP_CODE_DATA_MODULE_QUALIFIER)
+) : AbstractBackupComponent(componentContext), AddOtpProviderComponent {
 
     protected fun notifyInvalid(fieldName: String) {
         toast(message = stringResource(OpenOtpResources.strings.invalid_field_name_provided_formatted, fieldName))
@@ -137,7 +132,7 @@ class AddTotpProviderComponentImpl(
 
         val config = TotpConfig(period, digits, algorithm)
         val codeData = TotpData(issuer, accountName, secret, config)
-        secureStorage
+        _userOtpCodeData
             .updateInScope { it + codeData }
             .invokeOnCompletion {
                 super.onSaveClicked()
@@ -229,7 +224,7 @@ class AddHotpProviderComponentImpl(
 
         val config = HotpConfig(digits, algorithm)
         val codeData = HotpData(issuer, accountName, secret, counter, config)
-        secureStorage
+        _userOtpCodeData
             .updateInScope { it + codeData }
             .invokeOnCompletion {
                 super.onSaveClicked()

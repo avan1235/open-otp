@@ -6,10 +6,7 @@ import com.arkivanov.decompose.value.Value
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import ml.dev.kotlin.openotp.USER_LINKED_ACCOUNTS_MODULE_QUALIFIER
 import ml.dev.kotlin.openotp.backup.OAuth2AccountService
-import ml.dev.kotlin.openotp.util.StateFlowSettings
-import org.koin.core.component.get
 
 interface LinkAccountComponent {
 
@@ -28,10 +25,7 @@ class LinkAccountComponentImpl(
     private val accountType: UserLinkedAccountType,
     componentContext: ComponentContext,
     private val navigateOnCancel: () -> Unit,
-) : AbstractComponent(componentContext), LinkAccountComponent {
-
-    private val userLinkedAccounts: StateFlowSettings<UserLinkedAccountsModel> =
-        get(USER_LINKED_ACCOUNTS_MODULE_QUALIFIER)
+) : AbstractBackupComponent(componentContext), LinkAccountComponent {
 
     private val requestedPermissions: MutableStateFlow<OAuth2AccountService.RequestedPermissions?> =
         MutableStateFlow(null)
@@ -70,7 +64,7 @@ class LinkAccountComponentImpl(
 
             requestedPermissions.authenticateUser(code.value)
                 .onSuccess { authenticated ->
-                    userLinkedAccounts
+                    _userLinkedAccounts
                         .updateInScope(this, authenticated::updateUserLinkedAccounts)
                         .invokeOnCompletion {
                             _isLoadingAppPermissions.update { false }

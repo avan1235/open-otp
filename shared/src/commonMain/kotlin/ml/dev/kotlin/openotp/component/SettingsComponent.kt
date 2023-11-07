@@ -3,7 +3,6 @@ package ml.dev.kotlin.openotp.component
 import androidx.compose.runtime.Composable
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.Value
-import ml.dev.kotlin.openotp.USER_LINKED_ACCOUNTS_MODULE_QUALIFIER
 import ml.dev.kotlin.openotp.USER_PREFERENCES_MODULE_QUALIFIER
 import ml.dev.kotlin.openotp.component.SettingsComponentImpl.LinkedAccountState
 import ml.dev.kotlin.openotp.shared.OpenOtpResources
@@ -46,13 +45,10 @@ class SettingsComponentImpl(
     componentContext: ComponentContext,
     private val navigateOnLinkAccount: (UserLinkedAccountType) -> Unit,
     private val navigateOnExit: () -> Unit,
-) : AbstractComponent(componentContext), SettingsComponent {
+) : AbstractBackupComponent(componentContext), SettingsComponent {
 
     private val userPreferences: StateFlowSettings<UserPreferencesModel> =
         get(USER_PREFERENCES_MODULE_QUALIFIER)
-
-    private val userLinkedAccounts: StateFlowSettings<UserLinkedAccountsModel> =
-        get(USER_LINKED_ACCOUNTS_MODULE_QUALIFIER)
 
     private val authenticator: BiometryAuthenticator = get()
 
@@ -83,7 +79,7 @@ class SettingsComponentImpl(
     override val isAuthenticationAvailable: Boolean
         get() = authenticator.isBiometricAvailable()
 
-    override val linkedAccountsStates: Value<List<LinkedAccountState>> = userLinkedAccounts
+    override val linkedAccountsStates: Value<List<LinkedAccountState>> = _userLinkedAccounts
         .stateFlow
         .map { linkedAccounts ->
             UserLinkedAccountType.entries.map { accountType ->
@@ -138,8 +134,7 @@ class SettingsComponentImpl(
             get() = stringResource(OpenOtpResources.strings.unlink_account_button_name)
 
         override fun onClick() {
-            userLinkedAccounts
-                .updateInScope { accountType.reset(it) }
+            _userLinkedAccounts.updateInScope { accountType.reset(it) }
         }
     }
 
@@ -148,7 +143,7 @@ class SettingsComponentImpl(
             get() = stringResource(OpenOtpResources.strings.link_account_button_name)
 
         override fun onClick() {
-            userLinkedAccounts
+            _userLinkedAccounts
                 .updateInScope { accountType.reset(it) }
                 .invokeOnCompletion {
                     navigateOnLinkAccount(accountType)

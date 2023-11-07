@@ -7,19 +7,13 @@ import androidx.compose.ui.text.toLowerCase
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.backhandler.BackCallback
-import kotlinx.coroutines.*
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.updateAndGet
-import ml.dev.kotlin.openotp.USER_LINKED_ACCOUNTS_MODULE_QUALIFIER
-import ml.dev.kotlin.openotp.USER_OTP_CODE_DATA_MODULE_QUALIFIER
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import ml.dev.kotlin.openotp.USER_PREFERENCES_MODULE_QUALIFIER
-import ml.dev.kotlin.openotp.backup.SerializedStoredOtpCodeDataBackup.Companion.toSerializedBackup
-import ml.dev.kotlin.openotp.backup.StoredOtpCodeDataBackup
-import ml.dev.kotlin.openotp.backup.downloadBackup
-import ml.dev.kotlin.openotp.backup.merge
-import ml.dev.kotlin.openotp.backup.uploadBackup
-import ml.dev.kotlin.openotp.component.LinkedAccountsSyncState.*
 import ml.dev.kotlin.openotp.otp.*
 import ml.dev.kotlin.openotp.shared.OpenOtpResources
 import ml.dev.kotlin.openotp.ui.component.DragDropListData
@@ -70,7 +64,7 @@ class MainComponentImpl(
     private val navigateOnAddProvider: () -> Unit,
     private val navigateSettings: () -> Unit,
     private val updateTimeDelay: Duration = 10.milliseconds,
-) : AbstractComponent(componentContext), MainComponent {
+) : AbstractBackupComponent(componentContext), MainComponent {
 
     private data class CameraPermissionRequest(
         val count: Int = 0,
@@ -79,14 +73,8 @@ class MainComponentImpl(
 
     private val appContext: OpenOtpAppComponentContext = get()
 
-    private val userOtpCodeData: StateFlowSettings<StoredOtpCodeData> =
-        get(USER_OTP_CODE_DATA_MODULE_QUALIFIER)
-
     private val userPreferences: StateFlowSettings<UserPreferencesModel> =
         get(USER_PREFERENCES_MODULE_QUALIFIER)
-
-    private val userLinkedAccounts: StateFlowSettings<UserLinkedAccountsModel> =
-        get(USER_LINKED_ACCOUNTS_MODULE_QUALIFIER)
 
     private val _timestamp: MutableStateFlow<Long> = MutableStateFlow(currentEpochMilliseconds())
     override val timestamp: Value<Long> = _timestamp.asValue()
@@ -101,7 +89,7 @@ class MainComponentImpl(
         _cameraPermissionRequest.map { it.changed }.asValue()
 
     override val codeData: Value<PresentedOtpCodeData> = combine(
-        userOtpCodeData.stateFlow,
+        _userOtpCodeData.stateFlow,
         userPreferences.stateFlow.map { it.sortOtpDataBy },
         userPreferences.stateFlow.map { it.sortOtpDataReversed },
         userPreferences.stateFlow.map { it.sortOtpDataNullsFirst },
@@ -112,8 +100,7 @@ class MainComponentImpl(
     private val _isSearchActive: MutableStateFlow<Boolean> = MutableStateFlow(false)
     override val isSearchActive: Value<Boolean> = _isSearchActive.asValue()
 
-    private val _isLinkAccountsSynced: MutableStateFlow<LinkedAccountsSyncState> = MutableStateFlow(NothingToSync)
-    override val linkedAccountsSyncState: Value<LinkedAccountsSyncState> = _isLinkAccountsSynced.asValue()
+    override val linkedAccountsSyncState: Value<LinkedAccountsSyncState> = _linkedAccountsSyncState.asValue()
 
     override val isDragAndDropEnabled: Value<Boolean> =
         userPreferences.stateFlow.map { it.sortOtpDataBy == SortOtpDataBy.Dont }.asValue()
@@ -134,7 +121,7 @@ class MainComponentImpl(
             }
         }
         scope.launch {
-            userLinkedAccounts.stateFlow.collect {
+            _userLinkedAccounts.stateFlow.collect {
                 onRefresh()
             }
         }
@@ -150,14 +137,17 @@ class MainComponentImpl(
     }
 
     override fun onOtpCodeDataRemove(otpData: OtpData): Boolean {
-        userOtpCodeData.updateInScope { before ->
-            before.filter { it != otpData }
-        }.unit()
+        _userOtpCodeData
+            .updateInScope { before ->
+                before.filter { it != otpData }
+            }.invokeOnCompletion {
+                refreshBackup(download = false)
+            }
         return true
     }
 
     override fun onOtpCodeDataReordered(currentIndex: Int, updatedIndex: Int) {
-        userOtpCodeData.updateInScope {
+        _userOtpCodeData.updateInScope {
             buildList {
                 addAll(it)
                 set(currentIndex, it[updatedIndex])
@@ -168,7 +158,7 @@ class MainComponentImpl(
 
     override fun onOtpCodeDataRestart(otpData: OtpData) = when (otpData) {
         is TotpData -> Unit
-        is HotpData -> userOtpCodeData.updateInScope { before ->
+        is HotpData -> _userOtpCodeData.updateInScope { before ->
             val updated = otpData.increaseCounter()
             before.map { if (it != otpData) it else updated }
         }.unit()
@@ -203,79 +193,8 @@ class MainComponentImpl(
     }
 
     override fun onRefresh() {
-        val linkedAccounts = userLinkedAccounts.stateFlow.value
-        val syncAccountsCount = UserLinkedAccountType.entries.count { it.isLinked(linkedAccounts) }
-
-        if (syncAccountsCount == 0) {
-            _isLinkAccountsSynced.value = NothingToSync
-            return
-        }
-        _isLinkAccountsSynced.value = Refreshing
-
-        scope.launch {
-            var success = true
-            try {
-                downloadBackup(linkedAccounts)
-                uploadBackup(linkedAccounts)
-            } catch (_: Exception) {
-                success = false
-            } finally {
-                if (!success) _isLinkAccountsSynced.value = NotSynced
-            }
-        }
+        refreshBackup(download = true)
     }
-
-    private suspend fun uploadBackup(linkedAccounts: UserLinkedAccountsModel) {
-        val backup = userOtpCodeData.stateFlow.value.toSerializedBackup()
-
-        supervisorScope {
-            val jobs = mutableListOf<Deferred<Boolean>>()
-            for (accountType in UserLinkedAccountType.entries) {
-                val service = accountType.createAuthenticatedService(linkedAccounts) ?: continue
-                jobs += async { service.uploadBackup(backup) }
-            }
-            val results = jobs.awaitAll()
-            when {
-                results.isEmpty() -> Unit
-
-                results.all { it } -> {
-                    _isLinkAccountsSynced.value = Synced
-                    toast(stringResource(OpenOtpResources.strings.synced_all))
-                }
-
-                results.any { it } -> {
-                    _isLinkAccountsSynced.value = Synced
-                    toast(stringResource(OpenOtpResources.strings.failed_some))
-                }
-
-                else -> {
-                    _isLinkAccountsSynced.value = NotSynced
-                    toast(stringResource(OpenOtpResources.strings.failed_all))
-                }
-            }
-        }
-    }
-
-    private suspend fun downloadBackup(linkedAccounts: UserLinkedAccountsModel) {
-        val currentCodeData = userOtpCodeData.stateFlow.value
-        val updatedCodeData = supervisorScope {
-            val jobs = mutableListOf<Deferred<StoredOtpCodeDataBackup?>>()
-            for (accountType in UserLinkedAccountType.entries) {
-                val service = accountType.createAuthenticatedService(linkedAccounts) ?: continue
-                jobs += async { service.downloadBackup() }
-            }
-            val downloadedData = jobs.awaitAll().filterNotNull()
-            downloadedData.merge(current = currentCodeData)
-        }
-        userOtpCodeData.updateInScope { updatedCodeData }
-    }
-}
-
-enum class LinkedAccountsSyncState {
-    Synced, Refreshing, NotSynced, NothingToSync;
-
-    val isSyncAvailable: Boolean get() = this != NothingToSync
-    val isRefreshing: Boolean get() = this == Refreshing
 }
 
 private const val MAX_CAMERA_PERMISSION_SILENT_REQUESTS: Int = 2

@@ -5,13 +5,10 @@ import com.eygraber.uri.Uri
 import `in`.procyk.compose.camera.qr.QRResult
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
-import ml.dev.kotlin.openotp.USER_OTP_CODE_DATA_MODULE_QUALIFIER
 import ml.dev.kotlin.openotp.otp.*
 import ml.dev.kotlin.openotp.shared.OpenOtpResources
-import ml.dev.kotlin.openotp.util.StateFlowSettings
 import ml.dev.kotlin.openotp.util.isValidBase32Secret
 import ml.dev.kotlin.openotp.util.letFalse
-import org.koin.core.component.get
 
 interface ScanQRCodeComponent {
 
@@ -23,9 +20,7 @@ interface ScanQRCodeComponent {
 class ScanQRCodeComponentImpl(
     componentContext: ComponentContext,
     private val navigateOnCancel: (message: String?) -> Unit,
-) : AbstractComponent(componentContext), ScanQRCodeComponent {
-
-    private val userOtpCodeData: StateFlowSettings<StoredOtpCodeData> = get(USER_OTP_CODE_DATA_MODULE_QUALIFIER)
+) : AbstractBackupComponent(componentContext), ScanQRCodeComponent {
 
     override fun onQRCodeScanned(result: QRResult): Boolean = when (result) {
         is QRResult.QRError -> navigateOnCancel(invalidQRCodeMessage).letFalse()
@@ -36,7 +31,7 @@ class ScanQRCodeComponentImpl(
                 navigateOnCancel(invalidQRCodeMessage)
             } else {
                 val updated = nonNullOtpData.map { otpData ->
-                    userOtpCodeData.updateInScope { it + otpData }
+                    _userOtpCodeData.updateInScope { it + otpData }
                 }
                 scope
                     .launch { updated.awaitAll() }

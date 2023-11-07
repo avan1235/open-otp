@@ -151,3 +151,11 @@ class OpenOtpAppComponentImpl(
         data class LinkAccount(val accountType: UserLinkedAccountType) : Config
     }
 }
+
+enum class LinkedAccountsSyncState {
+    Synced, Refreshing, NotSynced, NothingToSync;
+
+    val isSyncAvailable: Boolean get() = this != NothingToSync
+
+    val isRefreshing: Boolean get() = this == Refreshing
+}
