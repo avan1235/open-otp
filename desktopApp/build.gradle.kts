@@ -8,13 +8,14 @@ plugins {
 }
 
 kotlin {
-    jvm()
+    jvm("desktop")
+
     sourceSets {
-        val jvmMain by getting {
-            dependencies {
-                implementation(compose.desktop.currentOs)
-                implementation(project(":shared"))
-            }
+        val desktopMain by getting
+
+        desktopMain.dependencies {
+            implementation(compose.desktop.currentOs)
+            implementation(project(":shared"))
         }
     }
     jvmToolchain(17)
@@ -32,17 +33,17 @@ compose.desktop {
             windows {
                 menu = false
                 upgradeUuid = "b3aef4be-d942-4334-bdfc-6f42a7689c17"
-                iconFile.set(projectDir.resolve("src/jvmMain/resources/ic_launcher.ico"))
+                iconFile.set(projectDir.resolve("src/desktopMain/resources/ic_launcher.ico"))
             }
 
             linux {
-                iconFile.set(projectDir.resolve("src/jvmMain/resources/ic_launcher.png"))
+                iconFile.set(projectDir.resolve("src/desktopMain/resources/ic_launcher.png"))
             }
 
             macOS {
                 bundleID = "ml.dev.kotlin.openotp.OpenOtp"
                 appStore = false
-                iconFile.set(projectDir.resolve("src/jvmMain/resources/ic_launcher.icns"))
+                iconFile.set(projectDir.resolve("src/desktopMain/resources/ic_launcher.icns"))
                 signing {
                     sign.set(false)
                 }

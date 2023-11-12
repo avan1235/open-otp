@@ -12,6 +12,7 @@ import com.arkivanov.decompose.extensions.compose.jetbrains.stack.Children
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.slide
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
+import `in`.procyk.compose.util.OnceLaunchedEffect
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.serialization.builtins.ListSerializer
 import ml.dev.kotlin.openotp.component.LinkedAccountsSyncState.NothingToSync
@@ -24,7 +25,6 @@ import ml.dev.kotlin.openotp.ui.screen.*
 import ml.dev.kotlin.openotp.ui.theme.OpenOtpTheme
 import ml.dev.kotlin.openotp.util.BindBiometryAuthenticatorEffect
 import ml.dev.kotlin.openotp.util.BiometryAuthenticator
-import ml.dev.kotlin.openotp.util.OnceLaunchedEffect
 import ml.dev.kotlin.openotp.util.StateFlowSettings
 import org.koin.compose.koinInject
 import org.koin.core.context.startKoin

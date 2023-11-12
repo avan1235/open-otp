@@ -3,7 +3,7 @@ package ml.dev.kotlin.openotp.util
 import android.annotation.SuppressLint
 import android.content.Context
 import androidx.biometric.BiometricManager
-import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_WEAK
+import androidx.biometric.BiometricManager.Authenticators.*
 import androidx.biometric.BiometricPrompt
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -14,9 +14,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.OnLifecycleEvent
 import java.util.concurrent.Executor
 import kotlin.coroutines.suspendCoroutine
 
@@ -28,10 +27,10 @@ actual class BiometryAuthenticator(
     fun bind(lifecycle: Lifecycle, fragmentManager: FragmentManager) {
         this.fragmentManager = fragmentManager
 
-        val observer = object : LifecycleObserver {
+        val observer = object : LifecycleEventObserver {
+            override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+                if (event != Lifecycle.Event.ON_DESTROY) return
 
-            @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-            fun onDestroyed(source: LifecycleOwner) {
                 this@BiometryAuthenticator.fragmentManager = null
                 source.lifecycle.removeObserver(this)
             }
@@ -130,7 +129,7 @@ actual class BiometryAuthenticator(
             promptInfo = BiometricPrompt.PromptInfo.Builder()
                 .setTitle(requestTitle)
                 .setSubtitle(requestReason)
-                .setDeviceCredentialAllowed(true)
+                .setAllowedAuthenticators(BIOMETRIC_WEAK or BIOMETRIC_STRONG or DEVICE_CREDENTIAL)
                 .build()
 
             biometricPrompt.authenticate(promptInfo)

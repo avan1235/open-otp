@@ -1,5 +1,6 @@
 import dev.icerock.gradle.MRVisibility
 import org.jetbrains.compose.ExperimentalComposeLibrary
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -31,7 +32,11 @@ kotlin {
         }
     }
 
+    applyDefaultHierarchyTemplate()
+
     sourceSets {
+        val desktopMain by getting
+
         all {
             languageSettings.apply {
                 optIn("kotlin.contracts.ExperimentalContracts")
@@ -45,71 +50,67 @@ kotlin {
                 optIn("androidx.compose.material3.ExperimentalMaterial3Api")
                 optIn("androidx.compose.material.ExperimentalMaterialApi")
                 optIn("com.arkivanov.decompose.ExperimentalDecomposeApi")
-                optIn("com.google.accompanist.permissions.ExperimentalPermissionsApi")
             }
         }
-        val commonMain by getting {
-            dependencies {
-                implementation(compose.runtime)
-                implementation(compose.foundation)
-                implementation(compose.material)
-                implementation(compose.material3)
-                implementation(compose.materialIconsExtended)
-                implementation(compose.animationGraphics)
+        commonMain.dependencies {
+            implementation(compose.runtime)
+            implementation(compose.foundation)
+            implementation(compose.material)
+            implementation(compose.material3)
+            implementation(compose.materialIconsExtended)
+            implementation(compose.animationGraphics)
 
-                @OptIn(ExperimentalComposeLibrary::class)
-                implementation(compose.components.resources)
+            @OptIn(ExperimentalComposeLibrary::class)
+            implementation(compose.components.resources)
 
-                implementation(libs.kotlinx.datetime)
-                implementation(libs.buffer)
-                implementation(libs.uuid)
-                implementation(libs.encoding.base32)
+            implementation(libs.kotlinx.datetime)
+            implementation(libs.buffer)
+            implementation(libs.uuid)
+            implementation(libs.encoding.base32)
 
-                implementation(libs.kotlincrypto.hash.sha2)
-                implementation(libs.kotlincrypto.macs.hmac.sha1)
-                implementation(libs.kotlincrypto.macs.hmac.sha2)
-                implementation(libs.kotlincrypto.secure.random)
-                implementation(libs.kotlincrypto.secure.random)
+            implementation(libs.kotlincrypto.hash.sha2)
+            implementation(libs.kotlincrypto.macs.hmac.sha1)
+            implementation(libs.kotlincrypto.macs.hmac.sha2)
+            implementation(libs.kotlincrypto.secure.random)
+            implementation(libs.kotlincrypto.secure.random)
 
-                implementation(libs.koin.core)
-                implementation(libs.koin.compose)
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose)
 
-                implementation(libs.kermit)
-                implementation(libs.uriKmp)
+            implementation(libs.kermit)
+            implementation(libs.uriKmp)
 
-                implementation(libs.multiplatform.settings)
-                implementation(libs.multiplatform.settings.coroutines)
+            implementation(libs.multiplatform.settings)
+            implementation(libs.multiplatform.settings.coroutines)
 
-                api(libs.decompose)
-                api(libs.decompose.extensionsComposeJetbrains)
+            api(libs.decompose)
+            api(libs.decompose.extensionsComposeJetbrains)
 
-                implementation(libs.kotlinx.serialization.json)
-                implementation(libs.kotlinx.serialization.cbor)
+            implementation(libs.kotlinx.serialization.json)
+            implementation(libs.kotlinx.serialization.cbor)
 
-                api(libs.essenty.lifecycle)
-                api(libs.essenty.stateKeeper)
-                api(libs.essenty.parcelable)
-                api(libs.essenty.instanceKeeper)
+            api(libs.essenty.lifecycle)
+            api(libs.essenty.stateKeeper)
+            api(libs.essenty.parcelable)
+            api(libs.essenty.instanceKeeper)
 
-                api(libs.moko.resoures)
-                api(libs.moko.resoures.compose)
+            api(libs.moko.resoures)
+            api(libs.moko.resoures.compose)
 
-                implementation(libs.compose.extensions.camera.permission)
-                implementation(libs.compose.extensions.camera.qr)
-                implementation(libs.compose.extensions.util)
+            implementation(libs.compose.extensions.camera.permission)
+            implementation(libs.compose.extensions.camera.qr)
+            implementation(libs.compose.extensions.util)
 
-                implementation(libs.ktor.client.content.negotiation)
-                implementation(libs.ktor.client.core)
-                implementation(libs.ktor.serialization.kotlinx.json)
-            }
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.serialization.kotlinx.json)
         }
-        val commonTest by getting {
-            dependencies {
-                implementation(kotlin("test"))
-            }
+        commonTest.dependencies {
+            implementation(kotlin("test"))
         }
-        val androidMain by getting {
-            dependsOn(commonMain)
+
+        androidMain {
+            dependsOn(commonMain.get())
 
             dependencies {
                 api(libs.androidx.activity.compose)
@@ -125,15 +126,14 @@ kotlin {
 
                 runtimeOnly(libs.kotlinx.coroutines.android)
             }
+
+            languageSettings {
+                optIn("com.google.accompanist.permissions.ExperimentalPermissionsApi")
+            }
         }
-        val iosX64Main by getting
-        val iosArm64Main by getting
-        val iosSimulatorArm64Main by getting
-        val iosMain by creating {
-            dependsOn(commonMain)
-            iosX64Main.dependsOn(this)
-            iosArm64Main.dependsOn(this)
-            iosSimulatorArm64Main.dependsOn(this)
+
+        iosMain {
+            dependsOn(commonMain.get())
 
             dependencies {
                 implementation(libs.ktor.client.darwin)
@@ -141,20 +141,18 @@ kotlin {
                 api(libs.parcelize.darwinRuntime)
             }
         }
-        val desktopMain by getting {
-            dependsOn(commonMain)
 
-            dependencies {
-                implementation(compose.desktop.common)
-                implementation(libs.webcam.capture)
-                implementation(libs.webcam.capture.driver.native)
-                implementation(libs.zxing.core)
-                implementation(libs.zxing.javase)
+        desktopMain.dependsOn(commonMain.get())
+        desktopMain.dependencies {
+            implementation(compose.desktop.common)
+            implementation(libs.webcam.capture)
+            implementation(libs.webcam.capture.driver.native)
+            implementation(libs.zxing.core)
+            implementation(libs.zxing.javase)
 
-                runtimeOnly(libs.kotlinx.coroutines.swing)
+            runtimeOnly(libs.kotlinx.coroutines.swing)
 
-                implementation(libs.ktor.client.okhttp)
-            }
+            implementation(libs.ktor.client.okhttp)
         }
     }
 }
@@ -186,4 +184,10 @@ multiplatformResources {
     iosBaseLocalizationRegion = "en"
     multiplatformResourcesSourceSet = "commonMain"
     disableStaticFrameworkWarning = true
+}
+
+tasks.withType<KotlinCompilationTask<*>>().all {
+    compilerOptions {
+        freeCompilerArgs.add("-Xexpect-actual-classes")
+    }
 }

@@ -1,7 +1,5 @@
 package ml.dev.kotlin.openotp.util
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.lifecycle.Lifecycle
@@ -20,9 +18,6 @@ fun LifecycleOwner.coroutineScope(context: CoroutineContext): CoroutineScope {
     lifecycle.doOnDestroy(scope::cancel)
     return scope
 }
-
-@Composable
-inline fun OnceLaunchedEffect(noinline block: suspend CoroutineScope.() -> Unit): Unit = LaunchedEffect(Unit, block)
 
 fun <T : Any> StateFlow<T>.asValue(
     lifecycle: Lifecycle,

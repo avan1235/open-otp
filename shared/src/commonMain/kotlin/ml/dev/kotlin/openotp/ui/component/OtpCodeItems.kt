@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.icerock.moko.resources.compose.stringResource
+import `in`.procyk.compose.util.OnceLaunchedEffect
 import kotlinx.coroutines.isActive
 import ml.dev.kotlin.openotp.otp.HotpData
 import ml.dev.kotlin.openotp.otp.OtpData
@@ -39,7 +40,6 @@ import ml.dev.kotlin.openotp.otp.PresentedOtpCodeData
 import ml.dev.kotlin.openotp.otp.TotpData
 import ml.dev.kotlin.openotp.shared.OpenOtpResources
 import ml.dev.kotlin.openotp.ui.issuerIcon
-import ml.dev.kotlin.openotp.util.OnceLaunchedEffect
 import ml.dev.kotlin.openotp.util.currentEpochMilliseconds
 import ml.dev.kotlin.openotp.util.letTrue
 import kotlin.math.roundToInt
