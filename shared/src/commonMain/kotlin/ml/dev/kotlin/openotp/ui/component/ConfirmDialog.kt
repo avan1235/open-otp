@@ -44,6 +44,7 @@ fun ConfirmDialog(
                     imageVector = icon,
                     contentDescription = imageDescription,
                     modifier = Modifier
+                        .size(64.dp)
                         .padding(top = 16.dp)
                         .padding(8.dp)
                 )

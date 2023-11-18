@@ -10,7 +10,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cached
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.QuestionMark
 import androidx.compose.material3.*
 import androidx.compose.material3.DismissDirection.EndToStart
 import androidx.compose.material3.DismissDirection.StartToEnd
@@ -113,7 +112,7 @@ internal fun OtpCodeItems(
                 null -> stringResource(OpenOtpResources.strings.confirm_delete_item_prompt)
                 else -> stringResource(OpenOtpResources.strings.confirm_delete_specific_item_prompt, presentation)
             },
-            icon = Icons.Default.QuestionMark,
+            icon = Icons.Default.Delete,
             imageDescription = stringResource(OpenOtpResources.strings.question_icon_name),
         )
     }
