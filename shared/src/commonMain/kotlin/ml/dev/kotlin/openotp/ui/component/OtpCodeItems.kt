@@ -100,9 +100,8 @@ internal fun OtpCodeItems(
             }
         )
     }
-    when (val dismissed = dismissedCode) {
-        null -> Unit
-        else -> ConfirmDialog(
+    dismissedCode?.let { dismissed ->
+        ConfirmDialog(
             onDismissRequest = { dismissedCode = null },
             onConfirmation = {
                 dismissedCode = null

@@ -26,7 +26,7 @@ fun ConfirmDialog(
     dismissText: String = stringResource(OpenOtpResources.strings.cancel_button_name),
     confirmText: String = stringResource(OpenOtpResources.strings.proceed_button_name),
 ) {
-    Dialog(onDismissRequest = { onDismissRequest() }) {
+    Dialog(onDismissRequest = onDismissRequest) {
         Card(
             modifier = Modifier
                 .wrapContentSize()
