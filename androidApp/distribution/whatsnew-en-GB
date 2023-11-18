@@ -1,2 +1,2 @@
-This version brings new features to app:
-- save codes backup to external providers (available: Dropbox)
+This version brings small improvements to app:
+- synced codes are properly propagated in all places in app
