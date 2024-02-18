@@ -2,7 +2,7 @@
 # @keep
 android-compileSdk = "34"
 # @pin
-android-gradle-plugin = "8.1.0"
+android-gradle-plugin = "8.1.2"
 # @keep
 android-minSdk = "26"
 # @keep
@@ -15,7 +15,7 @@ androidx-core-ktx = "1.12.0"
 androidx-crypto = "1.1.0-alpha05"
 barcodeScanning = "17.2.0"
 buffer = "1.3.6"
-compose = "1.5.11"
+compose = "1.5.12"
 compose-extensions = "1.5.11.0"
 decompose = "2.2.2-compose-experimental"
 encoding = "2.0.0"
@@ -25,19 +25,19 @@ kermit = "2.0.0-RC5"
 koin = "3.5.0"
 koin-compose = "1.1.0"
 # @pin
-kotlin = "1.9.21"
+kotlin = "1.9.22"
 kotlincrypto-hash = "0.3.0"
 kotlincrypto-macs = "0.3.0"
 kotlincrypto-secure-random = "0.1.0"
 kotlinx-coroutines = "1.7.3"
-kotlinx-datetime = "0.4.1"
-kotlinx-serialization = "1.6.0"
-ktor = "2.3.5"
+kotlinx-datetime = "0.5.0"
+kotlinx-serialization = "1.6.2"
+ktor = "2.3.7"
 moko-resources = "0.23.0"
-multiplatform-settings = "1.1.0"
+multiplatform-settings = "1.1.1"
 parcelize-darwin = "0.2.3"
 uri-kmp = "0.0.15"
-uuid = "0.8.1"
+uuid = "0.8.2"
 version-catalog-update = "0.8.4"
 # @keep
 versionCode = "19"
@@ -75,9 +75,9 @@ kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.
 kotlinx-serialization-cbor = { module = "org.jetbrains.kotlinx:kotlinx-serialization-cbor", version.ref = "kotlinx-serialization" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
-ktor-client-core = "io.ktor:ktor-client-core:2.3.6"
-ktor-client-darwin = "io.ktor:ktor-client-darwin:2.3.7"
-ktor-client-okhttp = "io.ktor:ktor-client-okhttp:2.3.7"
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
+ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 mlkit-barcodeScanning = { module = "com.google.mlkit:barcode-scanning", version.ref = "barcodeScanning" }
 moko-resoures = { module = "dev.icerock.moko:resources", version.ref = "moko-resources" }
