@@ -25,6 +25,8 @@
 -keepclasseswithmembers class kotlinx.serialization.cbor.** {
     kotlinx.serialization.KSerializer serializer(...);
 }
+-keep class com.sun.jna.** { *; }
+-keep class com.google.zxing.** { *; }
 
 -dontwarn com.arkivanov.decompose.extensions.compose.pages.**
 -dontwarn org.xml.sax.**
