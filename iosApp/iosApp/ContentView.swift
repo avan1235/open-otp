@@ -22,8 +22,8 @@ struct ContentView: View {
     var body: some View {
         let backgroundColor = Color(
             colorScheme == .dark
-            ? SwiftHelpersKt.MD_THEME_DARK_BACKGROUND
-            : SwiftHelpersKt.MD_THEME_LIGHT_BACKGROUND
+            ? ThemeHelpersKt.MD_THEME_DARK_BACKGROUND
+            : ThemeHelpersKt.MD_THEME_LIGHT_BACKGROUND
         )
         ZStack {
             backgroundColor

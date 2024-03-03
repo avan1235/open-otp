@@ -5,7 +5,7 @@ import shared
 struct iOSApp: App {
     
     init() {
-        SwiftHelpersKt.doInitIOSKoin()
+        KoinHelpersKt.doInitIOSKoin()
     }
     
     @UIApplicationDelegateAdaptor(AppDelegate.self)
@@ -33,26 +33,19 @@ struct iOSApp: App {
     }
 }
 
-private let STATE_KEY: String = "open-otp-saved-state"
-
 class AppDelegate: NSObject, UIApplicationDelegate {
     
     private var rootHolder: RootHolder?
     
     func application(_ application: UIApplication, shouldSaveSecureApplicationState coder: NSCoder) -> Bool {
-        let savedState = rootHolder!.stateKeeper.save()
-        CodingKt.encodeParcelable(coder, value: savedState, key: STATE_KEY)
+        StateKeeperUtilsKt.save(coder: coder, state: rootHolder!.stateKeeper.save())
         return true
     }
     
     func application(_ application: UIApplication, shouldRestoreSecureApplicationState coder: NSCoder) -> Bool {
-        do {
-            let savedState = try CodingKt.decodeParcelable(coder, key: STATE_KEY) as! ParcelableParcelableContainer
-            rootHolder = RootHolder(savedState: savedState)
-            return true
-        } catch {
-            return false
-        }
+        let savedState = StateKeeperUtilsKt.restore(coder: coder)
+        rootHolder = RootHolder(savedState: savedState)
+        return true
     }
     
     fileprivate func getRootHolder() -> RootHolder {
@@ -68,7 +61,7 @@ private class RootHolder {
     let stateKeeper: StateKeeperDispatcher
     let root: OpenOtpAppComponent
     
-    init(savedState: ParcelableParcelableContainer?) {
+    init(savedState: SerializableContainer?) {
         lifecycle = LifecycleRegistryKt.LifecycleRegistry()
         stateKeeper = StateKeeperDispatcherKt.StateKeeperDispatcher(savedState: savedState)
         

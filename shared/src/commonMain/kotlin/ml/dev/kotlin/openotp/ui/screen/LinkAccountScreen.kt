@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
-import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
+import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import dev.icerock.moko.resources.compose.stringResource
 import ml.dev.kotlin.openotp.component.LinkAccountComponent
 import ml.dev.kotlin.openotp.shared.OpenOtpResources

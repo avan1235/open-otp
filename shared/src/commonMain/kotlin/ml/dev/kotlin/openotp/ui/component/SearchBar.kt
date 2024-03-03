@@ -39,6 +39,7 @@ import kotlinx.coroutines.delay
 import ml.dev.kotlin.openotp.ui.component.SearchBarDefaults.InputFieldHeight
 import kotlin.math.max
 import kotlin.math.min
+import androidx.compose.foundation.layout.MutableWindowInsets as UnconsumedInsets
 
 
 @Composable
@@ -86,7 +87,7 @@ internal fun SearchBar(
             else -> shape
         }
     }
-    val unconsumedInsets = remember { MutableWindowInsets() }
+    val unconsumedInsets = remember { UnconsumedInsets() }
     val topPadding = remember(density) {
         derivedStateOf {
             SearchBarVerticalPadding + unconsumedInsets.asPaddingValues(density).calculateTopPadding()

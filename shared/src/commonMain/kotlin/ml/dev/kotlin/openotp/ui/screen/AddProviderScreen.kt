@@ -14,7 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
+import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import dev.icerock.moko.resources.compose.stringResource
 import ml.dev.kotlin.openotp.component.AddHotpProviderComponent
 import ml.dev.kotlin.openotp.component.AddOtpProviderComponent

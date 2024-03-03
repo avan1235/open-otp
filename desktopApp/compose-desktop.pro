@@ -1,4 +1,4 @@
--keep class com.arkivanov.decompose.extensions.compose.jetbrains.mainthread.SwingMainThreadChecker
+-keep class com.arkivanov.decompose.extensions.compose.mainthread.SwingMainThreadChecker
 -keep class kotlinx.coroutines.swing.SwingDispatcherFactory
 -keep class org.bridj.** { *; }
 -keep class io.ktor.serialization.kotlinx.json.KotlinxSerializationJsonExtensionProvider { *; }
@@ -26,7 +26,7 @@
     kotlinx.serialization.KSerializer serializer(...);
 }
 
--dontwarn com.arkivanov.decompose.extensions.compose.jetbrains.pages.**
+-dontwarn com.arkivanov.decompose.extensions.compose.pages.**
 -dontwarn org.xml.sax.**
 -dontwarn javax.xml.**
 -dontwarn org.w3c.dom.**

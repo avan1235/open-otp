@@ -7,8 +7,6 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.kotlin.parcelize)
-    alias(libs.plugins.parcelize.darwin)
     alias(libs.plugins.moko.resources)
 }
 
@@ -28,7 +26,6 @@ kotlin {
             export(libs.decompose)
             export(libs.essenty.lifecycle)
             export(libs.essenty.stateKeeper)
-            export(libs.parcelize.darwinRuntime)
         }
     }
 
@@ -84,14 +81,13 @@ kotlin {
             implementation(libs.multiplatform.settings.coroutines)
 
             api(libs.decompose)
-            api(libs.decompose.extensionsComposeJetbrains)
+            api(libs.decompose.extensionsCompose)
 
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.kotlinx.serialization.cbor)
 
             api(libs.essenty.lifecycle)
             api(libs.essenty.stateKeeper)
-            api(libs.essenty.parcelable)
             api(libs.essenty.instanceKeeper)
 
             api(libs.moko.resoures)
@@ -137,8 +133,6 @@ kotlin {
 
             dependencies {
                 implementation(libs.ktor.client.darwin)
-
-                api(libs.parcelize.darwinRuntime)
             }
         }
 

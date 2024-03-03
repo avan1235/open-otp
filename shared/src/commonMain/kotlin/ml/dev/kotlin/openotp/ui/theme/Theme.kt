@@ -3,7 +3,7 @@ package ml.dev.kotlin.openotp.ui.theme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
+import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import ml.dev.kotlin.openotp.component.OpenOtpAppComponent
 
 @Composable

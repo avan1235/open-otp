@@ -6,14 +6,17 @@ import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.DismissDirection.EndToStart
+import androidx.compose.material.DismissDirection.StartToEnd
+import androidx.compose.material.DismissState
+import androidx.compose.material.DismissValue.*
+import androidx.compose.material.SwipeToDismiss
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cached
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.rememberDismissState
 import androidx.compose.material3.*
-import androidx.compose.material3.DismissDirection.EndToStart
-import androidx.compose.material3.DismissDirection.StartToEnd
-import androidx.compose.material3.DismissValue.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -71,7 +74,7 @@ internal fun OtpCodeItems(
         val currentItem by rememberUpdatedState(item)
         val localClipboardManager = LocalClipboardManager.current
         val dismissState = rememberDismissState(
-            confirmValueChange = {
+            confirmStateChange = {
                 when (it) {
                     DismissedToEnd -> localClipboardManager.copyOtpCode(currentItem, currentTimestamp).letTrue()
                     DismissedToStart -> when (confirmCodeDismiss) {

@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
+import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import dev.icerock.moko.resources.compose.stringResource
 import ml.dev.kotlin.openotp.component.OpenOtpAppTheme
 import ml.dev.kotlin.openotp.component.SettingsComponent
@@ -123,7 +123,7 @@ private fun CodesManagementSettingsGroup(component: SettingsComponent) {
             checked = confirmOtpDataDelete,
             onCheckedChange = component::onConfirmOtpDataDeleteChange,
         )
-        Divider()
+        HorizontalDivider()
 
         val sortOtpDataBy by component.sortOtpDataBy.subscribeAsState()
         NamedDropdownMenu(
