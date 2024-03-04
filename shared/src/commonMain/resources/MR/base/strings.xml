@@ -33,6 +33,7 @@
     <string name="authenticate_request_description">Authenticate to get access to application codes.</string>
     <string name="app_icon">App icon</string>
     <string name="dropbox_name">Dropbox</string>
+    <string name="onedrive_name">OneDrive</string>
     <string name="synced_all">Synced successfully all backups destinations</string>
     <string name="failed_some">Some backups destinations have failed</string>
     <string name="failed_all">All backups destinations have failed</string>

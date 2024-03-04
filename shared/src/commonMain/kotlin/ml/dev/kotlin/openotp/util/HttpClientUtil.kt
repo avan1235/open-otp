@@ -29,7 +29,7 @@ suspend inline fun <reified T> HttpClient.safeRequest(
     Result.failure(e)
 }
 
-suspend inline fun HttpClient.safHttpRequest(
+suspend inline fun HttpClient.safeHttpRequest(
     block: HttpRequestBuilder.() -> Unit,
 ): Result<HttpResponse> = try {
     val response = request { block() }

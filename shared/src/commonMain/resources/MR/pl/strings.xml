@@ -35,6 +35,7 @@
     <string name="authenticate_request_description">Uwierzytelnij, aby uzyskać dostęp do kodów aplikacji.</string>
     <string name="app_icon">Ikona aplikacji</string>
     <string name="dropbox_name">Dropbox</string>
+    <string name="onedrive_name">OneDrive</string>
     <string name="synced_all">Pomyślnie stworzono kopię zapasową</string>
     <string name="failed_some">Niektóre kopie zapasowe nie mogły zostać ukończone poprawnie</string>
     <string name="failed_all">Wszystkie kopie zapasowe nie mogły zostać ukończone poprawnie</string>
