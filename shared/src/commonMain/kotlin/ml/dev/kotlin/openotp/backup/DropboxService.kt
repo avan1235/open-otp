@@ -15,7 +15,7 @@ import kotlinx.serialization.json.Json
 import ml.dev.kotlin.openotp.component.UserLinkedAccountsModel
 import ml.dev.kotlin.openotp.util.createJsonHttpClient
 import ml.dev.kotlin.openotp.util.randomBytesChallenge
-import ml.dev.kotlin.openotp.util.safHttpRequest
+import ml.dev.kotlin.openotp.util.safeHttpRequest
 import ml.dev.kotlin.openotp.util.safeRequest
 import org.kotlincrypto.hash.sha2.SHA256
 import kotlin.math.min
@@ -99,7 +99,7 @@ sealed class DropboxService : OAuth2AccountService {
 
         override suspend fun downloadBackupData(): ByteArray? {
             val apiArg = DropboxJson.encodeToString(DropboxDownloadArg())
-            return client.safHttpRequest {
+            return client.safeHttpRequest {
                 method = HttpMethod.Post
                 url("https://content.dropboxapi.com/2/files/download")
                 header(HttpHeaders.Authorization, "Bearer ${refreshableAccessData.accessToken}")
