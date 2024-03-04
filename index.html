@@ -59,9 +59,16 @@
 </body>
 
 <script type="text/javascript">
+    function clearCode(code) {
+        const idx = code.indexOf("=");
+        if (idx === -1) return code;
+
+        return code.substring(idx + 1);
+    }
+
     if (window.location.hash.length > 0) {
-        let codeElement = document.getElementById("code");
-        let code = window.location.hash.substring(1);
+        const codeElement = document.getElementById("code");
+        const code = clearCode(window.location.hash.substring(1));
         codeElement.textContent = code;
         codeElement.addEventListener("click", function () {
             navigator.clipboard.writeText(code);
