@@ -47,16 +47,15 @@ sealed class DropboxService : OAuth2AccountService {
                     "&code_challenge=${accessData.codeChallenge}" +
                     "&code_challenge_method=S256"
 
-        override suspend fun authenticateUser(userCode: String): Result<Authenticated> = client
-            .safeRequest<DropboxOAuth2RefreshableTokenResponse> {
+        override suspend fun authenticateUser(userCode: String): Result<Authenticated> =
+            client.safeRequest<DropboxOAuth2RefreshableTokenResponse> {
                 method = HttpMethod.Post
                 url("https://api.dropbox.com/oauth2/token")
                 parameter("code", userCode)
                 parameter("grant_type", "authorization_code")
                 parameter("code_verifier", accessData.codeVerifier)
                 parameter("client_id", CLIENT_ID)
-            }
-            .map { response ->
+            }.map { response ->
                 val refreshableAccessData = response.toDropboxRefreshableAccessData()
                 Authenticated(refreshableAccessData)
             }
@@ -69,48 +68,42 @@ sealed class DropboxService : OAuth2AccountService {
         override val isExpired: Boolean
             get() = Clock.System.now() >= refreshableAccessData.expiresAt
 
-        override suspend fun refreshUserAccessToken(): Result<Authenticated> = client
-            .safeRequest<DropboxOAuth2TokenResponse> {
+        override suspend fun refreshUserAccessToken(): Result<Authenticated> =
+            client.safeRequest<DropboxOAuth2TokenResponse> {
                 method = HttpMethod.Post
                 url("https://api.dropbox.com/oauth2/token")
                 parameter("grant_type", "refresh_token")
                 parameter("refresh_token", refreshableAccessData.refreshToken)
                 parameter("client_id", CLIENT_ID)
-            }
-            .map { response ->
+            }.map { response ->
                 val refreshableAccessData = response.toDropboxRefreshableAccessData(refreshableAccessData.refreshToken)
                 Authenticated(refreshableAccessData)
             }
 
-        override suspend fun uploadBackupData(data: ByteArray): Result<Boolean> {
-            val contentHash = data.dropboxContentHash()
-            val apiArg = DropboxJson.encodeToString(DropboxUploadArg(contentHash))
-            return client.safeRequest<DropboxUploadResponse> {
+        override suspend fun uploadBackupData(data: ByteArray): Result<Boolean> =
+            client.safeRequest<DropboxUploadResponse> {
                 method = HttpMethod.Post
                 url("https://content.dropboxapi.com/2/files/upload")
                 header(HttpHeaders.Authorization, "Bearer ${refreshableAccessData.accessToken}")
                 header(HttpHeaders.ContentType, ContentType.Application.OctetStream)
-                header(HttpHeaders.DropboxApiArg, apiArg)
+                header(HttpHeaders.DropboxApiArg, data.toUploadApiArg())
                 setBody(ByteArrayContent(data))
-            }.map {
-                it.contentHash == contentHash
+            }.map { response ->
+                response.contentHash == data.dropboxContentHash()
             }
-        }
 
-        override suspend fun downloadBackupData(): ByteArray? {
-            val apiArg = DropboxJson.encodeToString(DropboxDownloadArg())
-            return client.safeHttpRequest {
+        override suspend fun downloadBackupData(): ByteArray? =
+            client.safeHttpRequest {
                 method = HttpMethod.Post
                 url("https://content.dropboxapi.com/2/files/download")
                 header(HttpHeaders.Authorization, "Bearer ${refreshableAccessData.accessToken}")
-                header(HttpHeaders.DropboxApiArg, apiArg)
+                header(HttpHeaders.DropboxApiArg, downloadApiArg())
             }.map { response ->
                 val header = response.headers[HttpHeaders.DropboxApiResult] ?: return@map null
                 val downloadResponse = DropboxJson.decodeFromString<DropboxDownloadResponse>(header)
                 val bytes = response.readBytes()
                 bytes.takeIf { it.dropboxContentHash() == downloadResponse.contentHash }
             }.getOrNull()
-        }
 
         override fun updateUserLinkedAccounts(linkedAccounts: UserLinkedAccountsModel): UserLinkedAccountsModel =
             linkedAccounts.copy(dropbox = refreshableAccessData)
@@ -166,6 +159,9 @@ private data class DropboxUploadArg(
     enum class WriteMode { add, overwrite, update }
 }
 
+private fun ByteArray.toUploadApiArg(): String =
+    DropboxJson.encodeToString(DropboxUploadArg(dropboxContentHash()))
+
 @Serializable
 private data class DropboxUploadResponse(
     @SerialName("content_hash") val contentHash: String,
@@ -175,6 +171,9 @@ private data class DropboxUploadResponse(
 private data class DropboxDownloadArg(
     @SerialName("path") val path: String = BACKUP_PATH,
 )
+
+private fun downloadApiArg(): String =
+    DropboxJson.encodeToString(DropboxDownloadArg())
 
 @Serializable
 private data class DropboxDownloadResponse(
