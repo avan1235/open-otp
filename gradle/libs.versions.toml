@@ -39,7 +39,7 @@ uri-kmp = "0.0.15"
 uuid = "0.8.2"
 version-catalog-update = "0.8.4"
 # @keep
-versionCode = "21"
+versionCode = "22"
 webcamCapture = "0.3.12"
 webcamCaptureDriverNative = "1.0.0"
 zxing-core = "3.5.3"
