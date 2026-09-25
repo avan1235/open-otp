@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import kotlinx.serialization.Serializable
 import ml.dev.kotlin.openotp.backup.*
-import ml.dev.kotlin.openotp.shared.OpenOtpResources
+import ml.dev.kotlin.openotp.shared.*
 import ml.dev.kotlin.openotp.ui.OtpIcons
 import ml.dev.kotlin.openotp.ui.icons.Dropbox
 import ml.dev.kotlin.openotp.ui.icons.OneDrive

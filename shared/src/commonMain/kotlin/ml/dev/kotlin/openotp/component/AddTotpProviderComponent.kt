@@ -5,7 +5,7 @@ import com.arkivanov.decompose.value.Value
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import ml.dev.kotlin.openotp.otp.*
-import ml.dev.kotlin.openotp.shared.OpenOtpResources
+import ml.dev.kotlin.openotp.shared.*
 import ml.dev.kotlin.openotp.util.isValidBase32Secret
 import ml.dev.kotlin.openotp.util.unit
 

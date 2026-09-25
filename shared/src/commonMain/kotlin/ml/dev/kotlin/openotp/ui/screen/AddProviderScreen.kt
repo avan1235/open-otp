@@ -25,7 +25,7 @@ import ml.dev.kotlin.openotp.otp.OtpType
 import ml.dev.kotlin.openotp.otp.OtpType.HOTP
 import ml.dev.kotlin.openotp.otp.OtpType.TOTP
 import ml.dev.kotlin.openotp.otp.TotpPeriod
-import ml.dev.kotlin.openotp.shared.OpenOtpResources
+import ml.dev.kotlin.openotp.shared.*
 import ml.dev.kotlin.openotp.ui.component.*
 import ml.dev.kotlin.openotp.util.SystemBarsScreen
 

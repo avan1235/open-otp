@@ -6,7 +6,7 @@ import `in`.procyk.compose.camera.qr.QRResult
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import ml.dev.kotlin.openotp.otp.*
-import ml.dev.kotlin.openotp.shared.OpenOtpResources
+import ml.dev.kotlin.openotp.shared.*
 import ml.dev.kotlin.openotp.util.isValidBase32Secret
 import ml.dev.kotlin.openotp.util.letFalse
 

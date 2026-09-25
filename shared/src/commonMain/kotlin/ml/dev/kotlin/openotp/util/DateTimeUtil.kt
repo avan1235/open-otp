@@ -1,6 +1,6 @@
 package ml.dev.kotlin.openotp.util
 
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
 
 fun currentEpochMilliseconds(): Long =
     Clock.System.now().toEpochMilliseconds()

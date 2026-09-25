@@ -9,7 +9,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material3.ripple
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
@@ -39,7 +39,7 @@ actual fun ClickableIconButton(
             .clip(CircleShape)
             .background(containerColor)
             .indication(
-                interactionSource, indication = rememberRipple(
+                interactionSource, indication = ripple(
                     bounded = false,
                     radius = 20.dp,
                 )

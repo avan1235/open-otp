@@ -2,12 +2,12 @@ package ml.dev.kotlin.openotp.otp
 
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.DateTimeUnit.Companion.SECOND
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlinx.datetime.plus
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import ml.dev.kotlin.openotp.component.OpenOtpAppComponentContext
-import ml.dev.kotlin.openotp.shared.OpenOtpResources
+import ml.dev.kotlin.openotp.shared.*
 import ml.dev.kotlin.openotp.util.Named
 
 @Serializable

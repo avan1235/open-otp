@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
 import ml.dev.kotlin.openotp.component.OpenOtpAppTheme.System
 import ml.dev.kotlin.openotp.component.SortOtpDataBy.Dont
 import ml.dev.kotlin.openotp.otp.OtpData
-import ml.dev.kotlin.openotp.shared.OpenOtpResources
+import ml.dev.kotlin.openotp.shared.*
 import ml.dev.kotlin.openotp.ui.theme.*
 import ml.dev.kotlin.openotp.util.Named
 

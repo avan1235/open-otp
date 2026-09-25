@@ -75,7 +75,6 @@ Example build commands for particular platforms:
 - [moko resources](https://github.com/icerockdev/moko-resources) (resources for localization)
 - [Multiplatform Settings](https://github.com/russhwolf/multiplatform-settings) (persistence of keys)
 - [uuid](https://github.com/benasher44/uuid) (UUID generation)
-- [ByteBuffer](https://github.com/DitchOoM/buffer) (allocate and modify `byte[]` natively)
 - [Uri KMP](https://github.com/eygraber/uri-kmp) (parsing URI from QR codes)
 - [Webcam Capture API](https://github.com/sarxos/webcam-capture/) (desktop camera bindings)
 - [zxing](https://github.com/zxing/zxing) (desktop QR codes recognition)

@@ -8,7 +8,7 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import ml.dev.kotlin.openotp.USER_PREFERENCES_MODULE_QUALIFIER
 import ml.dev.kotlin.openotp.component.OpenOtpAppComponent.Child
-import ml.dev.kotlin.openotp.shared.OpenOtpResources
+import ml.dev.kotlin.openotp.shared.*
 import ml.dev.kotlin.openotp.util.BiometryAuthenticator
 import ml.dev.kotlin.openotp.util.StateFlowSettings
 import org.koin.core.component.get

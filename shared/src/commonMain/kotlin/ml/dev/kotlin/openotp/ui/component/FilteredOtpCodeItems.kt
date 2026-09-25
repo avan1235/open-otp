@@ -30,7 +30,7 @@ import ml.dev.kotlin.openotp.component.LinkedAccountsSyncState
 import ml.dev.kotlin.openotp.component.LinkedAccountsSyncState.*
 import ml.dev.kotlin.openotp.otp.OtpData
 import ml.dev.kotlin.openotp.otp.PresentedOtpCodeData
-import ml.dev.kotlin.openotp.shared.OpenOtpResources
+import ml.dev.kotlin.openotp.shared.*
 import ml.dev.kotlin.openotp.ui.component.DragDropListData.Companion.emptyDragDropListData
 
 @Composable

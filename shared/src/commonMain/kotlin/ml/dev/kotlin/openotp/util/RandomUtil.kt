@@ -1,7 +1,7 @@
 package ml.dev.kotlin.openotp.util
 
-import org.kotlincrypto.SecureRandom
+import org.kotlincrypto.random.CryptoRand
 
 fun randomBytesChallenge(count: Int): ByteArray? = runCatchingOrNull {
-    ByteArray(count).apply(SecureRandom()::nextBytesCopyTo)
+    CryptoRand.Default.nextBytes(ByteArray(count))
 }

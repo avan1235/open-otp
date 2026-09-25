@@ -3,19 +3,27 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
-    alias(libs.plugins.android.library)
+    alias(libs.plugins.android.kotlin.multiplatform.library)
+    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.moko.resources)
 }
 
 kotlin {
-    androidTarget()
+    android {
+        namespace = "ml.dev.kotlin.openotp.shared"
+        compileSdk = libs.versions.android.compileSdk.get().toInt()
+        minSdk = libs.versions.android.minSdk.get().toInt()
+
+        androidResources {
+            enable = true
+        }
+    }
 
     jvm("desktop")
 
     listOf(
-        iosX64(),
         iosArm64(),
         iosSimulatorArm64()
     ).forEach { iosTarget ->
@@ -38,6 +46,7 @@ kotlin {
                 optIn("kotlin.contracts.ExperimentalContracts")
                 optIn("kotlinx.serialization.ExperimentalSerializationApi")
                 optIn("kotlin.ExperimentalStdlibApi")
+                optIn("kotlin.time.ExperimentalTime")
                 optIn("com.russhwolf.settings.ExperimentalSettingsApi")
                 optIn("com.russhwolf.settings.ExperimentalSettingsImplementation")
                 optIn("androidx.compose.foundation.ExperimentalFoundationApi")
@@ -49,24 +58,23 @@ kotlin {
             }
         }
         commonMain.dependencies {
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.material)
-            implementation(compose.material3)
-            implementation(compose.materialIconsExtended)
-            implementation(compose.animationGraphics)
-            implementation(compose.components.resources)
+            implementation(libs.compose.runtime)
+            implementation(libs.compose.foundation)
+            implementation(libs.compose.ui)
+            implementation(libs.compose.material)
+            implementation(libs.compose.material3)
+            implementation(libs.compose.material.icons.extended)
+            implementation(libs.compose.animation.graphics)
+            implementation(libs.compose.components.resources)
 
             implementation(libs.kotlinx.datetime)
-            implementation(libs.buffer)
             implementation(libs.uuid)
             implementation(libs.encoding.base32)
 
             implementation(libs.kotlincrypto.hash.sha2)
             implementation(libs.kotlincrypto.macs.hmac.sha1)
             implementation(libs.kotlincrypto.macs.hmac.sha2)
-            implementation(libs.kotlincrypto.secure.random)
-            implementation(libs.kotlincrypto.secure.random)
+            implementation(libs.kotlincrypto.random.crypto.rand)
 
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
@@ -103,8 +111,6 @@ kotlin {
         }
 
         androidMain {
-            dependsOn(commonMain.get())
-
             dependencies {
                 api(libs.androidx.activity.compose)
                 api(libs.androidx.appcompat.appcompat)
@@ -119,21 +125,14 @@ kotlin {
 
                 runtimeOnly(libs.kotlinx.coroutines.android)
             }
-
-            languageSettings {
-                optIn("com.google.accompanist.permissions.ExperimentalPermissionsApi")
-            }
         }
 
         iosMain {
-            dependsOn(commonMain.get())
-
             dependencies {
                 implementation(libs.ktor.client.darwin)
             }
         }
 
-        desktopMain.dependsOn(commonMain.get())
         desktopMain.dependencies {
             implementation(compose.desktop.common)
             implementation(libs.webcam.capture)
@@ -146,35 +145,15 @@ kotlin {
             implementation(libs.ktor.client.okhttp)
         }
     }
-}
 
-android {
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
-    namespace = "ml.dev.kotlin.openotp.shared"
-
-    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
-    sourceSets["main"].res.srcDirs("src/androidMain/res")
-    sourceSets["main"].resources.srcDirs("src/commonMain/resources")
-
-    defaultConfig {
-        minSdk = libs.versions.android.minSdk.get().toInt()
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-    kotlin {
-        jvmToolchain(17)
-    }
+    jvmToolchain(17)
 }
 
 multiplatformResources {
-    multiplatformResourcesPackage = "ml.dev.kotlin.openotp.shared"
-    multiplatformResourcesClassName = "OpenOtpResources"
-    multiplatformResourcesVisibility = MRVisibility.Public
-    iosBaseLocalizationRegion = "en"
-    multiplatformResourcesSourceSet = "commonMain"
-    disableStaticFrameworkWarning = true
+    resourcesPackage.set("ml.dev.kotlin.openotp.shared")
+    resourcesClassName.set("OpenOtpResources")
+    resourcesVisibility.set(MRVisibility.Public)
+    iosBaseLocalizationRegion.set("en")
 }
 
 tasks.withType<KotlinCompilationTask<*>>().all {

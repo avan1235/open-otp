@@ -24,7 +24,7 @@ import ml.dev.kotlin.openotp.component.SettingsComponentImpl
 import ml.dev.kotlin.openotp.component.SettingsComponentImpl.Linked
 import ml.dev.kotlin.openotp.component.SettingsComponentImpl.Unlinked
 import ml.dev.kotlin.openotp.component.SortOtpDataBy
-import ml.dev.kotlin.openotp.shared.OpenOtpResources
+import ml.dev.kotlin.openotp.shared.*
 import ml.dev.kotlin.openotp.ui.component.NamedBox
 import ml.dev.kotlin.openotp.ui.component.NamedDropdownMenu
 import ml.dev.kotlin.openotp.ui.component.NamedSwitch
