@@ -22,6 +22,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import ml.dev.kotlin.openotp.util.runIfNonNull
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.stringResource
 import kotlin.math.roundToInt
 
 interface DragDropListData<out T : Any> {
@@ -32,13 +34,16 @@ interface DragDropListData<out T : Any> {
             Listed(items.filter(predicate))
     }
 
-    data class Grouped<U : Any>(val groups: List<Group<U>>) : DragDropListData<U> {
-        data class Group<V>(val groupName: String, val items: List<V>)
+    data class Grouped<U : Any>(
+        val groups: List<Group<U>>,
+        val defaultGroupName: StringResource,
+    ) : DragDropListData<U> {
+        data class Group<V>(val groupName: String?, val items: List<V>)
 
         override val isEmpty: Boolean = groups.all { it.items.isEmpty() }
 
         override fun filter(predicate: (U) -> Boolean): DragDropListData<U> =
-            Grouped(groups.map { Group(it.groupName, it.items.filter(predicate)) })
+            Grouped(groups.map { Group(it.groupName, it.items.filter(predicate)) }, defaultGroupName)
 
         override val items: List<U> by lazy { groups.flatMap { it.items } }
     }
@@ -110,9 +115,9 @@ internal fun <T : Any> DragDropList(
     ) {
         when {
             showHeaders && items is DragDropListData.Grouped -> items.groups.forEach { group ->
-                if (group.items.isNotEmpty()) stickyHeader(group.groupName) {
+                if (group.items.isNotEmpty()) stickyHeader(group.groupName ?: DefaultGroupHeaderKey) {
                     Text(
-                        text = group.groupName,
+                        text = group.groupName ?: stringResource(items.defaultGroupName),
                         style = MaterialTheme.typography.labelLarge,
                         color = contentColorFor(headerColor),
                         maxLines = 1,
@@ -168,6 +173,8 @@ internal fun rememberDragDropState(
         )
     }
 }
+
+private data object DefaultGroupHeaderKey
 
 private fun LazyListState.getVisibleItemInfoFor(absoluteIndex: Int): LazyListItemInfo? = this
     .layoutInfo

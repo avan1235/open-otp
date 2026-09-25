@@ -15,7 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import dev.icerock.moko.resources.compose.stringResource
+import org.jetbrains.compose.resources.stringResource
 import ml.dev.kotlin.openotp.component.AddHotpProviderComponent
 import ml.dev.kotlin.openotp.component.AddOtpProviderComponent
 import ml.dev.kotlin.openotp.component.AddTotpProviderComponent
@@ -102,7 +102,7 @@ private fun AddTotpProviderScreen(component: AddTotpProviderComponent) {
     AddOtpProviderScreen(component) {
         val selectedAlgorithm by component.algorithm.subscribeAsState()
         NamedDropdownMenu(
-            name = stringResource(OpenOtpResources.strings.algorithm_field_name),
+            name = stringResource(Res.string.algorithm_field_name),
             selected = selectedAlgorithm,
             anyItems = HmacAlgorithm.entries,
             onSelected = component::onAlgorithmSelected,
@@ -110,7 +110,7 @@ private fun AddTotpProviderScreen(component: AddTotpProviderComponent) {
 
         val selectedDigits by component.digits.subscribeAsState()
         NamedDropdownMenu(
-            name = stringResource(OpenOtpResources.strings.digits_field_name),
+            name = stringResource(Res.string.digits_field_name),
             selected = selectedDigits,
             anyItems = OtpDigits.entries,
             onSelected = component::onDigitsSelected,
@@ -118,7 +118,7 @@ private fun AddTotpProviderScreen(component: AddTotpProviderComponent) {
 
         val selectedPeriod by component.period.subscribeAsState()
         NamedDropdownMenu(
-            name = stringResource(OpenOtpResources.strings.period_field_name),
+            name = stringResource(Res.string.period_field_name),
             selected = selectedPeriod,
             anyItems = TotpPeriod.entries,
             onSelected = component::onPeriodSelected,
@@ -132,7 +132,7 @@ private fun AddHotpProviderScreen(component: AddHotpProviderComponent) {
         val counter by component.counter.subscribeAsState()
         val counterIsError by component.counterIsError.subscribeAsState()
         FormField(
-            name = stringResource(OpenOtpResources.strings.counter_field_name),
+            name = stringResource(Res.string.counter_field_name),
             text = counter,
             onTextChange = component::onCounterChanged,
             isError = counterIsError,
@@ -141,7 +141,7 @@ private fun AddHotpProviderScreen(component: AddHotpProviderComponent) {
 
         val selectedAlgorithm by component.algorithm.subscribeAsState()
         NamedDropdownMenu(
-            name = stringResource(OpenOtpResources.strings.algorithm_field_name),
+            name = stringResource(Res.string.algorithm_field_name),
             selected = selectedAlgorithm,
             anyItems = HmacAlgorithm.entries,
             onSelected = component::onAlgorithmSelected,
@@ -149,7 +149,7 @@ private fun AddHotpProviderScreen(component: AddHotpProviderComponent) {
 
         val selectedDigits by component.digits.subscribeAsState()
         NamedDropdownMenu(
-            name = stringResource(OpenOtpResources.strings.digits_field_name),
+            name = stringResource(Res.string.digits_field_name),
             selected = selectedDigits,
             anyItems = OtpDigits.entries,
             onSelected = component::onDigitsSelected,
@@ -173,7 +173,7 @@ private fun AddOtpProviderScreen(
         ) {
             AccountDetails(component)
             FormGroup(
-                groupName = stringResource(OpenOtpResources.strings.advanced_settings_group_name),
+                groupName = stringResource(Res.string.advanced_settings_group_name),
                 content = advancedSettingsContent,
             )
             Spacer(Modifier.height(48.dp))
@@ -184,18 +184,18 @@ private fun AddOtpProviderScreen(
 @Composable
 private fun AccountDetails(component: AddOtpProviderComponent) {
     FormGroup(
-        groupName = stringResource(OpenOtpResources.strings.account_details_group_name)
+        groupName = stringResource(Res.string.account_details_group_name)
     ) {
         val issuer by component.issuer.subscribeAsState()
         FormField(
-            name = stringResource(OpenOtpResources.strings.issuer_field_name),
+            name = stringResource(Res.string.issuer_field_name),
             text = issuer,
             onTextChange = component::onIssuerChanged,
         )
 
         val accountName by component.accountName.subscribeAsState()
         FormField(
-            name = stringResource(OpenOtpResources.strings.account_name_field_name),
+            name = stringResource(Res.string.account_name_field_name),
             text = accountName,
             onTextChange = component::onAccountNameChanged,
         )
@@ -203,7 +203,7 @@ private fun AccountDetails(component: AddOtpProviderComponent) {
         val secret by component.secret.subscribeAsState()
         val secretIsError by component.secretIsError.subscribeAsState()
         FormField(
-            name = stringResource(OpenOtpResources.strings.secret_field_name),
+            name = stringResource(Res.string.secret_field_name),
             text = secret,
             isError = secretIsError,
             onTextChange = component::onSecretChanged,

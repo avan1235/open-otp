@@ -8,7 +8,7 @@ import ml.dev.kotlin.openotp.shared.*
 import ml.dev.kotlin.openotp.ui.OtpIcons
 import ml.dev.kotlin.openotp.ui.icons.Dropbox
 import ml.dev.kotlin.openotp.ui.icons.OneDrive
-import org.koin.compose.koinInject
+import org.jetbrains.compose.resources.stringResource
 
 @Serializable
 data class UserLinkedAccountsModel(
@@ -20,8 +20,8 @@ enum class UserLinkedAccountType {
     Dropbox {
         override val icon: ImageVector = OtpIcons.Dropbox
 
-        override val OpenOtpAppComponentContext.iconContentDescription: String
-            get() = stringResource(OpenOtpResources.strings.dropbox_name)
+        @Composable
+        override fun iconContentDescription(): String = stringResource(Res.string.dropbox_name)
 
         override fun reset(model: UserLinkedAccountsModel) =
             model.copy(dropbox = null)
@@ -38,8 +38,8 @@ enum class UserLinkedAccountType {
     OneDrive {
         override val icon: ImageVector = OtpIcons.OneDrive
 
-        override val OpenOtpAppComponentContext.iconContentDescription: String
-            get() = stringResource(OpenOtpResources.strings.onedrive_name)
+        @Composable
+        override fun iconContentDescription(): String = stringResource(Res.string.onedrive_name)
 
         override fun reset(model: UserLinkedAccountsModel) =
             model.copy(onedrive = null)
@@ -57,13 +57,8 @@ enum class UserLinkedAccountType {
 
     abstract val icon: ImageVector
 
-    abstract val OpenOtpAppComponentContext.iconContentDescription: String
-
     @Composable
-    fun iconContentDescription(): String {
-        val context = koinInject<OpenOtpAppComponentContext>()
-        return context.iconContentDescription
-    }
+    abstract fun iconContentDescription(): String
 
     abstract fun reset(model: UserLinkedAccountsModel): UserLinkedAccountsModel
 

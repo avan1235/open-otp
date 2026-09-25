@@ -9,6 +9,7 @@ import ml.dev.kotlin.openotp.shared.*
 import ml.dev.kotlin.openotp.util.BiometryAuthenticator
 import ml.dev.kotlin.openotp.util.Named
 import ml.dev.kotlin.openotp.util.StateFlowSettings
+import org.jetbrains.compose.resources.stringResource
 import org.koin.core.component.get
 
 interface SettingsComponent {
@@ -130,8 +131,8 @@ class SettingsComponentImpl(
     }
 
     inner class Linked(type: UserLinkedAccountType) : LinkedAccountState(type) {
-        override val OpenOtpAppComponentContext.presentableName: String
-            get() = stringResource(OpenOtpResources.strings.unlink_account_button_name)
+        @Composable
+        override fun presentableName(): String = stringResource(Res.string.unlink_account_button_name)
 
         override fun onClick() {
             _userLinkedAccounts.updateInScope { accountType.reset(it) }
@@ -139,8 +140,8 @@ class SettingsComponentImpl(
     }
 
     inner class Unlinked(type: UserLinkedAccountType) : LinkedAccountState(type) {
-        override val OpenOtpAppComponentContext.presentableName: String
-            get() = stringResource(OpenOtpResources.strings.link_account_button_name)
+        @Composable
+        override fun presentableName(): String = stringResource(Res.string.link_account_button_name)
 
         override fun onClick() {
             _userLinkedAccounts

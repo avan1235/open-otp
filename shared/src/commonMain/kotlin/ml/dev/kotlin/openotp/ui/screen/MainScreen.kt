@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import dev.icerock.moko.resources.compose.stringResource
+import org.jetbrains.compose.resources.stringResource
 import `in`.procyk.compose.camera.permission.CameraPermission.Denied
 import `in`.procyk.compose.camera.permission.CameraPermission.Granted
 import `in`.procyk.compose.camera.permission.rememberCameraPermissionState
@@ -136,7 +136,7 @@ private fun AllOtpCodeItems(
                         copyOtpCode,
                     )
                 } else {
-                    Text(text = stringResource(OpenOtpResources.strings.add_new_keys))
+                    Text(text = stringResource(Res.string.add_new_keys))
                 }
             }
         }

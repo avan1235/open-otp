@@ -9,6 +9,7 @@ import ml.dev.kotlin.openotp.otp.*
 import ml.dev.kotlin.openotp.shared.*
 import ml.dev.kotlin.openotp.util.isValidBase32Secret
 import ml.dev.kotlin.openotp.util.letFalse
+import org.jetbrains.compose.resources.StringResource
 
 interface ScanQRCodeComponent {
 
@@ -19,16 +20,16 @@ interface ScanQRCodeComponent {
 
 class ScanQRCodeComponentImpl(
     componentContext: ComponentContext,
-    private val navigateOnCancel: (message: String?) -> Unit,
+    private val navigateOnCancel: (message: StringResource?) -> Unit,
 ) : AbstractBackupComponent(componentContext), ScanQRCodeComponent {
 
     override fun onQRCodeScanned(result: QRResult): Boolean = when (result) {
-        is QRResult.QRError -> navigateOnCancel(invalidQRCodeMessage).letFalse()
+        is QRResult.QRError -> navigateOnCancel(Res.string.invalid_qr_code).letFalse()
         is QRResult.QRSuccess -> {
             val distinctOtpData = result.nonEmptyCodes.distinct().map(::extractQRCodeUserOtpCodeData)
             val nonNullOtpData = distinctOtpData.filterNotNull()
             if (distinctOtpData.size != nonNullOtpData.size) {
-                navigateOnCancel(invalidQRCodeMessage)
+                navigateOnCancel(Res.string.invalid_qr_code)
             } else {
                 val updated = nonNullOtpData.map { otpData ->
                     _userOtpCodeData.updateInScope { it + otpData }
@@ -78,9 +79,6 @@ class ScanQRCodeComponentImpl(
     } catch (_: InvalidQRCodeException) {
         null
     }
-
-    private val invalidQRCodeMessage: String
-        get() = stringResource(OpenOtpResources.strings.invalid_qr_code)
 }
 
 private object InvalidQRCodeException : IllegalArgumentException()

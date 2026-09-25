@@ -17,7 +17,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import dev.icerock.moko.resources.compose.stringResource
+import org.jetbrains.compose.resources.stringResource
 import ml.dev.kotlin.openotp.component.OpenOtpAppTheme
 import ml.dev.kotlin.openotp.component.SettingsComponent
 import ml.dev.kotlin.openotp.component.SettingsComponentImpl
@@ -38,7 +38,7 @@ internal fun SettingsScreen(
     TopBarClickableIconScreen(
         onIconClick = component::onExitSettings,
         accent = accent,
-        text = stringResource(OpenOtpResources.strings.settings_screen_name),
+        text = stringResource(Res.string.settings_screen_name),
     ) {
         Column(
             modifier = Modifier
@@ -63,7 +63,7 @@ internal fun SettingsScreen(
 @Composable
 private fun CloudBackupsSettingsGroup(component: SettingsComponent) {
     SettingsGroup(
-        name = stringResource(OpenOtpResources.strings.cloud_backups_group_name),
+        name = stringResource(Res.string.cloud_backups_group_name),
     ) {
         val states by component.linkedAccountsStates.subscribeAsState()
         for (state in states) {
@@ -100,11 +100,11 @@ private fun SecuritySettingsGroup(component: SettingsComponent) {
     if (!component.isAuthenticationAvailable) return
 
     SettingsGroup(
-        name = stringResource(OpenOtpResources.strings.security_group_name),
+        name = stringResource(Res.string.security_group_name),
     ) {
         val requireAuthentication by component.requireAuthentication.subscribeAsState()
         NamedSwitch(
-            name = stringResource(OpenOtpResources.strings.require_authentication),
+            name = stringResource(Res.string.require_authentication),
             checked = requireAuthentication,
             onCheckedChange = component::onRequireAuthenticationChange,
             nameModifier = Modifier.fillMaxWidth(0.7f)
@@ -115,11 +115,11 @@ private fun SecuritySettingsGroup(component: SettingsComponent) {
 @Composable
 private fun CodesManagementSettingsGroup(component: SettingsComponent) {
     SettingsGroup(
-        name = stringResource(OpenOtpResources.strings.codes_management_group_name),
+        name = stringResource(Res.string.codes_management_group_name),
     ) {
         val confirmOtpDataDelete by component.confirmOtpDataDelete.subscribeAsState()
         NamedSwitch(
-            name = stringResource(OpenOtpResources.strings.confirm_codes_deletion),
+            name = stringResource(Res.string.confirm_codes_deletion),
             checked = confirmOtpDataDelete,
             onCheckedChange = component::onConfirmOtpDataDeleteChange,
         )
@@ -127,7 +127,7 @@ private fun CodesManagementSettingsGroup(component: SettingsComponent) {
 
         val sortOtpDataBy by component.sortOtpDataBy.subscribeAsState()
         NamedDropdownMenu(
-            name = stringResource(OpenOtpResources.strings.sort_type),
+            name = stringResource(Res.string.sort_type),
             selected = sortOtpDataBy,
             onSelected = component::onSelectedSortType,
             anyItems = SortOtpDataBy.entries
@@ -139,7 +139,7 @@ private fun CodesManagementSettingsGroup(component: SettingsComponent) {
             visibleState = reorderManuallyVisibleState,
         ) {
             Text(
-                text = stringResource(OpenOtpResources.strings.can_manually_reorder),
+                text = stringResource(Res.string.can_manually_reorder),
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.alpha(0.75f).padding(bottom = 12.dp)
             )
@@ -154,21 +154,21 @@ private fun CodesManagementSettingsGroup(component: SettingsComponent) {
             Column {
                 val showSortedGroupsHeaders by component.showSortedGroupsHeaders.subscribeAsState()
                 NamedSwitch(
-                    name = stringResource(OpenOtpResources.strings.show_headers),
+                    name = stringResource(Res.string.show_headers),
                     checked = showSortedGroupsHeaders,
                     onCheckedChange = component::onShowSortedGroupsHeadersChange,
                 )
 
                 val sortOtpDataNullsFirst by component.sortOtpDataNullsFirst.subscribeAsState()
                 NamedSwitch(
-                    name = stringResource(OpenOtpResources.strings.nulls_first),
+                    name = stringResource(Res.string.nulls_first),
                     checked = sortOtpDataNullsFirst,
                     onCheckedChange = component::onSortNullsFirstChange,
                 )
 
                 val sortOtpDataReversed by component.sortOtpDataReversed.subscribeAsState()
                 NamedSwitch(
-                    name = stringResource(OpenOtpResources.strings.reversed_sort),
+                    name = stringResource(Res.string.reversed_sort),
                     checked = sortOtpDataReversed,
                     onCheckedChange = component::onSortReversedChange,
                 )
@@ -180,12 +180,12 @@ private fun CodesManagementSettingsGroup(component: SettingsComponent) {
 @Composable
 private fun LookAndFeelSettingsGroup(component: SettingsComponent) {
     SettingsGroup(
-        name = stringResource(OpenOtpResources.strings.look_and_feel_group_name),
+        name = stringResource(Res.string.look_and_feel_group_name),
     ) {
         val theme by component.theme.subscribeAsState()
 
         NamedDropdownMenu(
-            name = stringResource(OpenOtpResources.strings.theme),
+            name = stringResource(Res.string.theme),
             icon = when (theme.isDarkTheme()) {
                 true -> Icons.Filled.DarkMode
                 false -> Icons.Filled.LightMode

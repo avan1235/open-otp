@@ -69,17 +69,17 @@ abstract class AbstractBackupComponent(
 
                 results.all { it } -> {
                     _linkedAccountsSyncState.value = LinkedAccountsSyncState.Synced
-                    toast(stringResource(OpenOtpResources.strings.synced_all))
+                    toast(Res.string.synced_all)
                 }
 
                 results.any { it } -> {
                     _linkedAccountsSyncState.value = LinkedAccountsSyncState.Synced
-                    toast(stringResource(OpenOtpResources.strings.failed_some))
+                    toast(Res.string.failed_some)
                 }
 
                 else -> {
                     _linkedAccountsSyncState.value = LinkedAccountsSyncState.NotSynced
-                    toast(stringResource(OpenOtpResources.strings.failed_all))
+                    toast(Res.string.failed_all)
                 }
             }
         }

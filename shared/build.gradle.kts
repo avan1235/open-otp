@@ -1,4 +1,3 @@
-import dev.icerock.gradle.MRVisibility
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
@@ -7,7 +6,6 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.moko.resources)
 }
 
 kotlin {
@@ -95,9 +93,6 @@ kotlin {
             api(libs.essenty.stateKeeper)
             api(libs.essenty.instanceKeeper)
 
-            api(libs.moko.resoures)
-            api(libs.moko.resoures.compose)
-
             implementation(libs.compose.extensions.camera.permission)
             implementation(libs.compose.extensions.camera.qr)
             implementation(libs.compose.extensions.util)
@@ -144,16 +139,21 @@ kotlin {
 
             implementation(libs.ktor.client.okhttp)
         }
+
+        val desktopTest by getting {
+            dependencies {
+                implementation(compose.desktop.currentOs)
+            }
+        }
     }
 
     jvmToolchain(17)
 }
 
-multiplatformResources {
-    resourcesPackage.set("ml.dev.kotlin.openotp.shared")
-    resourcesClassName.set("OpenOtpResources")
-    resourcesVisibility.set(MRVisibility.Public)
-    iosBaseLocalizationRegion.set("en")
+compose.resources {
+    publicResClass = true
+    packageOfResClass = "ml.dev.kotlin.openotp.shared"
+    generateResClass = always
 }
 
 tasks.withType<KotlinCompilationTask<*>>().all {

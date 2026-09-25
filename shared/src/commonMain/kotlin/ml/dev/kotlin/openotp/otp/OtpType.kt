@@ -1,19 +1,18 @@
 package ml.dev.kotlin.openotp.otp
 
+import androidx.compose.runtime.Composable
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
-import ml.dev.kotlin.openotp.component.OpenOtpAppComponentContext
 import ml.dev.kotlin.openotp.shared.*
 import ml.dev.kotlin.openotp.util.Named
+import org.jetbrains.compose.resources.stringResource
 
 @Serializable
 enum class OtpType : Named {
     TOTP, HOTP;
 
-    @Transient
-    override val OpenOtpAppComponentContext.presentableName: String
-        get() = when (this@OtpType) {
-            TOTP -> stringResource(OpenOtpResources.strings.totp_presentation)
-            HOTP -> stringResource(OpenOtpResources.strings.hotp_presentation)
-        }
+    @Composable
+    override fun presentableName(): String = when (this@OtpType) {
+        TOTP -> stringResource(Res.string.totp_presentation)
+        HOTP -> stringResource(Res.string.hotp_presentation)
+    }
 }

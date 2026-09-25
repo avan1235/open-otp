@@ -5,12 +5,10 @@
     <string name="invalid_qr_code">Nieprawidłowy kod QR</string>
     <string name="missing_camera_permissions">Brak uprawnień do używania kamery</string>
     <string name="scan_qr_code">Zeskanuj kod QR</string>
-    <string name="copied_code_to_clipboard">Skopiowano "%s" do schowka</string>
-    <string name="camera_not_available">
-        Aparat nie jest dostępny\nna symulatorze. Proszę\nspróbowaź uruchomić na\nfizycznym urządzeniu z iOS.
-    </string>
+    <string name="copied_code_to_clipboard">Skopiowano "%1$s" do schowka</string>
+    <string name="camera_not_available">Aparat nie jest dostępny\nna symulatorze. Proszę\nspróbowaź uruchomić na\nfizycznym urządzeniu z iOS.</string>
     <string name="confirm_delete_item_prompt">Czy jesteś pewien, że chcesz usunąć ten element?</string>
-    <string name="confirm_delete_specific_item_prompt">Czy jesteś pewien, że chcesz usunąć\n%s?</string>
+    <string name="confirm_delete_specific_item_prompt">Czy jesteś pewien, że chcesz usunąć\n%1$s?</string>
     <string name="confirm_codes_deletion">Zatwierdzaj usunięcie kodu</string>
     <string name="theme">Motyw</string>
     <string name="sort_type">Sortuj kody po</string>
@@ -26,9 +24,7 @@
     <string name="default_group_name_issuer_sort_name">Brak wystawcy</string>
     <string name="default_group_name_account_name_sort_name">Brak nazwy konta</string>
     <string name="default_group_name_dont_sort_name"/>
-    <string name="can_manually_reorder">
-        Możliwość ręcznej zmiany kolejności kodów dzięki gestom przytrzymania i przesuwania.
-    </string>
+    <string name="can_manually_reorder">Możliwość ręcznej zmiany kolejności kodów dzięki gestom przytrzymania i przesuwania.</string>
     <string name="require_authentication">Wymagaj uwierzytelnienia przed uruchomieniem</string>
     <string name="authenticate_request">Uwierzytelnij</string>
     <string name="authenticate_request_title">Uwierzytelnienie użytkownika</string>
@@ -60,7 +56,7 @@
     <string name="search_field">Wyszukaj...</string>
     <string name="secret_field">sekret</string>
     <string name="counter_field">licznik</string>
-    <string name="invalid_field_name_provided_formatted">Podano nieprawidłowy %s</string>
+    <string name="invalid_field_name_provided_formatted">Podano nieprawidłowy %1$s</string>
 
     <string name="account_details_group_name">Szczegóły konta</string>
     <string name="advanced_settings_group_name">Zaawansowane ustawienia</string>

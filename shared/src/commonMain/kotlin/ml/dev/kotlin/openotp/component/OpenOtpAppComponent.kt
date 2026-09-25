@@ -11,6 +11,7 @@ import ml.dev.kotlin.openotp.component.OpenOtpAppComponent.Child
 import ml.dev.kotlin.openotp.shared.*
 import ml.dev.kotlin.openotp.util.BiometryAuthenticator
 import ml.dev.kotlin.openotp.util.StateFlowSettings
+import org.jetbrains.compose.resources.getString
 import org.koin.core.component.get
 
 interface OpenOtpAppComponent {
@@ -83,7 +84,7 @@ class OpenOtpAppComponentImpl(
             ScanQRCodeComponentImpl(
                 componentContext = childComponentContext,
                 navigateOnCancel = { message ->
-                    navigation.pop { message?.let(::toast) }
+                    navigation.pop { message?.let { toast(it) } }
                 },
             )
         )
@@ -123,8 +124,8 @@ class OpenOtpAppComponentImpl(
 
         scope.launch {
             _authenticated.value = authenticator.checkBiometryAuthentication(
-                requestTitle = stringResource(OpenOtpResources.strings.authenticate_request_title),
-                requestReason = stringResource(OpenOtpResources.strings.authenticate_request_description)
+                requestTitle = getString(Res.string.authenticate_request_title),
+                requestReason = getString(Res.string.authenticate_request_description)
             )
         }
     }

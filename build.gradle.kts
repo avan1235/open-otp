@@ -7,7 +7,6 @@ plugins {
     alias(libs.plugins.android.kotlin.multiplatform.library) apply false
     alias(libs.plugins.compose.compiler) apply false
     alias(libs.plugins.compose.multiplatform) apply false
-    alias(libs.plugins.moko.resources) apply false
 
     alias(libs.plugins.gradle.versions) apply true
     alias(libs.plugins.version.catalog.update) apply true

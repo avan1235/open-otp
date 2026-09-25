@@ -5,12 +5,10 @@
     <string name="invalid_qr_code">Invalid QR code</string>
     <string name="missing_camera_permissions">Missing camera permissions</string>
     <string name="scan_qr_code">Scan QR Code</string>
-    <string name="copied_code_to_clipboard">Copied "%s" to clipboard</string>
-    <string name="camera_not_available">
-        Camera is not available\non simulator. Please try\nto run on a real iOS device.
-    </string>
+    <string name="copied_code_to_clipboard">Copied "%1$s" to clipboard</string>
+    <string name="camera_not_available">Camera is not available\non simulator. Please try\nto run on a real iOS device.</string>
     <string name="confirm_delete_item_prompt">Are you sure you want to delete this item?</string>
-    <string name="confirm_delete_specific_item_prompt">Are you sure you want to delete\n%s?</string>
+    <string name="confirm_delete_specific_item_prompt">Are you sure you want to delete\n%1$s?</string>
     <string name="confirm_codes_deletion">Confirm codes deletion</string>
     <string name="theme">Theme</string>
     <string name="sort_type">Sort codes by</string>
@@ -58,7 +56,7 @@
     <string name="search_field">Search...</string>
     <string name="secret_field">secret</string>
     <string name="counter_field">counter</string>
-    <string name="invalid_field_name_provided_formatted">Invalid %s provided</string>
+    <string name="invalid_field_name_provided_formatted">Invalid %1$s provided</string>
 
     <string name="account_details_group_name">Account Details</string>
     <string name="advanced_settings_group_name">Advanced Settings</string>

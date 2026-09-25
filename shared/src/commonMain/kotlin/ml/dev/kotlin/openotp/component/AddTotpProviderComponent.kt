@@ -4,10 +4,13 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.Value
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import ml.dev.kotlin.openotp.otp.*
 import ml.dev.kotlin.openotp.shared.*
 import ml.dev.kotlin.openotp.util.isValidBase32Secret
 import ml.dev.kotlin.openotp.util.unit
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.getString
 
 interface AddOtpProviderComponent {
 
@@ -48,12 +51,14 @@ abstract class AddOtpProviderComponentImpl(
     private val navigateOnCancelClicked: () -> Unit,
 ) : AbstractBackupComponent(componentContext), AddOtpProviderComponent {
 
-    protected fun notifyInvalid(fieldName: String) {
-        toast(message = stringResource(OpenOtpResources.strings.invalid_field_name_provided_formatted, fieldName))
+    protected fun notifyInvalid(fieldName: StringResource) {
+        scope.launch {
+            toast(message = getString(Res.string.invalid_field_name_provided_formatted, getString(fieldName)))
+        }
     }
 
     protected fun notifyInvalidSecret() =
-        notifyInvalid(fieldName = stringResource(OpenOtpResources.strings.secret_field))
+        notifyInvalid(fieldName = Res.string.secret_field)
 
     override fun onSaveClicked() {
         navigateOnSaveClicked()
@@ -232,5 +237,5 @@ class AddHotpProviderComponentImpl(
     }
 
     private fun notifyInvalidCounter() =
-        notifyInvalid(fieldName = stringResource(OpenOtpResources.strings.counter_field))
+        notifyInvalid(fieldName = Res.string.counter_field)
 }

@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import dev.icerock.moko.resources.compose.stringResource
+import org.jetbrains.compose.resources.stringResource
 import ml.dev.kotlin.openotp.shared.*
 import ml.dev.kotlin.openotp.ui.component.ClickableIconButton
 import `in`.procyk.compose.util.SystemBarsScreen as NoDefaultsSystemBarsScreen
@@ -56,7 +56,7 @@ internal fun TopBarClickableIconScreen(
                     ClickableIconButton(onClick = onIconClick) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(OpenOtpResources.strings.back_icon_name),
+                            contentDescription = stringResource(Res.string.back_icon_name),
                             tint = contentColorFor(accent),
                         )
                     }

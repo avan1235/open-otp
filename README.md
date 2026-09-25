@@ -72,7 +72,6 @@ Example build commands for particular platforms:
 - [Kermit](https://github.com/touchlab/Kermit) (Logging)
 - [Decompose](https://github.com/arkivanov/Decompose) (lifecycle-aware business logic)
 - [Essenty](https://github.com/arkivanov/Essenty) (handy additions to Decompose)
-- [moko resources](https://github.com/icerockdev/moko-resources) (resources for localization)
 - [Multiplatform Settings](https://github.com/russhwolf/multiplatform-settings) (persistence of keys)
 - [uuid](https://github.com/benasher44/uuid) (UUID generation)
 - [Uri KMP](https://github.com/eygraber/uri-kmp) (parsing URI from QR codes)

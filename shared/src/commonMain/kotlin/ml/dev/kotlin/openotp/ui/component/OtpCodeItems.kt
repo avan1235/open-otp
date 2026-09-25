@@ -33,7 +33,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dev.icerock.moko.resources.compose.stringResource
+import org.jetbrains.compose.resources.stringResource
 import `in`.procyk.compose.util.OnceLaunchedEffect
 import kotlinx.coroutines.isActive
 import ml.dev.kotlin.openotp.otp.HotpData
@@ -111,11 +111,11 @@ internal fun OtpCodeItems(
                 onOtpCodeDataDismiss(dismissed)
             },
             text = when (val presentation = dismissed.namePresentation) {
-                null -> stringResource(OpenOtpResources.strings.confirm_delete_item_prompt)
-                else -> stringResource(OpenOtpResources.strings.confirm_delete_specific_item_prompt, presentation)
+                null -> stringResource(Res.string.confirm_delete_item_prompt)
+                else -> stringResource(Res.string.confirm_delete_specific_item_prompt, presentation)
             },
             icon = Icons.Default.Delete,
-            imageDescription = stringResource(OpenOtpResources.strings.question_icon_name),
+            imageDescription = stringResource(Res.string.question_icon_name),
         )
     }
 }
@@ -202,7 +202,7 @@ private fun OtpCodeItem(
             leadingContent = {
                 Icon(
                     imageVector = itemIcon,
-                    contentDescription = stringResource(OpenOtpResources.strings.issuer_icon_name),
+                    contentDescription = stringResource(Res.string.issuer_icon_name),
                     modifier = Modifier
                         .background(
                             color = MaterialTheme.colorScheme.surfaceVariant,
@@ -249,7 +249,7 @@ private fun RestartButton(
     ) {
         Icon(
             imageVector = Icons.Default.Cached,
-            contentDescription = stringResource(OpenOtpResources.strings.restart_icon_name),
+            contentDescription = stringResource(Res.string.restart_icon_name),
             modifier = Modifier.fillMaxSize(),
         )
     }
@@ -312,8 +312,8 @@ private fun DismissBackground(dismissState: DismissState) {
         EndToStart -> Icons.Default.Delete
     }
     val contentDescription = when (direction) {
-        StartToEnd -> stringResource(OpenOtpResources.strings.copy_icon_name)
-        EndToStart -> stringResource(OpenOtpResources.strings.delete_icon_name)
+        StartToEnd -> stringResource(Res.string.copy_icon_name)
+        EndToStart -> stringResource(Res.string.delete_icon_name)
     }
     val scale by animateFloatAsState(
         targetValue = if (dismissState.targetValue == Default) 0.75f else 1f
