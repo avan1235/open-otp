@@ -3,6 +3,7 @@ rootProject.name = "OpenOTP"
 include(":androidApp")
 include(":shared")
 include(":desktopApp")
+include(":webApp")
 
 pluginManagement {
     repositories {

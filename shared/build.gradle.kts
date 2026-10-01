@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
@@ -32,6 +33,12 @@ kotlin {
             export(libs.essenty.lifecycle)
             export(libs.essenty.stateKeeper)
         }
+    }
+
+    @OptIn(ExperimentalWasmDsl::class)
+    wasmJs {
+        browser()
+        binaries.executable()
     }
 
     applyDefaultHierarchyTemplate()
@@ -138,6 +145,10 @@ kotlin {
             runtimeOnly(libs.kotlinx.coroutines.swing)
 
             implementation(libs.ktor.client.okhttp)
+        }
+
+        wasmJsMain.dependencies {
+            implementation(libs.ktor.client.js)
         }
 
         val desktopTest by getting {

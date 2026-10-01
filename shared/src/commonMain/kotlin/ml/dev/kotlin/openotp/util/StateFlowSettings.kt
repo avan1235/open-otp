@@ -1,13 +1,10 @@
 package ml.dev.kotlin.openotp.util
 
 import com.russhwolf.settings.Settings
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.updateAndGet
-import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
 import ml.dev.kotlin.openotp.component.OpenOtpAppComponentContext
@@ -23,7 +20,6 @@ class StateFlowSettings<T : Any>(
     context: OpenOtpAppComponentContext,
     private val serializer: KSerializer<T>,
     private val default: T,
-    dispatcher: CoroutineDispatcher = Dispatchers.Default
 ) {
     private val settings: Settings = createSettings(name, context)
 
@@ -37,7 +33,7 @@ class StateFlowSettings<T : Any>(
         settings.putString(name, encoded)
     }
 
-    private val _stateFlow: MutableStateFlow<T> = MutableStateFlow(runBlocking(dispatcher) { readStoredValue() })
+    private val _stateFlow: MutableStateFlow<T> = MutableStateFlow(readStoredValue())
     val stateFlow: StateFlow<T> = _stateFlow.asStateFlow()
 
     fun update(function: (oldValue: T) -> T): T =
