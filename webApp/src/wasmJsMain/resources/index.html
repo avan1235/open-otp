@@ -2,11 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="color-scheme" content="light dark">
     <title>OpenOTP</title>
     <link type="text/css" rel="stylesheet" href="styles.css">
+    <meta name="theme-color" content="#FEFCF5">
+    <meta name="theme-color" content="#FEFCF5" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#1B1C18" media="(prefers-color-scheme: dark)">
 </head>
-<body style="text-align: center; align-content: center">
+<body>
+<div id="loader-box">
     <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 50 50" role="presentation">
         <circle cx="25" cy="25" r="20" stroke="#ccc" stroke-width="4" fill="none"/>
         <circle cx="25" cy="25" r="20" stroke="#333" stroke-width="4" fill="none" stroke-linecap="round"
@@ -15,6 +22,7 @@
                               repeatCount="indefinite"/>
         </circle>
     </svg>
-    <script type="application/javascript" src="webApp.js"></script>
+</div>
+<script type="application/javascript" src="webApp.js"></script>
 </body>
 </html>

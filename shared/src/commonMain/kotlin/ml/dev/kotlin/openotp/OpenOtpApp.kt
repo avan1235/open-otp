@@ -1,13 +1,16 @@
 package ml.dev.kotlin.openotp
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.slide
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
@@ -35,9 +38,15 @@ import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.module
 
 @Composable
-internal fun OpenOtpApp(component: OpenOtpAppComponent) {
+internal fun OpenOtpApp(
+    component: OpenOtpAppComponent,
+    onBackgroundColorChange: (Color) -> Unit = {},
+) {
     OpenOtpTheme(component) {
+        val backgroundColor = MaterialTheme.colorScheme.surface
+        LaunchedEffect(backgroundColor) { onBackgroundColorChange(backgroundColor) }
         Surface(
+            color = backgroundColor,
             modifier = Modifier.fillMaxSize(),
         ) {
             BindBiometryAuthenticatorEffect(koinInject<BiometryAuthenticator>())
