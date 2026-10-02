@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="color-scheme" content="light dark">
+    <link rel="apple-touch-icon" sizes="1024x1024" href="apple-touch-icon-1024x1024.png">
+    <link rel="icon" type="image/png" href="apple-touch-icon-1024x1024.png">
+    <meta name="theme-color" content="#FEFCF5" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#1B1C18" media="(prefers-color-scheme: dark)">
+    <title>OpenOTP – OneDrive authorization</title>
+    <style>
+        :root {
+            color-scheme: light dark;
+            --primary: #466800;
+            --on-primary: #FFFFFF;
+            --background: #FEFCF5;
+            --on-background: #1B1C18;
+            --surface-variant: #E1E4D4;
+            --on-surface-variant: #45483D;
+            --outline: #75786C;
+            --error-container: #FFDAD6;
+            --on-error-container: #410002;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --primary: #ABD468;
+                --on-primary: #223600;
+                --background: #1B1C18;
+                --on-background: #E4E3DB;
+                --surface-variant: #45483D;
+                --on-surface-variant: #C5C8B9;
+                --outline: #8F9285;
+                --error-container: #93000A;
+                --on-error-container: #FFDAD6;
+            }
+        }
+
+        html, body {
+            margin: 0;
+            min-height: 100%;
+            background-color: var(--background);
+            color: var(--on-background);
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        }
+
+        main {
+            min-height: 100vh;
+            box-sizing: border-box;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            text-align: center;
+        }
+
+        img {
+            width: 128px;
+            height: 128px;
+            border-radius: 28px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 1.4rem;
+            font-weight: 500;
+        }
+
+        p {
+            margin: 0;
+            color: var(--on-surface-variant);
+        }
+
+        #code {
+            width: min(480px, 100%);
+            box-sizing: border-box;
+            padding: 12px 16px;
+            border: 1px solid var(--outline);
+            border-radius: 12px;
+            background-color: var(--surface-variant);
+            color: var(--on-surface-variant);
+            font-family: ui-monospace, Menlo, Consolas, monospace;
+            font-size: 0.9rem;
+        }
+
+        #code:focus {
+            outline: 2px solid var(--primary);
+            outline-offset: -1px;
+        }
+
+        button {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 20px;
+            background-color: var(--primary);
+            color: var(--on-primary);
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        button:disabled {
+            opacity: 0.38;
+            cursor: default;
+        }
+
+        #error {
+            width: min(480px, 100%);
+            box-sizing: border-box;
+            padding: 12px 16px;
+            border-radius: 12px;
+            background-color: var(--error-container);
+            color: var(--on-error-container);
+        }
+
+        [hidden] {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+<main>
+    <img src="apple-touch-icon-1024x1024.png" alt="OpenOTP icon">
+    <h1>OpenOTP – OneDrive</h1>
+    <p id="msg">Copy this code and paste it into OpenOTP</p>
+    <input id="code" type="text" readonly aria-label="Authorization code" onclick="this.select()">
+    <button id="copy" type="button">Copy</button>
+    <div id="error" role="alert" hidden></div>
+</main>
+<script>
+    const params = new URLSearchParams(location.hash.slice(1) || location.search.slice(1));
+    const code = params.get('code');
+    const codeInput = document.getElementById('code');
+    const copyButton = document.getElementById('copy');
+    const error = document.getElementById('error');
+
+    function showError(text) {
+        error.textContent = text;
+        error.hidden = false;
+    }
+
+    if (code) {
+        codeInput.value = code;
+    } else {
+        copyButton.disabled = true;
+        showError(params.get('error_description') || params.get('error') || 'No authorization code found.');
+    }
+
+    copyButton.addEventListener('click', async () => {
+        try {
+            await navigator.clipboard.writeText(codeInput.value);
+            error.hidden = true;
+            copyButton.textContent = 'Copied';
+            setTimeout(() => copyButton.textContent = 'Copy', 2000);
+        } catch (e) {
+            codeInput.select();
+            showError('Could not copy automatically – select the code and copy it manually.');
+        }
+    });
+</script>
+</body>
+</html>
