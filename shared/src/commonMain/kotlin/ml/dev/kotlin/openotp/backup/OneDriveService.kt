@@ -56,7 +56,7 @@ sealed class OneDriveService : OAuth2AccountService {
                     append("grant_type", "authorization_code")
                     append("code_verifier", accessData.codeVerifier)
                     append("client_id", CLIENT_ID)
-                    append("redirect_uri", "https://open-otp.procyk.in")
+                    append("redirect_uri", "https://open-otp.procyk.in/onedrive")
                     append("scope", "files.readwrite.all")
                 }))
             }.map { response ->
