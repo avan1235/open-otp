@@ -161,6 +161,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./webApp/build/dist/wasmJs/productionExecutable
           force_orphan: true
+          cname: open-otp.procyk.in
 
   build-android:
     name: Build android release
