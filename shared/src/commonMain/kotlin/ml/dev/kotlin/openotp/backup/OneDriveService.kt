@@ -41,7 +41,7 @@ sealed class OneDriveService : OAuth2AccountService {
             "https://login.microsoftonline.com/common/oauth2/v2.0/authorize" +
                     "?client_id=$CLIENT_ID" +
                     "&response_type=code" +
-                    "&redirect_uri=https%3A%2F%2Fopen-otp.procyk.in" +
+                    "&redirect_uri=https%3A%2F%2Fopen-otp.procyk.in%2Fonedrive" +
                     "&response_mode=fragment" +
                     "&scope=offline_access+files.readwrite.all" +
                     "&code_challenge=${accessData.codeChallenge}" +
