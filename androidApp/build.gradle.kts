@@ -49,7 +49,7 @@ fun getAndBumpVersionCode(): Int {
     val bump = getenv()["BUMP_FILE_VERSION_CODE"]?.toBooleanStrictOrNull() ?: false
     if (!bump) return code
 
-    val file = File("gradle/libs.versions.toml")
+    val file = project.file("../gradle/libs.versions.toml")
     val updatedFile = file.readLines().map { line ->
         if (!line.startsWith("versionCode")) return@map line
 
