@@ -21,3 +21,12 @@ kotlin {
         }
     }
 }
+
+tasks.named<Copy>("wasmJsProcessResources") {
+    val outputDir = destinationDir
+    val oneDriveRedirectPages = listOf("onedrive-native", "onedrive-web")
+    filesMatching("onedrive.html") {
+        oneDriveRedirectPages.forEach { page -> copyTo(outputDir.resolve("$page.html")) }
+        exclude()
+    }
+}

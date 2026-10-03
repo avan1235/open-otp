@@ -41,7 +41,7 @@ sealed class OneDriveService : OAuth2AccountService {
             "https://login.microsoftonline.com/common/oauth2/v2.0/authorize" +
                     "?client_id=$CLIENT_ID" +
                     "&response_type=code" +
-                    "&redirect_uri=https%3A%2F%2Fopen-otp.procyk.in%2Fonedrive" +
+                    "&redirect_uri=${ONEDRIVE_REDIRECT_URI.encodeURLParameter()}" +
                     "&response_mode=fragment" +
                     "&scope=offline_access+files.readwrite.all" +
                     "&code_challenge=${accessData.codeChallenge}" +
@@ -56,7 +56,7 @@ sealed class OneDriveService : OAuth2AccountService {
                     append("grant_type", "authorization_code")
                     append("code_verifier", accessData.codeVerifier)
                     append("client_id", CLIENT_ID)
-                    append("redirect_uri", "https://open-otp.procyk.in/onedrive")
+                    append("redirect_uri", ONEDRIVE_REDIRECT_URI)
                     append("scope", "files.readwrite.all")
                 }))
             }.map { response ->
@@ -184,6 +184,10 @@ private fun OneDriveOAuth2TokenResponse.toOneDriveRefreshableAccessData(refreshT
 private const val CLIENT_ID: String = "8612f175-11d3-4dea-960a-d2cb89867a33"
 
 private const val BACKUP_PATH: String = "OpenOTP/OpenOTP.backup"
+
+internal const val ONEDRIVE_NATIVE_REDIRECT_URI: String = "https://open-otp.procyk.in/onedrive-native"
+
+internal const val ONEDRIVE_WEB_REDIRECT_URI: String = "https://open-otp.procyk.in/onedrive-web"
 
 private fun ByteArray.oneDriveEncodeBase64(): String = encodeBase64()
     .replace('+', '-')
