@@ -96,7 +96,7 @@ sealed class OneDriveService : OAuth2AccountService {
                 header(HttpHeaders.Authorization, "Bearer ${refreshableAccessData.accessToken}")
                 setBody(ByteArrayContent(data))
             }.map { response ->
-                response.file.hashes.sha256Hash == data.oneDriveContentHash()
+                response.file.hashes.quickXorHash == data.quickXorHashBase64()
             }
 
         override suspend fun downloadBackupData(): ByteArray? =
@@ -162,7 +162,7 @@ private data class OneDriveUploadResponse(
     ) {
         @Serializable
         data class Hashes(
-            @SerialName("sha256Hash") val sha256Hash: String,
+            @SerialName("quickXorHash") val quickXorHash: String,
         )
     }
 }
@@ -193,6 +193,3 @@ private fun ByteArray.oneDriveEncodeBase64(): String = encodeBase64()
     .replace('+', '-')
     .replace('/', '_')
     .replace("=", "")
-
-private fun ByteArray.oneDriveContentHash(): String =
-    SHA256().digest(this).toHexString(format = HexFormat.UpperCase)
