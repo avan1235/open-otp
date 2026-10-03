@@ -135,6 +135,7 @@
     const codeInput = document.getElementById('code');
     const copyButton = document.getElementById('copy');
     const error = document.getElementById('error');
+    const msg = document.getElementById('msg');
 
     function showError(text) {
         error.textContent = text;
@@ -153,12 +154,26 @@
             await navigator.clipboard.writeText(codeInput.value);
             error.hidden = true;
             copyButton.textContent = 'Copied';
-            setTimeout(() => copyButton.textContent = 'Copy', 2000);
         } catch (e) {
             codeInput.select();
             showError('Could not copy automatically – select the code and copy it manually.');
+            return;
         }
+        closeCurrentWindow();
     });
+
+    function closeCurrentWindow() {
+        try {
+            window.close();
+        } catch (e) {
+            // ignored – handled by the fallback below
+        }
+        setTimeout(() => {
+            if (window.closed) return;
+            copyButton.disabled = true;
+            msg.textContent = 'Code copied. You can close this tab and paste the code into OpenOTP.';
+        }, 300);
+    }
 </script>
 </body>
 </html>
