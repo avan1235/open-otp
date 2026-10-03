@@ -81,19 +81,19 @@ class ScanQRCodeComponentImpl(
     }
 }
 
-private object InvalidQRCodeException : IllegalArgumentException()
+private class InvalidQRCodeException : IllegalArgumentException()
 
 private val Uri.otpType: OtpType
     get() = when (host) {
         "totp" -> OtpType.TOTP
         "hotp" -> OtpType.HOTP
-        else -> throw InvalidQRCodeException
+        else -> throw InvalidQRCodeException()
     }
 
 private val Uri.secret: String
     get() = getQueryParameter("secret")
         ?.takeIf { it.isValidBase32Secret }
-        ?: throw InvalidQRCodeException
+        ?: throw InvalidQRCodeException()
 
 private val Uri.issuer: String?
     get() = getQueryParameter("issuer")
@@ -107,7 +107,7 @@ private val Uri.hmacAlgorithm: HmacAlgorithm?
         "sha256" -> HmacAlgorithm.SHA256
         "sha512" -> HmacAlgorithm.SHA512
         null -> null
-        else -> throw InvalidQRCodeException
+        else -> throw InvalidQRCodeException()
     }
 
 private val Uri.codeDigits: OtpDigits?
@@ -115,7 +115,7 @@ private val Uri.codeDigits: OtpDigits?
         "6" -> OtpDigits.Six
         "8" -> OtpDigits.Eight
         null -> null
-        else -> throw InvalidQRCodeException
+        else -> throw InvalidQRCodeException()
     }
 
 private val Uri.period: TotpPeriod?
@@ -124,19 +124,19 @@ private val Uri.period: TotpPeriod?
         "30" -> TotpPeriod.Thirty
         "60" -> TotpPeriod.Sixty
         null -> null
-        else -> throw InvalidQRCodeException
+        else -> throw InvalidQRCodeException()
     }
 
 private val Uri.counter: HotpCounter
     get() = getQueryParameter("counter")
         ?.toLongOrNull()
         ?.takeIf { it.isValid() }
-        ?: throw InvalidQRCodeException
+        ?: throw InvalidQRCodeException()
 
 private fun Uri.validateScheme(): Unit =
-    if ("otpauth" != scheme) throw InvalidQRCodeException else Unit
+    if ("otpauth" != scheme) throw InvalidQRCodeException() else Unit
 
 private val String?.uri: Uri
     get() = this
         ?.let(Uri.Companion::parseOrNull)
-        ?: throw InvalidQRCodeException
+        ?: throw InvalidQRCodeException()
