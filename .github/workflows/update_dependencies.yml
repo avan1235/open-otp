@@ -31,12 +31,12 @@ jobs:
         run: |
           {
             echo 'REPORT<<EOF'
-            cat build/dependencyUpdates/report.txt | tail -n +6 
+            cat build/dependencyUpdates/report.txt | tail -n +6
             echo EOF
           } >> "$GITHUB_ENV"
 
       - name: Create pull request
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ secrets.PAT }}
           commit-message: update dependencies
@@ -47,4 +47,4 @@ jobs:
           delete-branch: true
           title: 'Update Dependencies'
           body: ${{ env.REPORT }}
-          reviewers: ${{ github.actor }}
+          reviewers: avan1235
